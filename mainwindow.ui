@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>700</width>
+    <height>435</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>700</width>
+    <height>435</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>700</width>
+    <height>435</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Overmind Studios BlenderUpdater</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="btn_Quit">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>366</y>
+      <width>131</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::StrongFocus</enum>
+    </property>
+    <property name="text">
+     <string>Quit</string>
+    </property>
+    <property name="icon">
+     <iconset resource="res.qrc">
+      <normaloff>:/newPrefix/images/Application-exit-icon.png</normaloff>:/newPrefix/images/Application-exit-icon.png</iconset>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_Check">
+    <property name="geometry">
+     <rect>
+      <x>6</x>
+      <y>366</y>
+      <width>131</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Version Check</string>
+    </property>
+    <property name="icon">
+     <iconset resource="res.qrc">
+      <normaloff>:/newPrefix/images/Refresh-icon.png</normaloff>:/newPrefix/images/Refresh-icon.png</iconset>
+    </property>
+    <property name="autoDefault">
+     <bool>false</bool>
+    </property>
+    <property name="default">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QProgressBar" name="progressBar">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>316</y>
+      <width>551</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="value">
+     <number>24</number>
+    </property>
+    <property name="textVisible">
+     <bool>true</bool>
+    </property>
+    <property name="invertedAppearance">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl_task">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>320</y>
+      <width>121</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl_available">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>19</y>
+      <width>210</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Available versions from buildbot:</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_about">
+    <property name="geometry">
+     <rect>
+      <x>657</x>
+      <y>10</y>
+      <width>35</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Settings</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="res.qrc">
+      <normaloff>:/newPrefix/images/Information-icon.png</normaloff>:/newPrefix/images/Information-icon.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>24</width>
+      <height>24</height>
+     </size>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+    <property name="checked">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QFrame" name="frm_start">
+    <property name="geometry">
+     <rect>
+      <x>6</x>
+      <y>50</y>
+      <width>686</width>
+      <height>271</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="lbl_start">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>70</y>
+       <width>491</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Press &amp;quot;Version Check&amp;quot; to get a list of the most current buildbot versions.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignHCenter|Qt::AlignTop</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="line_path">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>160</y>
+       <width>491</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>not set</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_path">
+     <property name="geometry">
+      <rect>
+       <x>576</x>
+       <y>160</y>
+       <width>35</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="res.qrc">
+       <normaloff>:/newPrefix/images/Open-folder-icon.png</normaloff>:/newPrefix/images/Open-folder-icon.png</iconset>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>130</y>
+       <width>311</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Choose path (must be an existing folder):</string>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignHCenter|Qt::AlignTop</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <zorder>frm_start</zorder>
+   <zorder>btn_Quit</zorder>
+   <zorder>btn_Check</zorder>
+   <zorder>progressBar</zorder>
+   <zorder>lbl_task</zorder>
+   <zorder>lbl_available</zorder>
+   <zorder>btn_about</zorder>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
+ <connections/>
+</ui>

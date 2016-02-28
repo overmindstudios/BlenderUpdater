@@ -1,0 +1,3 @@
+https://docs.python.org/3/library/shutil.html#archiving-operations
+
+http://stackoverflow.com/questions/8689938/extract-files-from-zip-without-keep-the-top-level-folder-with-python-zipfile

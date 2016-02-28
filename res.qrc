@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="newPrefix">
+    <file>images/Information-icon.png</file>
+    <file>images/Open-folder-icon.png</file>
+    <file>images/Refresh-icon.png</file>
+    <file>images/Application-exit-icon.png</file>
+  </qresource>
+</RCC>
