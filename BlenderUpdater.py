@@ -80,7 +80,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
     def about(self):
         aboutText = '<html><head/><body><p>Utility to update Blender to the latest buildbot version available at \
         <a href="https://builder.blender.org/download/"><span style=" text-decoration: underline; color:#2980b9;">\
-        https://builder.blender.org/download/</span></a></p><p><br/>Developed by Overmind Studios</p><p>\
+        https://builder.blender.org/download/</span></a></p><p><br/>Developed by Tobias Kummer for Overmind Studios</p><p>\
         Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0"><span style=" text-decoration:\
          underline; color:#2980b9;">Apache 2.0 license</span></a></p></body></html>'
         QtGui.QMessageBox.about(self, 'About', aboutText)
