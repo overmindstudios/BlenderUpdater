@@ -16,6 +16,7 @@ limitations under the License.
 
 
 from PyQt4 import QtGui, QtCore
+import qdarkstyle
 import sys
 import os.path
 from bs4 import BeautifulSoup
@@ -187,7 +188,6 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
                 self.statusBar().showMessage('Ready')
                 self.lbl_task.hide()
                 self.progressBar.hide()
-                self.btn_Check.setEnabled(True)
 
             else:
                 pass
@@ -219,23 +219,27 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
     def extraction(self, filename):
         self.lbl_task.hide()
         self.progressBar.hide()
-        self.statusBar().showMessage('Extracting, please wait')
+        self.btn_Quit.setEnabled(False)
+        self.statusBar().showMessage('Extracting, please wait... (Application may become unresponsive)')
         shutil.unpack_archive(filename, './blendertemp/')
         self.finalcopy()
 
     def finalcopy(self):
         global dir_
-        self.statusBar().showMessage('Copying')
+        self.statusBar().showMessage('Copying files... (Application may become unresponsive)')
         source = next(os.walk('./blendertemp/'))[1]
         copy_tree(os.path.join('./blendertemp/', source[0]), dir_)
         shutil.rmtree('./blendertemp')
         self.statusBar().showMessage('Ready')
+        self.btn_Quit.setEnabled(True)
+        self.btn_Check.setEnabled(True)
 
 
 
 def main():
     app = QtGui.QApplication(sys.argv)
     form = BlenderUpdater()
+    app.setStyleSheet(qdarkstyle.load_stylesheet(pyside=False))
     form.show()
     app.exec_()
 
