@@ -33,10 +33,10 @@ dir_ = ''
 config = configparser.ConfigParser()
 
 
-class DownloadThread(QtCore.QThread):
+class WorkerThread(QtCore.QThread):
 
     def __init__(self, url, file):
-        super(DownloadThread, self).__init__()
+        super(WorkerThread, self).__init__()
         self.filename = file
         self.url = url
 
@@ -226,7 +226,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         self.progressBar.setValue(0)
         self.btn_Check.setDisabled(True)
         self.statusbar.showMessage('Downloading ' + size_readable)
-        thread = DownloadThread(url,filename)
+        thread = WorkerThread(url, filename)
         self.connect(thread, QtCore.SIGNAL('aborted'), self.aborted)
         self.connect(thread, QtCore.SIGNAL('update'), self.updatepb)
         self.connect(thread, QtCore.SIGNAL('finishedDL'), self.extraction)
@@ -270,7 +270,6 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         self.lbl_task.setText('Finished')
         self.btn_Quit.setEnabled(True)
         self.btn_Check.setEnabled(True)
-
 
 
 def main():
