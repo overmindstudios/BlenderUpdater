@@ -45,16 +45,23 @@ class DownloadThread(QtCore.QThread):
         self.emit(QtCore.SIGNAL('update'), percent)
 
     def run(self):
-        urllib.request.urlretrieve(self.url, self.filename, reporthook=self.progress)
-        self.emit(QtCore.SIGNAL('finishedDL'))
-        shutil.unpack_archive(self.filename, './blendertemp/',)
-        self.emit(QtCore.SIGNAL('finishedEX'))
-        source = next(os.walk('./blendertemp/'))[1]
-        copy_tree(os.path.join('./blendertemp/', source[0]), dir_)
-        self.emit(QtCore.SIGNAL('finishedCP'))
-        shutil.rmtree('./blendertemp')
+        self.abort = False
+        while not self.abort:
+            urllib.request.urlretrieve(self.url, self.filename, reporthook=self.progress)
+            self.emit(QtCore.SIGNAL('finishedDL'))
+            shutil.unpack_archive(self.filename, './blendertemp/')
+            self.emit(QtCore.SIGNAL('finishedEX'))
+            source = next(os.walk('./blendertemp/'))[1]
+            copy_tree(os.path.join('./blendertemp/', source[0]), dir_)
+            self.emit(QtCore.SIGNAL('finishedCP'))
+            shutil.rmtree('./blendertemp')
+            self.emit(QtCore.SIGNAL('finishedCL'))
+            return
+        else:
+            self.emit(QtCore.SIGNAL('aborted'))
 
-
+    def stop(self):
+        self.abort = True
 
 
 class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
@@ -82,7 +89,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         else:
             pass
         dir_ = self.line_path.text()
-
+        self.btn_cancel.hide()
         self.btn_Check.setFocus()                   # set focus to Check Now button
         self.lbl_available.hide()                   # hide the message at the top
         self.progressBar.setValue(0)                # reset progress bar
@@ -93,6 +100,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         self.btn_Check.clicked.connect(self.check)  # connect Check Now button
         self.btn_about.clicked.connect(self.about)  # connect About button
         self.btn_path.clicked.connect(self.select_path)  # connect the path button
+
 
     def select_path(self):
         global dir_
@@ -173,7 +181,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
 
             version = str(text[1])
             buttontext = str(text[0]) + " | " + str(text[1]) + " | " + str(text[3])
-            btn1.setIconSize(QtCore.QSize(24,24))
+            btn1.setIconSize(QtCore.QSize(24, 24))
             btn1.setText(buttontext)
             btn1.setFixedWidth(686)
             btn1.move(6, 45 + i)
@@ -214,15 +222,26 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         self.progressBar.show()
         self.lbl_task.setText('Downloading')
         self.lbl_task.show()
+        # self.btn_cancel.show()
         self.progressBar.setValue(0)
         self.btn_Check.setDisabled(True)
         self.statusbar.showMessage('Downloading ' + size_readable)
         thread = DownloadThread(url,filename)
+        self.connect(thread, QtCore.SIGNAL('aborted'), self.aborted)
         self.connect(thread, QtCore.SIGNAL('update'), self.updatepb)
         self.connect(thread, QtCore.SIGNAL('finishedDL'), self.extraction)
         self.connect(thread, QtCore.SIGNAL('finishedEX'), self.finalcopy)
         self.connect(thread, QtCore.SIGNAL('finishedCP'), self.cleanup)
+        self.connect(thread, QtCore.SIGNAL('finishedCL'), self.done)
+        # self.btn_cancel.clicked.connect(thread.stop)
         thread.start()
+
+    def aborted(self):
+        self.statusbar.showMessage('Aborted')
+        self.lbl_task.hide()
+        self.progressBar.hide()
+        self.btn_cancel.hide()
+        self.btn_Check.setEnabled(True)
 
     def updatepb(self, percent):
         self.progressBar.setValue(percent)
@@ -230,26 +249,28 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
     def extraction(self):
         self.lbl_task.setText('Extracting...')
         self.btn_Quit.setEnabled(False)
-        self.statusbar.showMessage('Extracting, please wait...')
+        self.statusbar.showMessage('Extracting to temporary folder, please wait...')
         self.progressBar.setMaximum(0)
         self.progressBar.setMinimum(0)
         self.progressBar.setValue(-1)
 
     def finalcopy(self):
-        global dir_
         self.lbl_task.setText('Copying files...')
-        self.statusbar.showMessage('Copying files, please wait... ')
+        self.statusbar.showMessage('Copying files to "' + dir_ + '", please wait... ')
 
     def cleanup(self):
-        self.statusbar.showMessage('Cleaning up...')
-        shutil.rmtree('./blendertemp')
-        self.statusBar().showMessage('Ready')
+        self.lbl_task.setText('Cleaning up...')
+        self.statusbar.showMessage('Cleaning temporary files')
+
+    def done(self):
+        self.statusbar.showMessage('Ready')
         self.progressBar.setMinimum(0)
         self.progressBar.setMaximum(100)
         self.progressBar.setValue(100)
         self.lbl_task.setText('Finished')
         self.btn_Quit.setEnabled(True)
         self.btn_Check.setEnabled(True)
+
 
 
 def main():

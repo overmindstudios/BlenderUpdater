@@ -242,6 +242,23 @@
      </property>
     </widget>
    </widget>
+   <widget class="QPushButton" name="btn_cancel">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>320</y>
+      <width>24</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="res.qrc">
+      <normaloff>:/newPrefix/images/Cancel-icon.png</normaloff>:/newPrefix/images/Cancel-icon.png</iconset>
+    </property>
+   </widget>
    <zorder>frm_start</zorder>
    <zorder>btn_Quit</zorder>
    <zorder>btn_Check</zorder>
@@ -249,6 +266,7 @@
    <zorder>lbl_task</zorder>
    <zorder>lbl_available</zorder>
    <zorder>btn_about</zorder>
+   <zorder>btn_cancel</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
