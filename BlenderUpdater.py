@@ -33,6 +33,30 @@ dir_ = ''
 config = configparser.ConfigParser()
 
 
+class DownloadThread(QtCore.QThread):
+
+    def __init__(self, url, file):
+        super(DownloadThread, self).__init__()
+        self.filename = file
+        self.url = url
+
+    def progress(self, count, blockSize, totalSize):
+        percent = int(count*blockSize*100/totalSize)
+        self.emit(QtCore.SIGNAL('update'), percent)
+
+    def run(self):
+        urllib.request.urlretrieve(self.url, self.filename, reporthook=self.progress)
+        self.emit(QtCore.SIGNAL('finishedDL'))
+        shutil.unpack_archive(self.filename, './blendertemp/',)
+        self.emit(QtCore.SIGNAL('finishedEX'))
+        source = next(os.walk('./blendertemp/'))[1]
+        copy_tree(os.path.join('./blendertemp/', source[0]), dir_)
+        self.emit(QtCore.SIGNAL('finishedCP'))
+        shutil.rmtree('./blendertemp')
+
+
+
+
 class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
     def __init__(self, parent=None):
         super(BlenderUpdater, self).__init__(parent)
@@ -64,7 +88,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         self.progressBar.setValue(0)                # reset progress bar
         self.progressBar.hide()                     # Hide the progress bar on startup
         self.lbl_task.hide()                        # Hide progress description on startup
-        self.statusBar().showMessage('Ready - Last check: ' + lastcheck)       # Update last checked label in status bar
+        self.statusbar.showMessage('Ready - Last check: ' + lastcheck)       # Update last checked label in status bar
         self.btn_Quit.clicked.connect(QtCore.QCoreApplication.instance().quit)  # Implement quit button
         self.btn_Check.clicked.connect(self.check)  # connect Check Now button
         self.btn_about.clicked.connect(self.about)  # connect About button
@@ -86,13 +110,29 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
          underline; color:#2980b9;">Apache 2.0 license</span></a></p></body></html>'
         QtGui.QMessageBox.about(self, 'About', aboutText)
 
+    def check_dir(self, path):
+        global dir_
+        if not os.path.exists(path):
+            QtGui.QMessageBox.about(self, 'Directory not set', 'Please choose a valid destination directory first')
+            dir_ = QtGui.QFileDialog.getExistingDirectory(None, 'Select a folder:', 'C:\\', QtGui.QFileDialog.ShowDirsOnly)
+            self.check_dir(dir_)
+        else:
+            pass
+
+    def hbytes(self, num):      # translate to human readable file size
+        for x in [' bytes',' KB',' MB',' GB']:
+            if num < 1024.0:
+                return "%3.1f%s" % (num, x)
+            num /= 1024.0
+        return "%3.1f%s" % (num, ' TB')
+
     def check(self):
         global dir_
         dir_ = self.line_path.text()
         self.frm_start.hide()
-        appleicon = QtGui.QIcon('./images/Apple-icon.png')
-        windowsicon = QtGui.QIcon('./images/Windows-icon.png')
-        linuxicon = QtGui.QIcon('./images/Linux-icon.png')
+        appleicon = QtGui.QIcon(':/newPrefix/images/Apple-icon.png')
+        windowsicon = QtGui.QIcon(':/newPrefix/images/Windows-icon.png')
+        linuxicon = QtGui.QIcon(':/newPrefix/images/Linux-icon.png')
         url = 'https://builder.blender.org/download/'
         '''Do the path settings save here, in case the user has manually edited it'''
         global config
@@ -106,7 +146,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         except Exception:
             self.statusBar().showMessage('Error - check your internet connection')
             self.frm_start.show()
-        soup = BeautifulSoup(req.read())
+        soup = BeautifulSoup(req.read(), "html.parser")
         """iterate through the found versions"""
         table = soup.find(class_='table')
         results = []
@@ -143,7 +183,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
 
         self.lbl_available.show()
         lastcheck = datetime.now().strftime('%a %b %d %H:%M:%S %Y')
-        self.statusBar().showMessage ("Ready - Last check: " + str(lastcheck))
+        self.statusbar.showMessage ("Ready - Last check: " + str(lastcheck))
         config.read('config.ini')
         config.set('main', 'lastcheck', str(lastcheck))
         with open('config.ini', 'w') as f:
@@ -152,6 +192,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
 
     def download(self, version):
         global dir_
+        global filename
         if os.path.isdir('./blendertemp'):
             shutil.rmtree('./blendertemp')
         os.makedirs('./blendertemp')
@@ -159,7 +200,6 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         file = urllib.request.urlopen(url)
         totalsize = file.info()['Content-Length']
         size_readable = self.hbytes(float(totalsize))
-        global dir_
         self.check_dir(dir_)
         global config
         config.read('config.ini')
@@ -176,58 +216,38 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         self.lbl_task.show()
         self.progressBar.setValue(0)
         self.btn_Check.setDisabled(True)
-        self.statusBar().showMessage('Downloading ' + size_readable)
+        self.statusbar.showMessage('Downloading ' + size_readable)
+        thread = DownloadThread(url,filename)
+        self.connect(thread, QtCore.SIGNAL('update'), self.updatepb)
+        self.connect(thread, QtCore.SIGNAL('finishedDL'), self.extraction)
+        self.connect(thread, QtCore.SIGNAL('finishedEX'), self.finalcopy)
+        self.connect(thread, QtCore.SIGNAL('finishedCP'), self.cleanup)
+        thread.start()
 
-        def progress (count, blockSize, totalSize):
-            percent = int(count*blockSize*100/totalSize)
-            self.progressBar.setValue(percent)
-            QtGui.QApplication.processEvents()      # Avoid locking the GUI
-            if self.progressBar.value() >= 100:
-                self.statusBar().showMessage('Ready')
-                self.lbl_task.hide()
-                self.progressBar.hide()
-            else:
-                pass
+    def updatepb(self, percent):
+        self.progressBar.setValue(percent)
 
-        def dlthread():
-            urllib.request.urlretrieve(url, filename, reporthook=progress)
-            self.emit(QtCore.SIGNAL('DONE'))
-
-        dl = QtCore.QThread(dlthread())
-        dl.start()
-        dl.connect(dl, QtCore.SIGNAL('DONE'), self.extraction(filename))
-
-    def check_dir(self, path):
-        global dir_
-        if not os.path.exists(path):
-            QtGui.QMessageBox.about(self, 'Directory not set', 'Please choose a valid destination directory first')
-            dir_ = QtGui.QFileDialog.getExistingDirectory(None, 'Select a folder:', 'C:\\', QtGui.QFileDialog.ShowDirsOnly)
-            self.check_dir(dir_)
-        else:
-            pass
-
-    def hbytes(self, num):      # translate to human readable file size
-        for x in ['bytes','KB','MB','GB']:
-            if num < 1024.0:
-                return "%3.1f%s" % (num, x)
-            num /= 1024.0
-        return "%3.1f%s" % (num, 'TB')
-
-    def extraction(self, filename):
-        self.lbl_task.hide()
-        self.progressBar.hide()
+    def extraction(self):
+        self.lbl_task.setText('Extracting...')
         self.btn_Quit.setEnabled(False)
-        self.statusBar().showMessage('Extracting, please wait... (Application may become unresponsive)')
-        shutil.unpack_archive(filename, './blendertemp/')
-        self.finalcopy()
+        self.statusbar.showMessage('Extracting, please wait...')
+        self.progressBar.setMaximum(0)
+        self.progressBar.setMinimum(0)
+        self.progressBar.setValue(-1)
 
     def finalcopy(self):
         global dir_
-        self.statusBar().showMessage('Copying files... (Application may become unresponsive)')
-        source = next(os.walk('./blendertemp/'))[1]
-        copy_tree(os.path.join('./blendertemp/', source[0]), dir_)
+        self.lbl_task.setText('Copying files...')
+        self.statusbar.showMessage('Copying files, please wait... ')
+
+    def cleanup(self):
+        self.statusbar.showMessage('Cleaning up...')
         shutil.rmtree('./blendertemp')
         self.statusBar().showMessage('Ready')
+        self.progressBar.setMinimum(0)
+        self.progressBar.setMaximum(100)
+        self.progressBar.setValue(100)
+        self.lbl_task.setText('Finished')
         self.btn_Quit.setEnabled(True)
         self.btn_Check.setEnabled(True)
 
