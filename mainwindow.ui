@@ -31,6 +31,10 @@
   <property name="windowTitle">
    <string>Overmind Studios BlenderUpdater</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="res.qrc">
+    <normaloff>:/newPrefix/images/appicon.png</normaloff>:/newPrefix/images/appicon.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="btn_Quit">
     <property name="geometry">
