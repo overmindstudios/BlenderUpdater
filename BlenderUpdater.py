@@ -45,23 +45,15 @@ class WorkerThread(QtCore.QThread):
         self.emit(QtCore.SIGNAL('update'), percent)
 
     def run(self):
-        self.abort = False
-        while not self.abort:
-            urllib.request.urlretrieve(self.url, self.filename, reporthook=self.progress)
-            self.emit(QtCore.SIGNAL('finishedDL'))
-            shutil.unpack_archive(self.filename, './blendertemp/')
-            self.emit(QtCore.SIGNAL('finishedEX'))
-            source = next(os.walk('./blendertemp/'))[1]
-            copy_tree(os.path.join('./blendertemp/', source[0]), dir_)
-            self.emit(QtCore.SIGNAL('finishedCP'))
-            shutil.rmtree('./blendertemp')
-            self.emit(QtCore.SIGNAL('finishedCL'))
-            return
-        else:
-            self.emit(QtCore.SIGNAL('aborted'))
-
-    def stop(self):
-        self.abort = True
+        urllib.request.urlretrieve(self.url, self.filename, reporthook=self.progress)
+        self.emit(QtCore.SIGNAL('finishedDL'))
+        shutil.unpack_archive(self.filename, './blendertemp/')
+        self.emit(QtCore.SIGNAL('finishedEX'))
+        source = next(os.walk('./blendertemp/'))[1]
+        copy_tree(os.path.join('./blendertemp/', source[0]), dir_)
+        self.emit(QtCore.SIGNAL('finishedCP'))
+        shutil.rmtree('./blendertemp')
+        self.emit(QtCore.SIGNAL('finishedCL'))
 
 
 class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
@@ -222,7 +214,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         self.progressBar.show()
         self.lbl_task.setText('Downloading')
         self.lbl_task.show()
-        # self.btn_cancel.show()
+        self.btn_cancel.show()
         self.progressBar.setValue(0)
         self.btn_Check.setDisabled(True)
         self.statusbar.showMessage('Downloading ' + size_readable)
@@ -233,7 +225,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         self.connect(thread, QtCore.SIGNAL('finishedEX'), self.finalcopy)
         self.connect(thread, QtCore.SIGNAL('finishedCP'), self.cleanup)
         self.connect(thread, QtCore.SIGNAL('finishedCL'), self.done)
-        # self.btn_cancel.clicked.connect(thread.stop)
+        self.btn_cancel.clicked.connect(thread.de)
         thread.start()
 
     def aborted(self):
