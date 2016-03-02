@@ -39,7 +39,7 @@
    <widget class="QPushButton" name="btn_Quit">
     <property name="geometry">
      <rect>
-      <x>560</x>
+      <x>6</x>
       <y>366</y>
       <width>131</width>
       <height>35</height>
@@ -59,7 +59,7 @@
    <widget class="QPushButton" name="btn_Check">
     <property name="geometry">
      <rect>
-      <x>6</x>
+      <x>560</x>
       <y>366</y>
       <width>131</width>
       <height>35</height>
