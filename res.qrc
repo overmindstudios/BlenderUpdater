@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="newPrefix">
+    <file>images/Check-icon.png</file>
     <file>images/appicon.png</file>
     <file>images/Cancel-icon.png</file>
     <file>images/Apple-icon.png</file>
