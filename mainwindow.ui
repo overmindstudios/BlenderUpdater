@@ -317,7 +317,7 @@
       <string/>
      </property>
     </widget>
-    <widget class="QLabel" name="lbl_download_pic_2">
+    <widget class="QLabel" name="lbl_downloading">
      <property name="geometry">
       <rect>
        <x>70</x>
@@ -330,7 +330,7 @@
       <string>Downloading</string>
      </property>
     </widget>
-    <widget class="QLabel" name="lbl_download_pic_3">
+    <widget class="QLabel" name="lbl_extraction">
      <property name="geometry">
       <rect>
        <x>70</x>
@@ -343,7 +343,7 @@
       <string>Extraction</string>
      </property>
     </widget>
-    <widget class="QLabel" name="lbl_download_pic_4">
+    <widget class="QLabel" name="lbl_copying">
      <property name="geometry">
       <rect>
        <x>70</x>
@@ -369,7 +369,7 @@
       <string/>
      </property>
     </widget>
-    <widget class="QLabel" name="lbl_download_pic_5">
+    <widget class="QLabel" name="lbl_cleanup">
      <property name="geometry">
       <rect>
        <x>70</x>
