@@ -189,7 +189,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         with open('config.ini', 'w') as f:
             config.write(f)
         f.close()
-
+        
     def download(self, version):
         global dir_
         global filename
