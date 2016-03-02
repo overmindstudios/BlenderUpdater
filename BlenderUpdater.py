@@ -214,7 +214,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         self.progressBar.show()
         self.lbl_task.setText('Downloading')
         self.lbl_task.show()
-        self.btn_cancel.show()
+        # self.btn_cancel.show()
         self.progressBar.setValue(0)
         self.btn_Check.setDisabled(True)
         self.statusbar.showMessage('Downloading ' + size_readable)
@@ -225,7 +225,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         self.connect(thread, QtCore.SIGNAL('finishedEX'), self.finalcopy)
         self.connect(thread, QtCore.SIGNAL('finishedCP'), self.cleanup)
         self.connect(thread, QtCore.SIGNAL('finishedCL'), self.done)
-        self.btn_cancel.clicked.connect(thread.de)
+        # self.btn_cancel.clicked.connect(thread.de)
         thread.start()
 
     def aborted(self):
