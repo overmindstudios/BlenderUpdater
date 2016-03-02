@@ -383,6 +383,117 @@
      </property>
     </widget>
    </widget>
+   <widget class="QGroupBox" name="btngrp_filter">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>340</y>
+      <width>307</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Filter results</string>
+    </property>
+    <widget class="QPushButton" name="btn_osx">
+     <property name="geometry">
+      <rect>
+       <x>227</x>
+       <y>30</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>OSX</string>
+     </property>
+     <property name="icon">
+      <iconset resource="res.qrc">
+       <normaloff>:/newPrefix/images/Apple-icon.png</normaloff>:/newPrefix/images/Apple-icon.png</iconset>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_windows">
+     <property name="geometry">
+      <rect>
+       <x>79</x>
+       <y>30</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>Windows</string>
+     </property>
+     <property name="icon">
+      <iconset resource="res.qrc">
+       <normaloff>:/newPrefix/images/Windows-icon.png</normaloff>:/newPrefix/images/Windows-icon.png</iconset>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>true</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_allos">
+     <property name="geometry">
+      <rect>
+       <x>5</x>
+       <y>30</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>all OS</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_linux">
+     <property name="geometry">
+      <rect>
+       <x>153</x>
+       <y>30</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Linux</string>
+     </property>
+     <property name="icon">
+      <iconset resource="res.qrc">
+       <normaloff>:/newPrefix/images/Linux-icon.png</normaloff>:/newPrefix/images/Linux-icon.png</iconset>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <zorder>btngrp_filter</zorder>
    <zorder>frm_start</zorder>
    <zorder>btn_Quit</zorder>
    <zorder>btn_Check</zorder>

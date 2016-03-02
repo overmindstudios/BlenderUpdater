@@ -85,6 +85,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         dir_ = self.line_path.text()
         self.btn_cancel.hide()
         self.frm_progress.hide()
+        self.btngrp_filter.hide()
         self.btn_Check.setFocus()                   # set focus to Check Now button
         self.lbl_available.hide()                   # hide the message at the top
         self.progressBar.setValue(0)                # reset progress bar
@@ -110,7 +111,9 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         <a href="https://builder.blender.org/download/"><span style=" text-decoration: underline; color:#2980b9;">\
         https://builder.blender.org/download/</span></a></p><p><br/>Developed by Tobias Kummer for Overmind Studios</p><p>\
         Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0"><span style=" text-decoration:\
-         underline; color:#2980b9;">Apache 2.0 license</span></a></p></body></html>'
+         underline; color:#2980b9;">Apache 2.0 license</span></a></p><p>Project home: \
+         <a href="https://github.com/tobkum/BlenderUpdater"><span style=" text-decoration:\
+         underline; color:#2980b9;">https://github.com/tobkum/BlenderUpdater</a></p></body></html>'
         QtGui.QMessageBox.about(self, 'About', aboutText)
 
     def check_dir(self):
@@ -163,26 +166,97 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         del finallist[0]            # remove first entry which is the header of the table
 
         """generate buttons"""
-        i = 0
-        for index, text in enumerate(finallist):
-            btn[index] = QtGui.QPushButton(self)
-            if "OSX" in text[1]:                         # set icon according to OS
-                btn[index].setIcon(appleicon)
-            elif "linux" in text[1]:
-                btn[index].setIcon(linuxicon)
-            elif "win" in text[1]:
-                btn[index].setIcon(windowsicon)
+        def filterall():
+            global btn
+            for i in btn:
+                btn[i].hide()
+            i = 0
+            btn = {}
+            for index, text in enumerate(finallist):
+                btn[index] = QtGui.QPushButton(self)
+                if "OSX" in text[1]:                         # set icon according to OS
+                    btn[index].setIcon(appleicon)
+                elif "linux" in text[1]:
+                    btn[index].setIcon(linuxicon)
+                elif "win" in text[1]:
+                    btn[index].setIcon(windowsicon)
 
-            version = str(text[1])
-            buttontext = str(text[0]) + " | " + str(text[1]) + " | " + str(text[3])
-            btn[index].setIconSize(QtCore.QSize(24, 24))
-            btn[index].setText(buttontext)
-            btn[index].setFixedWidth(686)
-            btn[index].move(6, 45 + i)
-            i += 30
-            btn[index].clicked.connect(lambda throwaway=0, version=version: self.download(version))
-            btn[index].show()
+                version = str(text[1])
+                buttontext = str(text[0]) + " | " + str(text[1]) + " | " + str(text[3])
+                btn[index].setIconSize(QtCore.QSize(24, 24))
+                btn[index].setText(buttontext)
+                btn[index].setFixedWidth(686)
+                btn[index].move(6, 45 + i)
+                i += 30
+                btn[index].clicked.connect(lambda throwaway=0, version=version: self.download(version))
+                btn[index].show()
+
+        def filterosx():
+            global btn
+            for i in btn:
+                btn[i].hide()
+            btn = {}
+            i = 0
+            for index, text in enumerate(finallist):
+                btn[index] = QtGui.QPushButton(self)
+                if "OSX" in text[1]:
+                    btn[index].setIcon(appleicon)
+                    version = str(text[1])
+                    buttontext = str(text[0]) + " | " + str(text[1]) + " | " + str(text[3])
+                    btn[index].setIconSize(QtCore.QSize(24, 24))
+                    btn[index].setText(buttontext)
+                    btn[index].setFixedWidth(686)
+                    btn[index].move(6, 45 + i)
+                    i += 30
+                    btn[index].clicked.connect(lambda throwaway=0, version=version: self.download(version))
+                    btn[index].show()
+
+        def filterlinux():
+            global btn
+            for i in btn:
+                btn[i].hide()
+            btn = {}
+            i = 0
+            for index, text in enumerate(finallist):
+                btn[index] = QtGui.QPushButton(self)
+                if "linux" in text[1]:
+                    btn[index].setIcon(linuxicon)
+                    version = str(text[1])
+                    buttontext = str(text[0]) + " | " + str(text[1]) + " | " + str(text[3])
+                    btn[index].setIconSize(QtCore.QSize(24, 24))
+                    btn[index].setText(buttontext)
+                    btn[index].setFixedWidth(686)
+                    btn[index].move(6, 45 + i)
+                    i += 30
+                    btn[index].clicked.connect(lambda throwaway=0, version=version: self.download(version))
+                    btn[index].show()
+
+        def filterwindows():
+            global btn
+            for i in btn:
+                btn[i].hide()
+            btn = {}
+            i = 0
+            for index, text in enumerate(finallist):
+                btn[index] = QtGui.QPushButton(self)
+                if "win" in text[1]:
+                    btn[index].setIcon(windowsicon)
+                    version = str(text[1])
+                    buttontext = str(text[0]) + " | " + str(text[1]) + " | " + str(text[3])
+                    btn[index].setIconSize(QtCore.QSize(24, 24))
+                    btn[index].setText(buttontext)
+                    btn[index].setFixedWidth(686)
+                    btn[index].move(6, 45 + i)
+                    i += 30
+                    btn[index].clicked.connect(lambda throwaway=0, version=version: self.download(version))
+                    btn[index].show()
+
         self.lbl_available.show()
+        self.btngrp_filter.show()
+        self.btn_osx.clicked.connect(filterosx)
+        self.btn_linux.clicked.connect(filterlinux)
+        self.btn_windows.clicked.connect(filterwindows)
+        self.btn_allos.clicked.connect(filterall)
         lastcheck = datetime.now().strftime('%a %b %d %H:%M:%S %Y')
         self.statusbar.showMessage ("Ready - Last check: " + str(lastcheck))
         config.read('config.ini')
@@ -190,6 +264,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         with open('config.ini', 'w') as f:
             config.write(f)
         f.close()
+        filterall()
 
     def download(self, version):
         global dir_
@@ -214,6 +289,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
             btn[i].hide()
         self.lbl_available.hide()
         self.progressBar.show()
+        self.btngrp_filter.hide()
         self.lbl_task.setText('Downloading')
         self.lbl_task.show()
         self.frm_progress.show()
