@@ -89,7 +89,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         self.lbl_task.hide()                        # Hide progress description on startup
         self.statusbar.showMessage('Ready - Last check: ' + lastcheck)       # Update last checked label in status bar
         self.btn_Quit.clicked.connect(QtCore.QCoreApplication.instance().quit)  # Implement quit button
-        self.btn_Check.clicked.connect(self.check)  # connect Check Now button
+        self.btn_Check.clicked.connect(self.check_dir)  # connect Check Now button
         self.btn_about.clicked.connect(self.about)  # connect About button
         self.btn_path.clicked.connect(self.select_path)  # connect the path button
 
@@ -110,14 +110,13 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
          underline; color:#2980b9;">Apache 2.0 license</span></a></p></body></html>'
         QtGui.QMessageBox.about(self, 'About', aboutText)
 
-    def check_dir(self, path):
+    def check_dir(self):
         global dir_
-        if not os.path.exists(path):
+        dir_ = self.line_path.text()
+        if not os.path.exists(dir_):
             QtGui.QMessageBox.about(self, 'Directory not set', 'Please choose a valid destination directory first')
-            dir_ = QtGui.QFileDialog.getExistingDirectory(None, 'Select a folder:', 'C:\\', QtGui.QFileDialog.ShowDirsOnly)
-            self.check_dir(dir_)
         else:
-            pass
+            self.check()
 
     def hbytes(self, num):      # translate to human readable file size
         for x in [' bytes',' KB',' MB',' GB']:
@@ -189,7 +188,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         with open('config.ini', 'w') as f:
             config.write(f)
         f.close()
-        
+
     def download(self, version):
         global dir_
         global filename
@@ -200,7 +199,6 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         file = urllib.request.urlopen(url)
         totalsize = file.info()['Content-Length']
         size_readable = self.hbytes(float(totalsize))
-        self.check_dir(dir_)
         global config
         config.read('config.ini')
         config.set('main', 'path', dir_)
