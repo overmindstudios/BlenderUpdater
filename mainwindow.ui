@@ -263,6 +263,126 @@
       <normaloff>:/newPrefix/images/Cancel-icon.png</normaloff>:/newPrefix/images/Cancel-icon.png</iconset>
     </property>
    </widget>
+   <widget class="QFrame" name="frm_progress">
+    <property name="geometry">
+     <rect>
+      <x>6</x>
+      <y>50</y>
+      <width>686</width>
+      <height>251</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="lbl_download_pic">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>50</y>
+       <width>24</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbl_extract_pic">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>80</y>
+       <width>24</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbl_copy_pic">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>110</y>
+       <width>24</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbl_download_pic_2">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>50</y>
+       <width>81</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Downloading</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbl_download_pic_3">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>80</y>
+       <width>81</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Extraction</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbl_download_pic_4">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>110</y>
+       <width>81</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Copying files</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbl_clean_pic">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>140</y>
+       <width>24</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbl_download_pic_5">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>140</y>
+       <width>81</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Cleaning up</string>
+     </property>
+    </widget>
+   </widget>
    <zorder>frm_start</zorder>
    <zorder>btn_Quit</zorder>
    <zorder>btn_Check</zorder>
@@ -271,6 +391,7 @@
    <zorder>lbl_available</zorder>
    <zorder>btn_about</zorder>
    <zorder>btn_cancel</zorder>
+   <zorder>frm_progress</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

@@ -31,6 +31,8 @@ from distutils.dir_util import copy_tree
 
 dir_ = ''
 config = configparser.ConfigParser()
+btn = {}
+
 
 
 class WorkerThread(QtCore.QThread):
@@ -82,6 +84,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
             pass
         dir_ = self.line_path.text()
         self.btn_cancel.hide()
+        self.frm_progress.hide()
         self.btn_Check.setFocus()                   # set focus to Check Now button
         self.lbl_available.hide()                   # hide the message at the top
         self.progressBar.setValue(0)                # reset progress bar
@@ -162,24 +165,23 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         """generate buttons"""
         i = 0
         for index, text in enumerate(finallist):
-            btn1 = QtGui.QPushButton(self)
+            btn[index] = QtGui.QPushButton(self)
             if "OSX" in text[1]:                         # set icon according to OS
-                btn1.setIcon(appleicon)
+                btn[index].setIcon(appleicon)
             elif "linux" in text[1]:
-                btn1.setIcon(linuxicon)
+                btn[index].setIcon(linuxicon)
             elif "win" in text[1]:
-                btn1.setIcon(windowsicon)
+                btn[index].setIcon(windowsicon)
 
             version = str(text[1])
             buttontext = str(text[0]) + " | " + str(text[1]) + " | " + str(text[3])
-            btn1.setIconSize(QtCore.QSize(24, 24))
-            btn1.setText(buttontext)
-            btn1.setFixedWidth(686)
-            btn1.move(6, 45 + i)
+            btn[index].setIconSize(QtCore.QSize(24, 24))
+            btn[index].setText(buttontext)
+            btn[index].setFixedWidth(686)
+            btn[index].move(6, 45 + i)
             i += 30
-            btn1.clicked.connect(lambda throwaway=0, version=version: self.download(version))
-            btn1.show()
-
+            btn[index].clicked.connect(lambda throwaway=0, version=version: self.download(version))
+            btn[index].show()
         self.lbl_available.show()
         lastcheck = datetime.now().strftime('%a %b %d %H:%M:%S %Y')
         self.statusbar.showMessage ("Ready - Last check: " + str(lastcheck))
@@ -208,10 +210,15 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         '''Do the actual download'''
         dir_ = os.path.join(dir_, '')
         filename = './blendertemp/' + version
-
+        for i in btn:
+            btn[i].hide()
+        self.lbl_available.hide()
         self.progressBar.show()
         self.lbl_task.setText('Downloading')
         self.lbl_task.show()
+        self.frm_progress.show()
+        nowpixmap = QtGui.QPixmap(':/newPrefix/images/Actions-arrow-right-icon.png')
+        self.lbl_download_pic.setPixmap(nowpixmap)
         # self.btn_cancel.show()
         self.progressBar.setValue(0)
         self.btn_Check.setDisabled(True)
@@ -239,20 +246,34 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
     def extraction(self):
         self.lbl_task.setText('Extracting...')
         self.btn_Quit.setEnabled(False)
+        nowpixmap = QtGui.QPixmap(':/newPrefix/images/Actions-arrow-right-icon.png')
+        donepixmap = QtGui.QPixmap(':/newPrefix/images/Check-icon.png')
+        self.lbl_download_pic.setPixmap(donepixmap)
+        self.lbl_extract_pic.setPixmap(nowpixmap)
         self.statusbar.showMessage('Extracting to temporary folder, please wait...')
         self.progressBar.setMaximum(0)
         self.progressBar.setMinimum(0)
         self.progressBar.setValue(-1)
 
     def finalcopy(self):
+        nowpixmap = QtGui.QPixmap(':/newPrefix/images/Actions-arrow-right-icon.png')
+        donepixmap = QtGui.QPixmap(':/newPrefix/images/Check-icon.png')
+        self.lbl_extract_pic.setPixmap(donepixmap)
+        self.lbl_copy_pic.setPixmap(nowpixmap)
         self.lbl_task.setText('Copying files...')
         self.statusbar.showMessage('Copying files to "' + dir_ + '", please wait... ')
 
     def cleanup(self):
+        nowpixmap = QtGui.QPixmap(':/newPrefix/images/Actions-arrow-right-icon.png')
+        donepixmap = QtGui.QPixmap(':/newPrefix/images/Check-icon.png')
+        self.lbl_copy_pic.setPixmap(donepixmap)
+        self.lbl_clean_pic.setPixmap(nowpixmap)
         self.lbl_task.setText('Cleaning up...')
         self.statusbar.showMessage('Cleaning temporary files')
 
     def done(self):
+        donepixmap = QtGui.QPixmap(':/newPrefix/images/Check-icon.png')
+        self.lbl_clean_pic.setPixmap(donepixmap)
         self.statusbar.showMessage('Ready')
         self.progressBar.setMinimum(0)
         self.progressBar.setMaximum(100)
