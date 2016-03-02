@@ -135,6 +135,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         global dir_
         dir_ = self.line_path.text()
         self.frm_start.hide()
+        self.frm_progress.hide()
         appleicon = QtGui.QIcon(':/newPrefix/images/Apple-icon.png')
         windowsicon = QtGui.QIcon(':/newPrefix/images/Windows-icon.png')
         linuxicon = QtGui.QIcon(':/newPrefix/images/Linux-icon.png')
@@ -186,8 +187,8 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
                 btn[index].setIconSize(QtCore.QSize(24, 24))
                 btn[index].setText(buttontext)
                 btn[index].setFixedWidth(686)
-                btn[index].move(6, 45 + i)
-                i += 30
+                btn[index].move(6, 50 + i)
+                i += 32
                 btn[index].clicked.connect(lambda throwaway=0, version=version: self.download(version))
                 btn[index].show()
 
@@ -206,8 +207,8 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
                     btn[index].setIconSize(QtCore.QSize(24, 24))
                     btn[index].setText(buttontext)
                     btn[index].setFixedWidth(686)
-                    btn[index].move(6, 45 + i)
-                    i += 30
+                    btn[index].move(6, 50 + i)
+                    i += 32
                     btn[index].clicked.connect(lambda throwaway=0, version=version: self.download(version))
                     btn[index].show()
 
@@ -226,8 +227,8 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
                     btn[index].setIconSize(QtCore.QSize(24, 24))
                     btn[index].setText(buttontext)
                     btn[index].setFixedWidth(686)
-                    btn[index].move(6, 45 + i)
-                    i += 30
+                    btn[index].move(6, 50 + i)
+                    i += 32
                     btn[index].clicked.connect(lambda throwaway=0, version=version: self.download(version))
                     btn[index].show()
 
@@ -246,8 +247,8 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
                     btn[index].setIconSize(QtCore.QSize(24, 24))
                     btn[index].setText(buttontext)
                     btn[index].setFixedWidth(686)
-                    btn[index].move(6, 45 + i)
-                    i += 30
+                    btn[index].move(6, 50 + i)
+                    i += 32
                     btn[index].clicked.connect(lambda throwaway=0, version=version: self.download(version))
                     btn[index].show()
 
