@@ -7,9 +7,12 @@ the latest buildbot version. Download and install nightly builds with one click.
 * Beautiful Soup for HTML parsing.
 
 ### Mac
-Used the well proven pyinstaller package to create a Installer Package.
+cx_freeze installation procedure:
+TODO:
 
 ## Compiled releases
-On Windows, you can grab the .zip, extract it and execute BlenderUpdater.exe.
+Freezing is done via cx_freeze.
+On Windows, you can grab the .zip, extract it and execute BlenderUpdater.exe. Frozen binary files for OSX and Linux coming soon. As of now, just run "python BlenderUpdater.py" (make sure that the dependencies are met).
 
-Frozen binary files for OSX and Linux coming soon. As of now, just run "python BlenderUpdater.py" (make sure that the dependencies are met).
+## Known limitations
+Due to UAC starting in Windows Vista, you cannot use the "C:\Program Files\" directory. Please choose some other destination on your hard drive.
