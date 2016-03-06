@@ -322,7 +322,7 @@
       <rect>
        <x>70</x>
        <y>50</y>
-       <width>81</width>
+       <width>111</width>
        <height>24</height>
       </rect>
      </property>
@@ -348,7 +348,7 @@
       <rect>
        <x>70</x>
        <y>110</y>
-       <width>81</width>
+       <width>101</width>
        <height>24</height>
       </rect>
      </property>
@@ -374,7 +374,7 @@
       <rect>
        <x>70</x>
        <y>140</y>
-       <width>81</width>
+       <width>101</width>
        <height>24</height>
       </rect>
      </property>
@@ -386,9 +386,9 @@
    <widget class="QGroupBox" name="btngrp_filter">
     <property name="geometry">
      <rect>
-      <x>200</x>
+      <x>156</x>
       <y>340</y>
-      <width>307</width>
+      <width>391</width>
       <height>61</height>
      </rect>
     </property>
@@ -398,9 +398,9 @@
     <widget class="QPushButton" name="btn_osx">
      <property name="geometry">
       <rect>
-       <x>227</x>
+       <x>285</x>
        <y>30</y>
-       <width>75</width>
+       <width>91</width>
        <height>23</height>
       </rect>
      </property>
@@ -421,9 +421,9 @@
     <widget class="QPushButton" name="btn_windows">
      <property name="geometry">
       <rect>
-       <x>79</x>
+       <x>107</x>
        <y>30</y>
-       <width>75</width>
+       <width>91</width>
        <height>23</height>
       </rect>
      </property>
@@ -450,9 +450,9 @@
     <widget class="QPushButton" name="btn_allos">
      <property name="geometry">
       <rect>
-       <x>5</x>
+       <x>17</x>
        <y>30</y>
-       <width>75</width>
+       <width>91</width>
        <height>23</height>
       </rect>
      </property>
@@ -472,9 +472,9 @@
     <widget class="QPushButton" name="btn_linux">
      <property name="geometry">
       <rect>
-       <x>153</x>
+       <x>196</x>
        <y>30</y>
-       <width>75</width>
+       <width>91</width>
        <height>23</height>
       </rect>
      </property>
