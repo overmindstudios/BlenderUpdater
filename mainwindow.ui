@@ -322,7 +322,7 @@
       <rect>
        <x>70</x>
        <y>50</y>
-       <width>111</width>
+       <width>161</width>
        <height>24</height>
       </rect>
      </property>
@@ -335,7 +335,7 @@
       <rect>
        <x>70</x>
        <y>80</y>
-       <width>81</width>
+       <width>221</width>
        <height>24</height>
       </rect>
      </property>
@@ -348,7 +348,7 @@
       <rect>
        <x>70</x>
        <y>110</y>
-       <width>101</width>
+       <width>181</width>
        <height>24</height>
       </rect>
      </property>
@@ -374,7 +374,7 @@
       <rect>
        <x>70</x>
        <y>140</y>
-       <width>101</width>
+       <width>171</width>
        <height>24</height>
       </rect>
      </property>
@@ -386,9 +386,9 @@
    <widget class="QGroupBox" name="btngrp_filter">
     <property name="geometry">
      <rect>
-      <x>156</x>
+      <x>200</x>
       <y>340</y>
-      <width>391</width>
+      <width>307</width>
       <height>61</height>
      </rect>
     </property>
@@ -398,9 +398,9 @@
     <widget class="QPushButton" name="btn_osx">
      <property name="geometry">
       <rect>
-       <x>285</x>
+       <x>227</x>
        <y>30</y>
-       <width>91</width>
+       <width>75</width>
        <height>23</height>
       </rect>
      </property>
@@ -421,9 +421,9 @@
     <widget class="QPushButton" name="btn_windows">
      <property name="geometry">
       <rect>
-       <x>107</x>
+       <x>79</x>
        <y>30</y>
-       <width>91</width>
+       <width>75</width>
        <height>23</height>
       </rect>
      </property>
@@ -450,9 +450,9 @@
     <widget class="QPushButton" name="btn_allos">
      <property name="geometry">
       <rect>
-       <x>17</x>
+       <x>5</x>
        <y>30</y>
-       <width>91</width>
+       <width>75</width>
        <height>23</height>
       </rect>
      </property>
@@ -472,9 +472,9 @@
     <widget class="QPushButton" name="btn_linux">
      <property name="geometry">
       <rect>
-       <x>196</x>
+       <x>153</x>
        <y>30</y>
-       <width>91</width>
+       <width>75</width>
        <height>23</height>
       </rect>
      </property>
