@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'mainwindow.ui'
+# Form implementation generated from reading ui file 'E:\PyDev\BlenderUpdater\mainwindow.ui'
 #
 # Created by: PyQt4 UI code generator 4.11.4
 #
@@ -127,20 +127,20 @@ class Ui_MainWindow(object):
         self.lbl_copy_pic.setText(_fromUtf8(""))
         self.lbl_copy_pic.setObjectName(_fromUtf8("lbl_copy_pic"))
         self.lbl_downloading = QtGui.QLabel(self.frm_progress)
-        self.lbl_downloading.setGeometry(QtCore.QRect(70, 50, 81, 24))
+        self.lbl_downloading.setGeometry(QtCore.QRect(70, 50, 161, 24))
         self.lbl_downloading.setObjectName(_fromUtf8("lbl_downloading"))
         self.lbl_extraction = QtGui.QLabel(self.frm_progress)
-        self.lbl_extraction.setGeometry(QtCore.QRect(70, 80, 81, 24))
+        self.lbl_extraction.setGeometry(QtCore.QRect(70, 80, 221, 24))
         self.lbl_extraction.setObjectName(_fromUtf8("lbl_extraction"))
         self.lbl_copying = QtGui.QLabel(self.frm_progress)
-        self.lbl_copying.setGeometry(QtCore.QRect(70, 110, 81, 24))
+        self.lbl_copying.setGeometry(QtCore.QRect(70, 110, 181, 24))
         self.lbl_copying.setObjectName(_fromUtf8("lbl_copying"))
         self.lbl_clean_pic = QtGui.QLabel(self.frm_progress)
         self.lbl_clean_pic.setGeometry(QtCore.QRect(40, 140, 24, 24))
         self.lbl_clean_pic.setText(_fromUtf8(""))
         self.lbl_clean_pic.setObjectName(_fromUtf8("lbl_clean_pic"))
         self.lbl_cleanup = QtGui.QLabel(self.frm_progress)
-        self.lbl_cleanup.setGeometry(QtCore.QRect(70, 140, 81, 24))
+        self.lbl_cleanup.setGeometry(QtCore.QRect(70, 140, 171, 24))
         self.lbl_cleanup.setObjectName(_fromUtf8("lbl_cleanup"))
         self.btngrp_filter = QtGui.QGroupBox(self.centralwidget)
         self.btngrp_filter.setGeometry(QtCore.QRect(200, 340, 307, 61))
