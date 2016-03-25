@@ -3,7 +3,7 @@ A small crossplatform (Linux, Windows, OSX) Python3 GUI application to check htt
 the latest buildbot version. Download and install nightly builds with one click.
 
 ## Dependencies
-Built with PyQt4 for the and Beautiful Soup for HTML parsing.
+Built with PyQt4 for the UI and Beautiful Soup for HTML parsing.
 
 ## Compiled releases
 ### Windows
