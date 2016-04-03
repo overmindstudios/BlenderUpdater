@@ -27,8 +27,13 @@ import mainwindow
 import configparser
 import shutil
 from distutils.dir_util import copy_tree
+from esky import *
+from esky.util import appexe_from_executable
 
 
+
+
+appversion = '0.4'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
@@ -97,6 +102,16 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         self.btn_about.clicked.connect(self.about)  # connect About button
         self.btn_path.clicked.connect(self.select_path)  # connect the path button
 
+        ''' Auto-update function'''
+        if hasattr(sys, "frozen"):
+            exe = esky.Esky(sys.executable, "http://www.overmind-studios.de/blenderupdater")
+            if exe.find_update():
+                reply = QtGui.QMessageBox.question(self, 'Update', "New version of BlenderUpdater available. Do you want to update?",
+                                                  QtGui.QMessageBox.Yes | QtGui.QMessageBox.No, QtGui.QMessageBox.No)
+                if reply == QtGui.QMessageBox.Yes:
+                        exe.auto_update()
+        else:
+            pass
 
     def select_path(self):
         global dir_
@@ -113,7 +128,8 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0"><span style=" text-decoration:\
          underline; color:#2980b9;">Apache 2.0 license</span></a></p><p>Project home: \
          <a href="https://github.com/tobkum/BlenderUpdater"><span style=" text-decoration:\
-         underline; color:#2980b9;">https://github.com/tobkum/BlenderUpdater</a></p></body></html>'
+         underline; color:#2980b9;">https://github.com/tobkum/BlenderUpdater</a></p> \
+         Application version: ' + appversion + '</body></html>'
         QtGui.QMessageBox.about(self, 'About', aboutText)
 
     def check_dir(self):
