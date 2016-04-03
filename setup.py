@@ -1,5 +1,3 @@
-import sys
-from esky import bdist_esky
 from distutils.core import setup
 from esky.bdist_esky import Executable
 
