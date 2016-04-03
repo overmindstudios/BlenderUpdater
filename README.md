@@ -7,7 +7,7 @@ Built with PyQt4 for the UI and Beautiful Soup for HTML parsing.
 
 ## Compiled releases
 ### Windows
-You can grab the release .zip, extract it and execute BlenderUpdater.exe. Freezing is done via cx_freeze. ("cxfreeze --base-name Win32Gui Blenderupdater.py")
+You can grab the release .zip, extract it and execute BlenderUpdater.exe. Freezing is done via esky/cx_freeze. ("python setup.py bdist_esky")
 
 
 ### Linux and OSX
