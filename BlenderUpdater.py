@@ -17,7 +17,6 @@ limitations under the License.
 
 from PyQt4 import QtGui, QtCore
 import qdarkstyle
-import sys
 import os.path
 from bs4 import BeautifulSoup
 import urllib.request
@@ -28,12 +27,10 @@ import configparser
 import shutil
 from distutils.dir_util import copy_tree
 from esky import *
-from esky.util import appexe_from_executable
+import sys
 
 
-
-
-appversion = '0.4'
+appversion = '0.5'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
@@ -101,9 +98,15 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         self.btn_Check.clicked.connect(self.check_dir)  # connect Check Now button
         self.btn_about.clicked.connect(self.about)  # connect About button
         self.btn_path.clicked.connect(self.select_path)  # connect the path button
+        ''' Check internet connection '''
+        try:
+            testConnection = urllib.request.urlopen("http://www.google.com")
+        except Exception:
+            QtGui.QMessageBox.critical(self, "Error", "Please check your internet connection")
+            sys.exit()
 
         ''' Auto-update function'''
-        if hasattr(sys, "frozen"):
+        if hasattr(sys, "frozen"):      # Only check for updates in frozen application
             exe = esky.Esky(sys.executable, "http://www.overmind-studios.de/blenderupdater")
             if exe.find_update():
                 reply = QtGui.QMessageBox.question(self, 'Update', "New version of BlenderUpdater available. Do you want to update?",
