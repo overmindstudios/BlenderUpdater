@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'E:\PyDev\BlenderUpdater\mainwindow.ui'
+# Form implementation generated from reading ui file 'mainwindow.ui'
 #
 # Created by: PyQt4 UI code generator 4.11.4
 #
@@ -177,6 +177,20 @@ class Ui_MainWindow(object):
         self.btn_linux.setCheckable(True)
         self.btn_linux.setAutoExclusive(True)
         self.btn_linux.setObjectName(_fromUtf8("btn_linux"))
+        self.btn_osx.raise_()
+        self.btn_windows.raise_()
+        self.btn_allos.raise_()
+        self.btn_linux.raise_()
+        self.btn_oneclick = QtGui.QPushButton(self.centralwidget)
+        self.btn_oneclick.setGeometry(QtCore.QRect(260, 366, 191, 35))
+        icon9 = QtGui.QIcon()
+        icon9.addPixmap(QtGui.QPixmap(_fromUtf8(":/newPrefix/images/Actions-quickopen-icon.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btn_oneclick.setIcon(icon9)
+        self.btn_oneclick.setObjectName(_fromUtf8("btn_oneclick"))
+        self.lbl_quick = QtGui.QLabel(self.centralwidget)
+        self.lbl_quick.setGeometry(QtCore.QRect(290, 345, 131, 20))
+        self.lbl_quick.setAlignment(QtCore.Qt.AlignCenter)
+        self.lbl_quick.setObjectName(_fromUtf8("lbl_quick"))
         self.btngrp_filter.raise_()
         self.frm_start.raise_()
         self.btn_Quit.raise_()
@@ -187,6 +201,8 @@ class Ui_MainWindow(object):
         self.btn_about.raise_()
         self.btn_cancel.raise_()
         self.frm_progress.raise_()
+        self.btn_oneclick.raise_()
+        self.lbl_quick.raise_()
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setObjectName(_fromUtf8("statusbar"))
@@ -214,5 +230,8 @@ class Ui_MainWindow(object):
         self.btn_windows.setText(_translate("MainWindow", "Windows", None))
         self.btn_allos.setText(_translate("MainWindow", "all OS", None))
         self.btn_linux.setText(_translate("MainWindow", "Linux", None))
+        self.btn_oneclick.setToolTip(_translate("MainWindow", "Use last used settings to update blender. Uses the path in the above text field and specified version on the button.", None))
+        self.btn_oneclick.setText(_translate("MainWindow", "PushButton", None))
+        self.lbl_quick.setText(_translate("MainWindow", "Quick Update", None))
 
 import res_rc

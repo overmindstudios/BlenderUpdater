@@ -492,6 +492,47 @@
       <bool>true</bool>
      </property>
     </widget>
+    <zorder>btn_osx</zorder>
+    <zorder>btn_windows</zorder>
+    <zorder>btn_allos</zorder>
+    <zorder>btn_linux</zorder>
+    <zorder>lbl_quick</zorder>
+   </widget>
+   <widget class="QPushButton" name="btn_oneclick">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>366</y>
+      <width>191</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Use last used settings to update blender. Uses the path in the above text field and specified version on the button.</string>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+    <property name="icon">
+     <iconset resource="res.qrc">
+      <normaloff>:/newPrefix/images/Actions-quickopen-icon.png</normaloff>:/newPrefix/images/Actions-quickopen-icon.png</iconset>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl_quick">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>345</y>
+      <width>131</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Quick Update</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
    </widget>
    <zorder>btngrp_filter</zorder>
    <zorder>frm_start</zorder>
@@ -503,6 +544,8 @@
    <zorder>btn_about</zorder>
    <zorder>btn_cancel</zorder>
    <zorder>frm_progress</zorder>
+   <zorder>btn_oneclick</zorder>
+   <zorder>lbl_quick</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

@@ -4,7 +4,7 @@ from esky.bdist_esky import Executable
 
 setup(
     name = 'BlenderUpdater',
-    version = '0.5',
+    version = '0.6',
     options = {"bdist_esky": {
                 "freezer_module":"cxfreeze"
 	      }},

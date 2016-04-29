@@ -30,10 +30,13 @@ from esky import *
 import sys
 
 
-appversion = '0.5'
+appversion = '0.6'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
+quicky = False
+lastversion = ''
+
 
 
 
@@ -43,6 +46,41 @@ class WorkerThread(QtCore.QThread):
         super(WorkerThread, self).__init__()
         self.filename = file
         self.url = url
+        if "OSX" in file:
+            config.set('main', 'lastdl', 'OSX')
+            with open('config.ini', 'w') as f:
+                config.write(f)
+                f.close()
+        elif "win32" in file:
+            config.set('main', 'lastdl', 'Windows 32bit')
+            with open('config.ini', 'w') as f:
+                config.write(f)
+                f.close()
+        elif "win64" in file:
+            config.set('main', 'lastdl', 'Windows 64bit')
+            with open('config.ini', 'w') as f:
+                config.write(f)
+                f.close()
+        elif "glibc211-i686" in file:
+            config.set('main', 'lastdl', 'Linux glibc211 i686')
+            with open('config.ini', 'w') as f:
+                config.write(f)
+                f.close()
+        elif "glibc211-x86_64" in file:
+            config.set('main', 'lastdl', 'Linux glibc211 x86_64')
+            with open('config.ini', 'w') as f:
+                config.write(f)
+                f.close()
+        elif "glibc219-i686" in file:
+            config.set('main', 'lastdl', 'Linux glibc219 i686')
+            with open('config.ini', 'w') as f:
+                config.write(f)
+                f.close()
+        elif "glibc219-x86_64" in file:
+            config.set('main', 'lastdl', 'Linux glibc219 x86_64')
+            with open('config.ini', 'w') as f:
+                config.write(f)
+                f.close()
 
     def progress(self, count, blockSize, totalSize):
         percent = int(count*blockSize*100/totalSize)
@@ -64,6 +102,9 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
     def __init__(self, parent=None):
         super(BlenderUpdater, self).__init__(parent)
         self.setupUi(self)
+        self.btn_oneclick.hide()
+        self.lbl_quick.hide()
+        global lastversion
         global dir_
         global config
         if os.path.isfile('./config.ini'):
@@ -71,7 +112,17 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
             config.read('config.ini')
             dir_ = config.get('main', 'path')
             lastcheck = config.get('main', 'lastcheck')
+            lastversion = config.get('main', 'lastdl')
+            if lastversion is not '':
+                self.btn_oneclick.setText(lastversion)
+                self.btn_oneclick.clicked.connect(self.quickupdate)
+                self.btn_oneclick.show()
+                self.lbl_quick.show()
+            else:
+                pass
+
         else:
+            self.btn_oneclick.hide()
             config_exist = False
             config.read('config.ini')
             config.add_section('main')
@@ -152,9 +203,13 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
 
     def check(self):
         global dir_
+        global quicky
+        global lastversion
         dir_ = self.line_path.text()
         self.frm_start.hide()
         self.frm_progress.hide()
+        self.btn_oneclick.hide()
+        self.lbl_quick.hide()
         appleicon = QtGui.QIcon(':/newPrefix/images/Apple-icon.png')
         windowsicon = QtGui.QIcon(':/newPrefix/images/Windows-icon.png')
         linuxicon = QtGui.QIcon(':/newPrefix/images/Linux-icon.png')
@@ -184,6 +239,28 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
             finallist.append(sub)
         finallist = list(filter(None, finallist))
         del finallist[0]            # remove first entry which is the header of the table
+        if quicky:
+            self.btn_Check.setDisabled(True)
+            print('Quicky')
+            if lastversion == 'Windows 32bit':
+                quickversion = 'win32'
+            if lastversion == 'Windows 64bit':
+                quickversion = 'win64'
+            if lastversion == 'OSX':
+                quickversion = 'OSX'
+            if lastversion == 'Linux glibc211 i686':
+                quickversion = 'linux-glibc211-i686'
+            if lastversion == 'Linux glibc219 i686':
+                quickversion = 'linux-glibc219-i686'
+            if lastversion == 'Linux glibc211 x86_64':
+                quickversion = 'linux-glibc211-x86_64'
+            if lastversion == 'Linux glibc219 x86_64':
+                quickversion = 'linux-glibc219_x86_64'
+            for index, text in enumerate(finallist):
+                if quickversion in text[1]:
+                    version = str(text[1])
+                    self.download(version)
+                    return
 
         """generate buttons"""
         def filterall():
@@ -321,21 +398,17 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         self.btn_Check.setDisabled(True)
         self.statusbar.showMessage('Downloading ' + size_readable)
         thread = WorkerThread(url, filename)
-        self.connect(thread, QtCore.SIGNAL('aborted'), self.aborted)
         self.connect(thread, QtCore.SIGNAL('update'), self.updatepb)
         self.connect(thread, QtCore.SIGNAL('finishedDL'), self.extraction)
         self.connect(thread, QtCore.SIGNAL('finishedEX'), self.finalcopy)
         self.connect(thread, QtCore.SIGNAL('finishedCP'), self.cleanup)
         self.connect(thread, QtCore.SIGNAL('finishedCL'), self.done)
-        # self.btn_cancel.clicked.connect(thread.de)
         thread.start()
 
-    def aborted(self):
-        self.statusbar.showMessage('Aborted')
-        self.lbl_task.hide()
-        self.progressBar.hide()
-        self.btn_cancel.hide()
-        self.btn_Check.setEnabled(True)
+    def quickupdate(self):
+        global quicky
+        quicky = True
+        self.check()
 
     def updatepb(self, percent):
         self.progressBar.setValue(percent)
