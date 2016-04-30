@@ -9,4 +9,4 @@ setup(
                {"includes" : ['PyQt4'],
                "freezer_module":"cxfreeze"
 	      }},
-    scripts = [Executable('BlenderUpdater.py', gui_only=True)],)
+    scripts = [Executable('BlenderUpdater.py', gui_only=True, icon="icon.ico")],)

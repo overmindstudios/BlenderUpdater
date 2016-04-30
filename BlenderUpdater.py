@@ -99,7 +99,7 @@ class WorkerThread(QtCore.QThread):
         self.emit(QtCore.SIGNAL('finishedCL'))
 
 
-class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):  
+class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
     def __init__(self, parent=None):
         super(BlenderUpdater, self).__init__(parent)
         self.setupUi(self)
