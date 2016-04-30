@@ -133,6 +133,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
             lastcheck = 'Never'
             config.set('main', 'lastcheck', 'Never')
             config.set('main', 'lastdl', '')
+            config.set('main', 'installed', '')
             with open('config.ini', 'w') as f:
                 config.write(f)
         if config_exist:
