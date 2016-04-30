@@ -30,12 +30,13 @@ from esky import *
 import sys
 
 
-appversion = '0.6'
+appversion = '0.7'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
 quicky = False
 lastversion = ''
+installedversion = ''
 
 
 
@@ -98,7 +99,7 @@ class WorkerThread(QtCore.QThread):
         self.emit(QtCore.SIGNAL('finishedCL'))
 
 
-class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
+class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):  
     def __init__(self, parent=None):
         super(BlenderUpdater, self).__init__(parent)
         self.setupUi(self)
@@ -107,12 +108,14 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         global lastversion
         global dir_
         global config
+        global installedversion
         if os.path.isfile('./config.ini'):
             config_exist = True
             config.read('config.ini')
             dir_ = config.get('main', 'path')
             lastcheck = config.get('main', 'lastcheck')
             lastversion = config.get('main', 'lastdl')
+            installedversion = config.get('main', 'installed')
             if lastversion is not '':
                 self.btn_oneclick.setText(lastversion)
                 self.btn_oneclick.clicked.connect(self.quickupdate)
@@ -206,6 +209,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         global dir_
         global quicky
         global lastversion
+        global installedversion
         dir_ = self.line_path.text()
         self.frm_start.hide()
         self.frm_progress.hide()
@@ -240,9 +244,9 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
             finallist.append(sub)
         finallist = list(filter(None, finallist))
         del finallist[0]            # remove first entry which is the header of the table
+
         if quicky:
             self.btn_Check.setDisabled(True)
-            print('Quicky')
             if lastversion == 'Windows 32bit':
                 quickversion = 'win32'
             if lastversion == 'Windows 64bit':
@@ -260,8 +264,20 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
             for index, text in enumerate(finallist):
                 if quickversion in text[1]:
                     version = str(text[1])
-                    self.download(version)
-                    return
+                    if version == installedversion:
+                        reply = QtGui.QMessageBox.question(self, 'Warning',
+                                                           "This version is already installed. Do you still want to continue?",
+                                                           QtGui.QMessageBox.Yes | QtGui.QMessageBox.No,
+                                                           QtGui.QMessageBox.No)
+                        if reply == QtGui.QMessageBox.Yes:
+                            self.download(version)
+                        else:
+                            pass
+                    else:
+                        self.download(version)
+                        return
+
+
 
         """generate buttons"""
         def filterall():
@@ -367,6 +383,18 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
     def download(self, version):
         global dir_
         global filename
+        if version == installedversion:
+            reply = QtGui.QMessageBox.question(self, 'Warning',
+                                               "This version is already installed. Do you still want to continue?",
+                                               QtGui.QMessageBox.Yes | QtGui.QMessageBox.No,
+                                               QtGui.QMessageBox.No)
+            if reply == QtGui.QMessageBox.No:
+                return
+            else:
+                pass
+        else:
+            pass
+
         if os.path.isdir('./blendertemp'):
             shutil.rmtree('./blendertemp')
         os.makedirs('./blendertemp')
@@ -377,6 +405,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         global config
         config.read('config.ini')
         config.set('main', 'path', dir_)
+        config.set('main', 'installed', version)
         with open('config.ini', 'w') as f:
             config.write(f)
         f.close()

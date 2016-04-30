@@ -4,7 +4,7 @@ from esky.bdist_esky import Executable
 
 setup(
     name = 'BlenderUpdater',
-    version = '0.6',
+    version = '0.7',
     options = {"bdist_esky":
                {"includes" : ['PyQt4'],
                "freezer_module":"cxfreeze"
