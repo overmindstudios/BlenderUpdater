@@ -28,6 +28,7 @@ import shutil
 from distutils.dir_util import copy_tree
 from esky import *
 import sys
+import platform
 
 
 appversion = '0.7'
@@ -299,17 +300,24 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         def filterall():
             global btn
             global flavor
+            opsys = platform.system()
             for i in btn:
                 btn[i].hide()
             i = 0
             btn = {}
             for index, text in enumerate(finallist):
                 btn[index] = QtGui.QPushButton(self)
-                if "OSX" in text[1]:                         # set icon according to OS
+                if "OSX" in text[1]:             # set icon according to OS
+                    if opsys == "Darwin":
+                        btn[index].setStyleSheet('background: rgb(22, 52, 73)')
                     btn[index].setIcon(appleicon)
                 elif "linux" in text[1]:
+                    if opsys == "Linux":
+                        btn[index].setStyleSheet('background: rgb(22, 52, 73)')
                     btn[index].setIcon(linuxicon)
                 elif "win" in text[1]:
+                    if opsys == "Windows":
+                        btn[index].setStyleSheet('background: rgb(22, 52, 73)')
                     btn[index].setIcon(windowsicon)
 
                 version = str(text[1])
