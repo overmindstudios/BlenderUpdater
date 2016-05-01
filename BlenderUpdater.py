@@ -259,7 +259,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
                 variation = flavor
             if lastversion == 'Windows 64bit':
                 quickversion = 'win64'
-            variation = flavor
+                variation = flavor
             if lastversion == 'OSX':
                 quickversion = 'OSX'
                 variation = flavor
