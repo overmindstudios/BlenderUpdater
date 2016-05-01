@@ -1,7 +1,6 @@
 from distutils.core import setup
 from esky.bdist_esky import Executable
 
-
 setup(
     name = 'BlenderUpdater',
     version = '0.7',
