@@ -137,9 +137,10 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
             config.add_section('main')
             config.set('main', 'path', '')
             lastcheck = 'Never'
-            config.set('main', 'lastcheck', 'Never')
+            config.set('main', 'lastcheck', lastcheck)
             config.set('main', 'lastdl', '')
             config.set('main', 'installed', '')
+            config.set('main', 'flavor', '')
             with open('config.ini', 'w') as f:
                 config.write(f)
         if config_exist:
