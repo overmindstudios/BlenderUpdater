@@ -117,14 +117,23 @@
    <widget class="QLabel" name="lbl_available">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>19</y>
-      <width>210</width>
-      <height>19</height>
+      <x>6</x>
+      <y>3</y>
+      <width>645</width>
+      <height>20</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
     </property>
     <property name="text">
      <string>Available versions from buildbot:</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QPushButton" name="btn_about">
@@ -492,11 +501,6 @@
       <bool>true</bool>
      </property>
     </widget>
-    <zorder>btn_osx</zorder>
-    <zorder>btn_windows</zorder>
-    <zorder>btn_allos</zorder>
-    <zorder>btn_linux</zorder>
-    <zorder>lbl_quick</zorder>
    </widget>
    <widget class="QPushButton" name="btn_oneclick">
     <property name="geometry">
@@ -534,6 +538,31 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
+   <widget class="QLabel" name="lbl_caution">
+    <property name="geometry">
+     <rect>
+      <x>6</x>
+      <y>25</y>
+      <width>645</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
+    <property name="text">
+     <string> These builds are not as stable as releases, use at your own risk.</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
    <zorder>btngrp_filter</zorder>
    <zorder>frm_start</zorder>
    <zorder>btn_Quit</zorder>
@@ -546,6 +575,7 @@
    <zorder>frm_progress</zorder>
    <zorder>btn_oneclick</zorder>
    <zorder>lbl_quick</zorder>
+   <zorder>lbl_caution</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

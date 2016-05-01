@@ -106,6 +106,8 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         self.setupUi(self)
         self.btn_oneclick.hide()
         self.lbl_quick.hide()
+        self.lbl_caution.hide()
+        self.lbl_caution.setStyleSheet('background: rgb(255, 155, 8);\n' 'color: white')
         global lastversion
         global dir_
         global config
@@ -385,6 +387,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
                     btn[index].show()
 
         self.lbl_available.show()
+        self.lbl_caution.show()
         self.btngrp_filter.show()
         self.btn_osx.clicked.connect(filterosx)
         self.btn_linux.clicked.connect(filterlinux)
@@ -435,6 +438,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         for i in btn:
             btn[i].hide()
         self.lbl_available.hide()
+        self.lbl_caution.hide()
         self.progressBar.show()
         self.btngrp_filter.hide()
         self.lbl_task.setText('Downloading')
