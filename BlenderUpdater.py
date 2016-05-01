@@ -37,6 +37,7 @@ btn = {}
 quicky = False
 lastversion = ''
 installedversion = ''
+flavor = ''
 
 
 
@@ -109,6 +110,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         global dir_
         global config
         global installedversion
+        global flavor
         if os.path.isfile('./config.ini'):
             config_exist = True
             config.read('config.ini')
@@ -116,8 +118,9 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
             lastcheck = config.get('main', 'lastcheck')
             lastversion = config.get('main', 'lastdl')
             installedversion = config.get('main', 'installed')
+            flavor = config.get('main', 'flavor')
             if lastversion is not '':
-                self.btn_oneclick.setText(lastversion)
+                self.btn_oneclick.setText(flavor + ' | ' + lastversion)
                 self.btn_oneclick.clicked.connect(self.quickupdate)
                 self.btn_oneclick.show()
                 self.lbl_quick.show()
@@ -169,6 +172,10 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
                                                   QtGui.QMessageBox.Yes | QtGui.QMessageBox.No, QtGui.QMessageBox.No)
                 if reply == QtGui.QMessageBox.Yes:
                         exe.auto_update()
+                        if config_exist:
+                            os.remove('./config.ini')
+                        else:
+                            pass
         else:
             pass
 
@@ -245,37 +252,43 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
             finallist.append(sub)
         finallist = list(filter(None, finallist))
         del finallist[0]            # remove first entry which is the header of the table
-
         if quicky:
             self.btn_Check.setDisabled(True)
             if lastversion == 'Windows 32bit':
                 quickversion = 'win32'
+                variation = flavor
             if lastversion == 'Windows 64bit':
                 quickversion = 'win64'
+            variation = flavor
             if lastversion == 'OSX':
                 quickversion = 'OSX'
+                variation = flavor
             if lastversion == 'Linux glibc211 i686':
                 quickversion = 'linux-glibc211-i686'
+                variation = flavor
             if lastversion == 'Linux glibc219 i686':
                 quickversion = 'linux-glibc219-i686'
+                variation = flavor
             if lastversion == 'Linux glibc211 x86_64':
                 quickversion = 'linux-glibc211-x86_64'
+                variation = flavor
             if lastversion == 'Linux glibc219 x86_64':
                 quickversion = 'linux-glibc219_x86_64'
+                variation = flavor
             for index, text in enumerate(finallist):
-                if quickversion in text[1]:
+                if quickversion in text[1] and variation in text[0]:
                     version = str(text[1])
-                    if version == installedversion:
+                    if version == installedversion and variation in text[0]:
                         reply = QtGui.QMessageBox.question(self, 'Warning',
                                                            "This version is already installed. Do you still want to continue?",
                                                            QtGui.QMessageBox.Yes | QtGui.QMessageBox.No,
                                                            QtGui.QMessageBox.No)
                         if reply == QtGui.QMessageBox.Yes:
-                            self.download(version)
+                            self.download(version, variation)
                         else:
                             pass
                     else:
-                        self.download(version)
+                        self.download(version, variation)
                         return
 
 
@@ -283,6 +296,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         """generate buttons"""
         def filterall():
             global btn
+            global flavor
             for i in btn:
                 btn[i].hide()
             i = 0
@@ -297,13 +311,14 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
                     btn[index].setIcon(windowsicon)
 
                 version = str(text[1])
+                variation = str(text[0])
                 buttontext = str(text[0]) + " | " + str(text[1]) + " | " + str(text[3])
                 btn[index].setIconSize(QtCore.QSize(24, 24))
                 btn[index].setText(buttontext)
                 btn[index].setFixedWidth(686)
                 btn[index].move(6, 50 + i)
                 i += 32
-                btn[index].clicked.connect(lambda throwaway=0, version=version: self.download(version))
+                btn[index].clicked.connect(lambda throwaway=0, version=version: self.download(version, variation))
                 btn[index].show()
 
         def filterosx():
@@ -317,13 +332,14 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
                 if "OSX" in text[1]:
                     btn[index].setIcon(appleicon)
                     version = str(text[1])
+                    variation = str(text[0])
                     buttontext = str(text[0]) + " | " + str(text[1]) + " | " + str(text[3])
                     btn[index].setIconSize(QtCore.QSize(24, 24))
                     btn[index].setText(buttontext)
                     btn[index].setFixedWidth(686)
                     btn[index].move(6, 50 + i)
                     i += 32
-                    btn[index].clicked.connect(lambda throwaway=0, version=version: self.download(version))
+                    btn[index].clicked.connect(lambda throwaway=0, version=version: self.download(version, variation))
                     btn[index].show()
 
         def filterlinux():
@@ -337,13 +353,14 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
                 if "linux" in text[1]:
                     btn[index].setIcon(linuxicon)
                     version = str(text[1])
+                    variation = str(text[0])
                     buttontext = str(text[0]) + " | " + str(text[1]) + " | " + str(text[3])
                     btn[index].setIconSize(QtCore.QSize(24, 24))
                     btn[index].setText(buttontext)
                     btn[index].setFixedWidth(686)
                     btn[index].move(6, 50 + i)
                     i += 32
-                    btn[index].clicked.connect(lambda throwaway=0, version=version: self.download(version))
+                    btn[index].clicked.connect(lambda throwaway=0, version=version: self.download(version, variation))
                     btn[index].show()
 
         def filterwindows():
@@ -357,13 +374,14 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
                 if "win" in text[1]:
                     btn[index].setIcon(windowsicon)
                     version = str(text[1])
+                    variation = str(text[0])
                     buttontext = str(text[0]) + " | " + str(text[1]) + " | " + str(text[3])
                     btn[index].setIconSize(QtCore.QSize(24, 24))
                     btn[index].setText(buttontext)
                     btn[index].setFixedWidth(686)
                     btn[index].move(6, 50 + i)
                     i += 32
-                    btn[index].clicked.connect(lambda throwaway=0, version=version: self.download(version))
+                    btn[index].clicked.connect(lambda throwaway=0, version=version: self.download(version, variation))
                     btn[index].show()
 
         self.lbl_available.show()
@@ -381,7 +399,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         f.close()
         filterall()
 
-    def download(self, version):
+    def download(self, version, variation):
         global dir_
         global filename
         if version == installedversion:
@@ -406,6 +424,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         global config
         config.read('config.ini')
         config.set('main', 'path', dir_)
+        config.set('main', 'flavor', variation)
         config.set('main', 'installed', version)
         with open('config.ini', 'w') as f:
             config.write(f)
