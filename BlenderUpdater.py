@@ -90,6 +90,7 @@ class WorkerThread(QtCore.QThread):
         self.emit(QtCore.SIGNAL('update'), percent)
 
     def run(self):
+        global quicky
         urllib.request.urlretrieve(self.url, self.filename, reporthook=self.progress)
         self.emit(QtCore.SIGNAL('finishedDL'))
         shutil.unpack_archive(self.filename, './blendertemp/')
@@ -98,6 +99,7 @@ class WorkerThread(QtCore.QThread):
         copy_tree(os.path.join('./blendertemp/', source[0]), dir_)
         self.emit(QtCore.SIGNAL('finishedCP'))
         shutil.rmtree('./blendertemp')
+        quicky = False
         self.emit(QtCore.SIGNAL('finishedCL'))
 
 
