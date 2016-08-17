@@ -31,7 +31,7 @@ import sys
 import platform
 
 
-appversion = '0.8'
+appversion = '0.9'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
