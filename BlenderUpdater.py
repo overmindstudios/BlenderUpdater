@@ -31,7 +31,7 @@ import sys
 import platform
 
 
-appversion = '0.9'
+appversion = '1.0'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
@@ -249,7 +249,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         """iterate through the found versions"""
         table = soup.find(class_='table')
         results = []
-        for col in table.find_all('tr', text=None, recursive=True)[0:]:
+        for col in table.find_all('tr', recursive=False)[0:]:
             results.append([data.string for data in col])
         results = [[item.strip().strip("\xa0") if item is not None else None for item in sublist] for sublist in results]
         finallist = []

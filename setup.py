@@ -3,7 +3,7 @@ from esky.bdist_esky import Executable
 
 setup(
     name='BlenderUpdater',
-    version='0.9',
+    version='1.0',
     author='Tobias Kummer for Overmind Studios',
     options={"bdist_esky":
                {"includes" : ['PyQt4'],
