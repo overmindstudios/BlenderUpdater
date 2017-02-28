@@ -7,9 +7,7 @@ Built with PyQt5 for the UI and Beautiful Soup for HTML parsing.
 
 ## Compiled releases
 ### Windows
-You can grab the release .zip, extract it and execute BlenderUpdater.exe. Freezing is done via pyinstaller (`pyinstaller -F --noconsole BlenderUpdater.py`)
-
-
+You can grab the release .zip, extract it and execute BlenderUpdater.exe. Freezing is done via pyinstaller (`pyinstaller --icon=icon.ico --onefile --windowed BlenderUpdater.py`)
 
 ### Linux & OSX
 Frozen binary files for Linux and OSX coming soon. As of now, just run "python BlenderUpdater.py" (make sure that the dependencies are met).
