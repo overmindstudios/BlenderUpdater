@@ -26,7 +26,6 @@ import mainwindow
 import configparser
 import shutil
 from distutils.dir_util import copy_tree
-from esky import *
 import sys
 import platform
 
@@ -172,20 +171,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             QtWidgets.QMessageBox.critical(self, "Error", "Please check your internet connection")
             sys.exit()
 
-        ''' Auto-update function'''
-        if hasattr(sys, "frozen"):      # Only check for updates in frozen application
-            exe = esky.Esky(sys.executable, "http://www.overmind-studios.de/blenderupdater")
-            if exe.find_update():
-                reply = QtWidgets.QMessageBox.question(self, 'Update', "New version of BlenderUpdater available. Do you want to update?",
-                                                       QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
-                if reply == QtWidgets.QMessageBox.Yes:
-                        exe.auto_update()
-                        if config_exist:
-                            os.remove('./config.ini')
-                        else:
-                            pass
-        else:
-            pass
 
     def select_path(self):
         global dir_
