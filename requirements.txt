@@ -1,0 +1,4 @@
+esky
+qdarkstyle
+bs4
+PyQt5

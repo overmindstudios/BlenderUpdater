@@ -15,7 +15,7 @@ limitations under the License.
 '''
 
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 import qdarkstyle
 import os.path
 from bs4 import BeautifulSoup
@@ -30,8 +30,8 @@ from esky import *
 import sys
 import platform
 
-
-appversion = '1.0'
+app = QtWidgets.QApplication(sys.argv)
+appversion = '1.1'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
@@ -41,12 +41,14 @@ installedversion = ''
 flavor = ''
 
 
-
-
 class WorkerThread(QtCore.QThread):
-
+    update = QtCore.pyqtSignal(int)
+    finishedDL = QtCore.pyqtSignal()
+    finishedEX = QtCore.pyqtSignal()
+    finishedCP = QtCore.pyqtSignal()
+    finishedCL = QtCore.pyqtSignal()
     def __init__(self, url, file):
-        super(WorkerThread, self).__init__()
+        super(WorkerThread, self).__init__(parent=app)
         self.filename = file
         self.url = url
         if "OSX" in file:
@@ -87,23 +89,23 @@ class WorkerThread(QtCore.QThread):
 
     def progress(self, count, blockSize, totalSize):
         percent = int(count*blockSize*100/totalSize)
-        self.emit(QtCore.SIGNAL('update'), percent)
+        self.update.emit(percent)
 
     def run(self):
         global quicky
         urllib.request.urlretrieve(self.url, self.filename, reporthook=self.progress)
-        self.emit(QtCore.SIGNAL('finishedDL'))
+        self.finishedDL.emit()
         shutil.unpack_archive(self.filename, './blendertemp/')
-        self.emit(QtCore.SIGNAL('finishedEX'))
+        self.finishedEX.emit()
         source = next(os.walk('./blendertemp/'))[1]
         copy_tree(os.path.join('./blendertemp/', source[0]), dir_)
-        self.emit(QtCore.SIGNAL('finishedCP'))
+        self.finishedCP.emit()
         shutil.rmtree('./blendertemp')
         quicky = False
-        self.emit(QtCore.SIGNAL('finishedCL'))
+        self.finishedCL.emit()
 
 
-class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
+class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
     def __init__(self, parent=None):
         super(BlenderUpdater, self).__init__(parent)
         self.setupUi(self)
@@ -167,16 +169,16 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         try:
             testConnection = urllib.request.urlopen("http://www.google.com")
         except Exception:
-            QtGui.QMessageBox.critical(self, "Error", "Please check your internet connection")
+            QtWidgets.QMessageBox.critical(self, "Error", "Please check your internet connection")
             sys.exit()
 
         ''' Auto-update function'''
         if hasattr(sys, "frozen"):      # Only check for updates in frozen application
             exe = esky.Esky(sys.executable, "http://www.overmind-studios.de/blenderupdater")
             if exe.find_update():
-                reply = QtGui.QMessageBox.question(self, 'Update', "New version of BlenderUpdater available. Do you want to update?",
-                                                  QtGui.QMessageBox.Yes | QtGui.QMessageBox.No, QtGui.QMessageBox.No)
-                if reply == QtGui.QMessageBox.Yes:
+                reply = QtWidgets.QMessageBox.question(self, 'Update', "New version of BlenderUpdater available. Do you want to update?",
+                                                       QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
+                if reply == QtWidgets.QMessageBox.Yes:
                         exe.auto_update()
                         if config_exist:
                             os.remove('./config.ini')
@@ -187,7 +189,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
 
     def select_path(self):
         global dir_
-        dir_ = QtGui.QFileDialog.getExistingDirectory(None, 'Select a folder:', 'C:\\', QtGui.QFileDialog.ShowDirsOnly)
+        dir_ = QtWidgets.QFileDialog.getExistingDirectory(None, 'Select a folder:', 'C:\\', QtWidgets.QFileDialog.ShowDirsOnly)
         if dir_:
             self.line_path.setText(dir_)
         else:
@@ -202,13 +204,13 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
          <a href="https://github.com/tobkum/BlenderUpdater"><span style=" text-decoration:\
          underline; color:#2980b9;">https://github.com/tobkum/BlenderUpdater</a></p> \
          Application version: ' + appversion + '</body></html>'
-        QtGui.QMessageBox.about(self, 'About', aboutText)
+        QtWidgets.QMessageBox.about(self, 'About', aboutText)
 
     def check_dir(self):
         global dir_
         dir_ = self.line_path.text()
         if not os.path.exists(dir_):
-            QtGui.QMessageBox.about(self, 'Directory not set', 'Please choose a valid destination directory first')
+            QtWidgets.QMessageBox.about(self, 'Directory not set', 'Please choose a valid destination directory first')
         else:
             self.check()
 
@@ -285,11 +287,11 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
                 if quickversion in text[1] and variation in text[0]:
                     version = str(text[1])
                     if version == installedversion and variation in text[0]:
-                        reply = QtGui.QMessageBox.question(self, 'Warning',
+                        reply = QtWidgets.QMessageBox.question(self, 'Warning',
                                                            "This version is already installed. Do you still want to continue?",
-                                                           QtGui.QMessageBox.Yes | QtGui.QMessageBox.No,
-                                                           QtGui.QMessageBox.No)
-                        if reply == QtGui.QMessageBox.Yes:
+                                                               QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                                                               QtWidgets.QMessageBox.No)
+                        if reply == QtWidgets.QMessageBox.Yes:
                             self.download(version, variation)
                         else:
                             pass
@@ -309,7 +311,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
             i = 0
             btn = {}
             for index, text in enumerate(finallist):
-                btn[index] = QtGui.QPushButton(self)
+                btn[index] = QtWidgets.QPushButton(self)
                 if "OSX" in text[1]:             # set icon according to OS
                     if opsys == "Darwin":
                         btn[index].setStyleSheet('background: rgb(22, 52, 73)')
@@ -341,7 +343,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
             btn = {}
             i = 0
             for index, text in enumerate(finallist):
-                btn[index] = QtGui.QPushButton(self)
+                btn[index] = QtWidgets.QPushButton(self)
                 if "OSX" in text[1]:
                     btn[index].setIcon(appleicon)
                     version = str(text[1])
@@ -362,7 +364,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
             btn = {}
             i = 0
             for index, text in enumerate(finallist):
-                btn[index] = QtGui.QPushButton(self)
+                btn[index] = QtWidgets.QPushButton(self)
                 if "linux" in text[1]:
                     btn[index].setIcon(linuxicon)
                     version = str(text[1])
@@ -383,7 +385,7 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
             btn = {}
             i = 0
             for index, text in enumerate(finallist):
-                btn[index] = QtGui.QPushButton(self)
+                btn[index] = QtWidgets.QPushButton(self)
                 if "win" in text[1]:
                     btn[index].setIcon(windowsicon)
                     version = str(text[1])
@@ -417,11 +419,11 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         global dir_
         global filename
         if version == installedversion:
-            reply = QtGui.QMessageBox.question(self, 'Warning',
+            reply = QtWidgets.QMessageBox.question(self, 'Warning',
                                                "This version is already installed. Do you still want to continue?",
-                                               QtGui.QMessageBox.Yes | QtGui.QMessageBox.No,
-                                               QtGui.QMessageBox.No)
-            if reply == QtGui.QMessageBox.No:
+                                                   QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                                                   QtWidgets.QMessageBox.No)
+            if reply == QtWidgets.QMessageBox.No:
                 return
             else:
                 pass
@@ -458,16 +460,15 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
         nowpixmap = QtGui.QPixmap(':/newPrefix/images/Actions-arrow-right-icon.png')
         self.lbl_download_pic.setPixmap(nowpixmap)
         self.lbl_downloading.setText('<b>Downloading</b>')
-        # self.btn_cancel.show()
         self.progressBar.setValue(0)
         self.btn_Check.setDisabled(True)
         self.statusbar.showMessage('Downloading ' + size_readable)
         thread = WorkerThread(url, filename)
-        self.connect(thread, QtCore.SIGNAL('update'), self.updatepb)
-        self.connect(thread, QtCore.SIGNAL('finishedDL'), self.extraction)
-        self.connect(thread, QtCore.SIGNAL('finishedEX'), self.finalcopy)
-        self.connect(thread, QtCore.SIGNAL('finishedCP'), self.cleanup)
-        self.connect(thread, QtCore.SIGNAL('finishedCL'), self.done)
+        thread.update.connect(self.updatepb)
+        thread.finishedDL.connect(self.extraction)
+        thread.finishedEX.connect(self.finalcopy)
+        thread.finishedCP.connect(self.cleanup)
+        thread.finishedCL.connect(self.done)
         thread.start()
 
     def quickupdate(self):
@@ -526,10 +527,9 @@ class BlenderUpdater(QtGui.QMainWindow, mainwindow.Ui_MainWindow):
 
 
 def main():
-    app = QtGui.QApplication(sys.argv)
-    form = BlenderUpdater()
-    app.setStyleSheet(qdarkstyle.load_stylesheet(pyside=False))
-    form.show()
+    window = BlenderUpdater()
+    app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+    window.show()
     app.exec_()
 
 if __name__ == '__main__':
