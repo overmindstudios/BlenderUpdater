@@ -405,7 +405,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         global filename
         if version == installedversion:
             reply = QtWidgets.QMessageBox.question(self, 'Warning',
-                                               "This version is already installed. Do you still want to continue?",
+                                                   "This version is already installed. Do you still want to continue?",
                                                    QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
                                                    QtWidgets.QMessageBox.No)
             if reply == QtWidgets.QMessageBox.No:
