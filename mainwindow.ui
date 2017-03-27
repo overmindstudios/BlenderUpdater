@@ -35,6 +35,9 @@
    <iconset resource="res.qrc">
     <normaloff>:/newPrefix/images/appicon.png</normaloff>:/newPrefix/images/appicon.png</iconset>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="btn_Quit">
     <property name="geometry">
@@ -47,6 +50,9 @@
     </property>
     <property name="focusPolicy">
      <enum>Qt::StrongFocus</enum>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>Quit</string>
@@ -64,6 +70,9 @@
       <width>131</width>
       <height>35</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>Version Check</string>
@@ -91,6 +100,9 @@
       <height>30</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
     <property name="value">
      <number>24</number>
     </property>
@@ -109,6 +121,9 @@
       <width>121</width>
       <height>20</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>TextLabel</string>
@@ -281,6 +296,9 @@
       <height>251</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
     <property name="frameShape">
      <enum>QFrame::StyledPanel</enum>
     </property>
@@ -334,6 +352,9 @@
        <width>161</width>
        <height>24</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
      </property>
      <property name="text">
       <string>Downloading</string>
@@ -413,6 +434,9 @@
        <height>23</height>
       </rect>
      </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
      <property name="text">
       <string>OSX</string>
      </property>
@@ -465,6 +489,9 @@
        <height>23</height>
       </rect>
      </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
      <property name="text">
       <string>all OS</string>
      </property>
@@ -513,6 +540,9 @@
     </property>
     <property name="toolTip">
      <string>Use last used settings to update blender. Uses the path in the above text field and specified version on the button.</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>PushButton</string>

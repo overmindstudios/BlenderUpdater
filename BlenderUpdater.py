@@ -181,14 +181,17 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             pass
 
     def about(self):
+        instagramicon = QtGui.QIcon(':/newprefix/images/instagram.png')
         aboutText = '<html><head/><body><p>Utility to update Blender to the latest buildbot version available at \
         <a href="https://builder.blender.org/download/"><span style=" text-decoration: underline; color:#2980b9;">\
-        https://builder.blender.org/download/</span></a></p><p><br/>Developed by Tobias Kummer for Overmind Studios</p><p>\
+        https://builder.blender.org/download/</span></a></p><p><br/>Developed by Tobias Kummer for \
+        <a href="http://www.overmind-studios.de"><span style="text-decoration:underline; color:#2980b9;"> \
+        Overmind Studios</span></a></p><p>\
         Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0"><span style=" text-decoration:\
          underline; color:#2980b9;">Apache 2.0 license</span></a></p><p>Project home: \
          <a href="https://github.com/tobkum/BlenderUpdater"><span style=" text-decoration:\
          underline; color:#2980b9;">https://github.com/tobkum/BlenderUpdater</a></p> \
-         Application version: ' + appversion + '</body></html>'
+         Application version: ' + appversion + '</body></html> '
         QtWidgets.QMessageBox.about(self, 'About', aboutText)
 
     def check_dir(self):
@@ -392,7 +395,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.btn_windows.clicked.connect(filterwindows)
         self.btn_allos.clicked.connect(filterall)
         lastcheck = datetime.now().strftime('%a %b %d %H:%M:%S %Y')
-        self.statusbar.showMessage ("Ready - Last check: " + str(lastcheck))
+        self.statusbar.showMessage("Ready - Last check: " + str(lastcheck))
         config.read('config.ini')
         config.set('main', 'lastcheck', str(lastcheck))
         with open('config.ini', 'w') as f:

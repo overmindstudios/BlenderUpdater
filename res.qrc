@@ -1,16 +1,16 @@
 <RCC>
-  <qresource prefix="newPrefix">
-    <file>images/Actions-arrow-right-icon.png</file>
-    <file>images/Actions-quickopen-icon.png</file>
-    <file>images/Check-icon.png</file>
-    <file>images/appicon.png</file>
-    <file>images/Cancel-icon.png</file>
-    <file>images/Apple-icon.png</file>
-    <file>images/Linux-icon.png</file>
-    <file>images/Windows-icon.png</file>
-    <file>images/Information-icon.png</file>
-    <file>images/Open-folder-icon.png</file>
-    <file>images/Refresh-icon.png</file>
-    <file>images/Application-exit-icon.png</file>
-  </qresource>
+    <qresource prefix="/newPrefix">
+        <file>images/Actions-arrow-right-icon.png</file>
+        <file>images/Actions-quickopen-icon.png</file>
+        <file>images/Check-icon.png</file>
+        <file>images/appicon.png</file>
+        <file>images/Cancel-icon.png</file>
+        <file>images/Apple-icon.png</file>
+        <file>images/Linux-icon.png</file>
+        <file>images/Windows-icon.png</file>
+        <file>images/Information-icon.png</file>
+        <file>images/Open-folder-icon.png</file>
+        <file>images/Refresh-icon.png</file>
+        <file>images/Application-exit-icon.png</file>
+    </qresource>
 </RCC>
