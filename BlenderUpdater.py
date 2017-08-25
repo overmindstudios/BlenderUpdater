@@ -1,5 +1,4 @@
-'''
-Copyright 2016 Tobias Kummer/Overmind Studios
+"""Copyright 2016 Tobias Kummer/Overmind Studios.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -12,7 +11,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-'''
+"""
 
 
 from PyQt5 import QtWidgets, QtCore, QtGui
@@ -46,6 +45,7 @@ class WorkerThread(QtCore.QThread):
     finishedEX = QtCore.pyqtSignal()
     finishedCP = QtCore.pyqtSignal()
     finishedCL = QtCore.pyqtSignal()
+
     def __init__(self, url, file):
         super(WorkerThread, self).__init__(parent=app)
         self.filename = file
@@ -92,7 +92,8 @@ class WorkerThread(QtCore.QThread):
 
     def run(self):
         global quicky
-        urllib.request.urlretrieve(self.url, self.filename, reporthook=self.progress)
+        urllib.request.urlretrieve(self.url, self.filename,
+                                   reporthook=self.progress)
         self.finishedDL.emit()
         shutil.unpack_archive(self.filename, './blendertemp/')
         self.finishedEX.emit()
@@ -111,7 +112,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.btn_oneclick.hide()
         self.lbl_quick.hide()
         self.lbl_caution.hide()
-        self.lbl_caution.setStyleSheet('background: rgb(255, 155, 8);\n' 'color: white')
+        self.lbl_caution.setStyleSheet('background: rgb(255, 155, 8);\n'
+                                       'color: white')
         global lastversion
         global dir_
         global config
@@ -168,20 +170,21 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         try:
             testConnection = urllib.request.urlopen("http://www.google.com")
         except Exception:
-            QtWidgets.QMessageBox.critical(self, "Error", "Please check your internet connection")
+            QtWidgets.QMessageBox.critical(
+                self, "Error", "Please check your internet connection")
             sys.exit()
-
 
     def select_path(self):
         global dir_
-        dir_ = QtWidgets.QFileDialog.getExistingDirectory(None, 'Select a folder:', 'C:\\', QtWidgets.QFileDialog.ShowDirsOnly)
+        dir_ = QtWidgets.QFileDialog.getExistingDirectory(
+            None, 'Select a folder:',
+            'C:\\', QtWidgets.QFileDialog.ShowDirsOnly)
         if dir_:
             self.line_path.setText(dir_)
         else:
             pass
 
     def about(self):
-        instagramicon = QtGui.QIcon(':/newprefix/images/instagram.png')
         aboutText = '<html><head/><body><p>Utility to update Blender to the latest buildbot version available at \
         <a href="https://builder.blender.org/download/"><span style=" text-decoration: underline; color:#2980b9;">\
         https://builder.blender.org/download/</span></a></p><p><br/>Developed by Tobias Kummer for \
@@ -198,12 +201,14 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         global dir_
         dir_ = self.line_path.text()
         if not os.path.exists(dir_):
-            QtWidgets.QMessageBox.about(self, 'Directory not set', 'Please choose a valid destination directory first')
+            QtWidgets.QMessageBox.about(
+                self, 'Directory not set',
+                'Please choose a valid destination directory first')
         else:
             self.check()
 
     def hbytes(self, num):      # translate to human readable file size
-        for x in [' bytes',' KB',' MB',' GB']:
+        for x in [' bytes', ' KB', ' MB', ' GB']:
             if num < 1024.0:
                 return "%3.1f%s" % (num, x)
             num /= 1024.0
@@ -223,7 +228,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         windowsicon = QtGui.QIcon(':/newPrefix/images/Windows-icon.png')
         linuxicon = QtGui.QIcon(':/newPrefix/images/Linux-icon.png')
         url = 'https://builder.blender.org/download/'
-        '''Do the path settings save here, in case the user has manually edited it'''
+        '''Do path settings save here, in case user has manually edited it'''
         global config
         config.read('config.ini')
         config.set('main', 'path', dir_)
@@ -233,7 +238,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         try:
             req = urllib.request.urlopen(url)
         except Exception:
-            self.statusBar().showMessage('Error - check your internet connection')
+            self.statusBar().showMessage(
+                'Error - check your internet connection')
             self.frm_start.show()
         soup = BeautifulSoup(req.read(), "html.parser")
         """iterate through the found versions"""
@@ -275,10 +281,11 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 if quickversion in text[1] and variation in text[0]:
                     version = str(text[1])
                     if version == installedversion and variation in text[0]:
-                        reply = QtWidgets.QMessageBox.question(self, 'Warning',
-                                                           "This version is already installed. Do you still want to continue?",
-                                                               QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
-                                                               QtWidgets.QMessageBox.No)
+                        reply = QtWidgets.QMessageBox.question(
+                            self, 'Warning',
+                            "This version is already installed. Do you still want to continue?",
+                            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                            QtWidgets.QMessageBox.No)
                         if reply == QtWidgets.QMessageBox.Yes:
                             self.download(version, variation)
                         else:
@@ -286,8 +293,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                     else:
                         self.download(version, variation)
                         return
-
-
 
         """generate buttons"""
         def filterall():
@@ -315,13 +320,16 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
                 version = str(text[1])
                 variation = str(text[0])
-                buttontext = str(text[0]) + " | " + str(text[1]) + " | " + str(text[3])
+                buttontext = str(
+                    text[0]) + " | " + str(text[1]) + " | " + str(text[3])
                 btn[index].setIconSize(QtCore.QSize(24, 24))
                 btn[index].setText(buttontext)
                 btn[index].setFixedWidth(686)
                 btn[index].move(6, 50 + i)
                 i += 32
-                btn[index].clicked.connect(lambda throwaway=0, version=version: self.download(version, variation))
+                btn[index].clicked.connect(
+                    lambda throwaway=0,
+                    version=version: self.download(version, variation))
                 btn[index].show()
 
         def filterosx():
@@ -336,13 +344,16 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                     btn[index].setIcon(appleicon)
                     version = str(text[1])
                     variation = str(text[0])
-                    buttontext = str(text[0]) + " | " + str(text[1]) + " | " + str(text[3])
+                    buttontext = str(
+                        text[0]) + " | " + str(text[1]) + " | " + str(text[3])
                     btn[index].setIconSize(QtCore.QSize(24, 24))
                     btn[index].setText(buttontext)
                     btn[index].setFixedWidth(686)
                     btn[index].move(6, 50 + i)
                     i += 32
-                    btn[index].clicked.connect(lambda throwaway=0, version=version: self.download(version, variation))
+                    btn[index].clicked.connect(
+                        lambda throwaway=0,
+                        version=version: self.download(version, variation))
                     btn[index].show()
 
         def filterlinux():
@@ -357,13 +368,16 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                     btn[index].setIcon(linuxicon)
                     version = str(text[1])
                     variation = str(text[0])
-                    buttontext = str(text[0]) + " | " + str(text[1]) + " | " + str(text[3])
+                    buttontext = str(
+                        text[0]) + " | " + str(text[1]) + " | " + str(text[3])
                     btn[index].setIconSize(QtCore.QSize(24, 24))
                     btn[index].setText(buttontext)
                     btn[index].setFixedWidth(686)
                     btn[index].move(6, 50 + i)
                     i += 32
-                    btn[index].clicked.connect(lambda throwaway=0, version=version: self.download(version, variation))
+                    btn[index].clicked.connect(
+                        lambda throwaway=0,
+                        version=version: self.download(version, variation))
                     btn[index].show()
 
         def filterwindows():
@@ -378,13 +392,16 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                     btn[index].setIcon(windowsicon)
                     version = str(text[1])
                     variation = str(text[0])
-                    buttontext = str(text[0]) + " | " + str(text[1]) + " | " + str(text[3])
+                    buttontext = str(
+                        text[0]) + " | " + str(text[1]) + " | " + str(text[3])
                     btn[index].setIconSize(QtCore.QSize(24, 24))
                     btn[index].setText(buttontext)
                     btn[index].setFixedWidth(686)
                     btn[index].move(6, 50 + i)
                     i += 32
-                    btn[index].clicked.connect(lambda throwaway=0, version=version: self.download(version, variation))
+                    btn[index].clicked.connect(
+                        lambda throwaway=0,
+                        version=version: self.download(version, variation))
                     btn[index].show()
 
         self.lbl_available.show()
@@ -407,10 +424,11 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         global dir_
         global filename
         if version == installedversion:
-            reply = QtWidgets.QMessageBox.question(self, 'Warning',
-                                                   "This version is already installed. Do you still want to continue?",
-                                                   QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
-                                                   QtWidgets.QMessageBox.No)
+            reply = QtWidgets.QMessageBox.question(
+                self, 'Warning',
+                "This version is already installed. Do you still want to continue?",
+                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                QtWidgets.QMessageBox.No)
             if reply == QtWidgets.QMessageBox.No:
                 return
             else:
@@ -519,6 +537,7 @@ def main():
     app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
     window.show()
     app.exec_()
+
 
 if __name__ == '__main__':
     main()
