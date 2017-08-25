@@ -463,7 +463,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.lbl_task.setText('Downloading')
         self.lbl_task.show()
         self.frm_progress.show()
-        nowpixmap = QtGui.QPixmap(':/newPrefix/images/Actions-arrow-right-icon.png')
+        nowpixmap = QtGui.QPixmap(
+            ':/newPrefix/images/Actions-arrow-right-icon.png')
         self.lbl_download_pic.setPixmap(nowpixmap)
         self.lbl_downloading.setText('<b>Downloading</b>')
         self.progressBar.setValue(0)
@@ -488,29 +489,34 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
     def extraction(self):
         self.lbl_task.setText('Extracting...')
         self.btn_Quit.setEnabled(False)
-        nowpixmap = QtGui.QPixmap(':/newPrefix/images/Actions-arrow-right-icon.png')
+        nowpixmap = QtGui.QPixmap(
+            ':/newPrefix/images/Actions-arrow-right-icon.png')
         donepixmap = QtGui.QPixmap(':/newPrefix/images/Check-icon.png')
         self.lbl_downloading.setText('Downloading')
         self.lbl_download_pic.setPixmap(donepixmap)
         self.lbl_extract_pic.setPixmap(nowpixmap)
         self.lbl_extraction.setText('<b>Extraction</b>')
-        self.statusbar.showMessage('Extracting to temporary folder, please wait...')
+        self.statusbar.showMessage(
+            'Extracting to temporary folder, please wait...')
         self.progressBar.setMaximum(0)
         self.progressBar.setMinimum(0)
         self.progressBar.setValue(-1)
 
     def finalcopy(self):
-        nowpixmap = QtGui.QPixmap(':/newPrefix/images/Actions-arrow-right-icon.png')
+        nowpixmap = QtGui.QPixmap(
+            ':/newPrefix/images/Actions-arrow-right-icon.png')
         donepixmap = QtGui.QPixmap(':/newPrefix/images/Check-icon.png')
         self.lbl_extract_pic.setPixmap(donepixmap)
         self.lbl_copy_pic.setPixmap(nowpixmap)
         self.lbl_extraction.setText('Extraction')
         self.lbl_copying.setText('<b>Copying</b>')
         self.lbl_task.setText('Copying files...')
-        self.statusbar.showMessage('Copying files to "' + dir_ + '", please wait... ')
+        self.statusbar.showMessage(
+            'Copying files to "' + dir_ + '", please wait... ')
 
     def cleanup(self):
-        nowpixmap = QtGui.QPixmap(':/newPrefix/images/Actions-arrow-right-icon.png')
+        nowpixmap = QtGui.QPixmap(
+            ':/newPrefix/images/Actions-arrow-right-icon.png')
         donepixmap = QtGui.QPixmap(':/newPrefix/images/Check-icon.png')
         self.lbl_copy_pic.setPixmap(donepixmap)
         self.lbl_clean_pic.setPixmap(nowpixmap)
