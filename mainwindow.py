@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.8.1
+# Created by: PyQt5 UI code generator 5.9
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -197,6 +197,15 @@ class Ui_MainWindow(object):
         self.lbl_caution.setAutoFillBackground(True)
         self.lbl_caution.setAlignment(QtCore.Qt.AlignCenter)
         self.lbl_caution.setObjectName("lbl_caution")
+        self.btn_newVersion = QtWidgets.QPushButton(self.centralwidget)
+        self.btn_newVersion.setGeometry(QtCore.QRect(500, 10, 151, 35))
+        icon10 = QtGui.QIcon()
+        icon10.addPixmap(QtGui.QPixmap(":/newPrefix/images/software-update-icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btn_newVersion.setIcon(icon10)
+        self.btn_newVersion.setIconSize(QtCore.QSize(24, 24))
+        self.btn_newVersion.setCheckable(False)
+        self.btn_newVersion.setChecked(False)
+        self.btn_newVersion.setObjectName("btn_newVersion")
         self.btngrp_filter.raise_()
         self.frm_start.raise_()
         self.btn_Quit.raise_()
@@ -210,6 +219,7 @@ class Ui_MainWindow(object):
         self.btn_oneclick.raise_()
         self.lbl_quick.raise_()
         self.lbl_caution.raise_()
+        self.btn_newVersion.raise_()
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -242,5 +252,7 @@ class Ui_MainWindow(object):
         self.btn_oneclick.setText(_translate("MainWindow", "PushButton"))
         self.lbl_quick.setText(_translate("MainWindow", "Quick Update"))
         self.lbl_caution.setText(_translate("MainWindow", " These builds are not as stable as releases, use at your own risk."))
+        self.btn_newVersion.setToolTip(_translate("MainWindow", "New version available"))
+        self.btn_newVersion.setText(_translate("MainWindow", "New version available"))
 
 import res_rc

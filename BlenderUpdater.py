@@ -27,9 +27,12 @@ import shutil
 from distutils.dir_util import copy_tree
 import sys
 import platform
+from distutils.version import StrictVersion
+import json
+
 
 app = QtWidgets.QApplication(sys.argv)
-appversion = '1.1'
+appversion = '1.0'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
@@ -112,6 +115,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.btn_oneclick.hide()
         self.lbl_quick.hide()
         self.lbl_caution.hide()
+        self.btn_newVersion.hide()
         self.lbl_caution.setStyleSheet('background: rgb(255, 155, 8);\n'
                                        'color: white')
         global lastversion
@@ -119,6 +123,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         global config
         global installedversion
         global flavor
+        global appversion
         if os.path.isfile('./config.ini'):
             config_exist = True
             config.read('config.ini')
@@ -173,6 +178,17 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             QtWidgets.QMessageBox.critical(
                 self, "Error", "Please check your internet connection")
             sys.exit()
+        # Check for new version on github
+        Appupdate = urllib.request.urlopen('https://api.github.com/repos/tobkum/BlenderUpdater/releases/latest')
+        UpdateData = json.load(Appupdate)
+        applatestversion = UpdateData['tag_name']
+        print(UpdateData['tag_name'])
+        if StrictVersion(applatestversion) > StrictVersion(appversion):
+            self.btn_newVersion.show()
+        print(applatestversion)
+
+
+
 
     def select_path(self):
         global dir_
@@ -243,7 +259,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             self.frm_start.show()
         soup = BeautifulSoup(req.read(), "html.parser")
         """iterate through the found versions"""
-        table = soup.find(class_='table')
+        table = soup.find("table")
+        print(len(table))
         results = []
         for col in table.find_all('tr', recursive=False)[0:]:
             results.append([data.string for data in col])

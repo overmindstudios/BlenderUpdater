@@ -593,6 +593,38 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
+   <widget class="QPushButton" name="btn_newVersion">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>10</y>
+      <width>151</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>New version available</string>
+    </property>
+    <property name="text">
+     <string>New version available</string>
+    </property>
+    <property name="icon">
+     <iconset resource="res.qrc">
+      <normaloff>:/newPrefix/images/software-update-icon.png</normaloff>:/newPrefix/images/software-update-icon.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>24</width>
+      <height>24</height>
+     </size>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+    <property name="checked">
+     <bool>false</bool>
+    </property>
+   </widget>
    <zorder>btngrp_filter</zorder>
    <zorder>frm_start</zorder>
    <zorder>btn_Quit</zorder>
@@ -606,6 +638,7 @@
    <zorder>btn_oneclick</zorder>
    <zorder>lbl_quick</zorder>
    <zorder>lbl_caution</zorder>
+   <zorder>btn_newVersion</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
