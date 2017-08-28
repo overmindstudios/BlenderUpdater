@@ -29,10 +29,11 @@ import sys
 import platform
 from distutils.version import StrictVersion
 import json
+import webbrowser
 
 
 app = QtWidgets.QApplication(sys.argv)
-appversion = '1.0'
+appversion = '1.2'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
@@ -179,16 +180,17 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 self, "Error", "Please check your internet connection")
             sys.exit()
         # Check for new version on github
-        Appupdate = urllib.request.urlopen('https://api.github.com/repos/tobkum/BlenderUpdater/releases/latest')
+        try:
+            Appupdate = urllib.request.urlopen('https://api.github.com/repos/tobkum/BlenderUpdater/releases/latest')
+        except Exception:
+            QtWidgets.QMessageBox.critical(
+                self, "Error", "Unable to get update information")
         UpdateData = json.load(Appupdate)
         applatestversion = UpdateData['tag_name']
         print(UpdateData['tag_name'])
         if StrictVersion(applatestversion) > StrictVersion(appversion):
+            self.btn_newVersion.clicked.connect(self.getAppUpdate)
             self.btn_newVersion.show()
-        print(applatestversion)
-
-
-
 
     def select_path(self):
         global dir_
@@ -199,6 +201,10 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             self.line_path.setText(dir_)
         else:
             pass
+
+    def getAppUpdate(self):
+        webbrowser.open("https://github.com/tobkum/BlenderUpdater/releases/latest")
+
 
     def about(self):
         aboutText = '<html><head/><body><p>Utility to update Blender to the latest buildbot version available at \
