@@ -30,6 +30,7 @@ import platform
 from distutils.version import StrictVersion
 import json
 import webbrowser
+import logging
 
 
 app = QtWidgets.QApplication(sys.argv)
@@ -41,6 +42,8 @@ quicky = False
 lastversion = ''
 installedversion = ''
 flavor = ''
+
+logging.basicConfig(filename='BlenderUpdater.log', format='%(asctime)s:%message)s')
 
 
 class WorkerThread(QtCore.QThread):
@@ -178,6 +181,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         except Exception:
             QtWidgets.QMessageBox.critical(
                 self, "Error", "Please check your internet connection")
+            logging.error('No connection')
             sys.exit()
         # Check for new version on github
         try:
@@ -185,6 +189,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         except Exception:
             QtWidgets.QMessageBox.critical(
                 self, "Error", "Unable to get update information")
+            logging.error('Unable to get update information')
         UpdateData = json.load(Appupdate)
         applatestversion = UpdateData['tag_name']
         print(UpdateData['tag_name'])
