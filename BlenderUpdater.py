@@ -34,7 +34,7 @@ import logging
 
 
 app = QtWidgets.QApplication(sys.argv)
-appversion = '1.2'
+appversion = '1.3.1'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
@@ -189,7 +189,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         except Exception:
             QtWidgets.QMessageBox.critical(
                 self, "Error", "Unable to get update information")
-            logging.error('Unable to get update information')
+            logging.error('Unable to get update information from GitHub')
         UpdateData = json.load(Appupdate)
         applatestversion = UpdateData['tag_name']
         print(UpdateData['tag_name'])
@@ -225,6 +225,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         QtWidgets.QMessageBox.about(self, 'About', aboutText)
 
     def check_dir(self):
+        """Check if a vaild directory has been set by the user."""
         global dir_
         dir_ = self.line_path.text()
         if not os.path.exists(dir_):
@@ -234,7 +235,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         else:
             self.check()
 
-    def hbytes(self, num):      # translate to human readable file size
+    def hbytes(self, num):
+        """Translate to human readable file size."""
         for x in [' bytes', ' KB', ' MB', ' GB']:
             if num < 1024.0:
                 return "%3.1f%s" % (num, x)
@@ -323,8 +325,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                         self.download(version, variation)
                         return
 
-        """generate buttons"""
         def filterall():
+            """Generate buttons for downloadable versions."""
             global btn
             global flavor
             opsys = platform.system()
@@ -450,6 +452,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         filterall()
 
     def download(self, version, variation):
+        """Download routines."""
         global dir_
         global filename
         if version == installedversion:
