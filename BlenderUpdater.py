@@ -251,6 +251,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.frm_progress.hide()
         self.btn_oneclick.hide()
         self.lbl_quick.hide()
+        self.btn_newVersion.hide()
         appleicon = QtGui.QIcon(':/newPrefix/images/Apple-icon.png')
         windowsicon = QtGui.QIcon(':/newPrefix/images/Windows-icon.png')
         linuxicon = QtGui.QIcon(':/newPrefix/images/Linux-icon.png')
