@@ -94,7 +94,7 @@ class WorkerThread(QtCore.QThread):
                 f.close()
 
     def progress(self, count, blockSize, totalSize):
-        percent = int(count*blockSize*100/totalSize)
+        percent = int(count * blockSize * 100 / totalSize)
         self.update.emit(percent)
 
     def run(self):
@@ -552,7 +552,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.statusbar.showMessage(
             'Copying files to "' + dir_ + '", please wait... ')
         logging.debug('Extracting to ' + dir_)
-
 
     def cleanup(self):
         nowpixmap = QtGui.QPixmap(
