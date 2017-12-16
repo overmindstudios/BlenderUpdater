@@ -193,7 +193,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             logging.error('Unable to get update information from GitHub')
         UpdateData = json.load(Appupdate)
         applatestversion = UpdateData['tag_name']
-        print(UpdateData['tag_name'])
+        # print(UpdateData['tag_name'])
         if StrictVersion(applatestversion) > StrictVersion(appversion):
             self.btn_newVersion.clicked.connect(self.getAppUpdate)
             self.btn_newVersion.show()
@@ -276,7 +276,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         soup = BeautifulSoup(req.read(), "html.parser")
         """iterate through the found versions"""
         table = soup.find("table")
-        print(len(table))
+        # print(len(table))
         results = []
         for col in table.find_all('tr', recursive=False)[0:]:
             results.append([data.string for data in col])
