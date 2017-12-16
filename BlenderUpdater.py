@@ -1,4 +1,4 @@
-"""Copyright 2016 Tobias Kummer/Overmind Studios.
+"""Copyright 2016-2017 Tobias Kummer/Overmind Studios.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@ limitations under the License.
 
 
 from PyQt5 import QtWidgets, QtCore, QtGui
-import qdarkstyle
 import os.path
 from bs4 import BeautifulSoup
 import urllib.request
@@ -34,7 +33,7 @@ import logging
 
 
 app = QtWidgets.QApplication(sys.argv)
-appversion = '1.3.1'
+appversion = '1.4'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
@@ -211,7 +210,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
     def getAppUpdate(self):
         webbrowser.open("https://github.com/tobkum/BlenderUpdater/releases/latest")
 
-
     def about(self):
         aboutText = '<html><head/><body><p>Utility to update Blender to the latest buildbot version available at \
         <a href="https://builder.blender.org/download/"><span style=" text-decoration: underline; color:#2980b9;">\
@@ -255,6 +253,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.btn_oneclick.hide()
         self.lbl_quick.hide()
         self.btn_newVersion.hide()
+        self.progressBar.hide()
+        self.lbl_task.hide()
         appleicon = QtGui.QIcon(':/newPrefix/images/Apple-icon.png')
         windowsicon = QtGui.QIcon(':/newPrefix/images/Windows-icon.png')
         linuxicon = QtGui.QIcon(':/newPrefix/images/Linux-icon.png')
@@ -581,7 +581,28 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
 def main():
     window = BlenderUpdater()
-    app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+
+    app.setStyle("Fusion")
+
+    dark_palette = QtGui.QPalette()
+
+    dark_palette.setColor(QtGui.QPalette.Window, QtGui.QColor(53, 53, 53))
+    dark_palette.setColor(QtGui.QPalette.WindowText, QtGui.QColor(255, 255, 255))
+    dark_palette.setColor(QtGui.QPalette.Base, QtGui.QColor(25, 25, 25))
+    dark_palette.setColor(QtGui.QPalette.AlternateBase, QtGui.QColor(53, 53, 53))
+    dark_palette.setColor(QtGui.QPalette.ToolTipBase, QtGui.QColor(255, 255, 255))
+    dark_palette.setColor(QtGui.QPalette.ToolTipText, QtGui.QColor(255, 255, 255))
+    dark_palette.setColor(QtGui.QPalette.Text, QtGui.QColor(255, 255, 255))
+    dark_palette.setColor(QtGui.QPalette.Button, QtGui.QColor(53, 53, 53))
+    dark_palette.setColor(QtGui.QPalette.ButtonText, QtGui.QColor(255, 255, 255))
+    dark_palette.setColor(QtGui.QPalette.BrightText, QtGui.QColor(255, 0, 0))
+    dark_palette.setColor(QtGui.QPalette.Link, QtGui.QColor(42, 130, 218))
+    dark_palette.setColor(QtGui.QPalette.Highlight, QtGui.QColor(42, 130, 218))
+    dark_palette.setColor(QtGui.QPalette.HighlightedText, QtGui.QColor(0, 0, 0))
+
+    app.setPalette(dark_palette)
+
+    app.setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white; }")
     window.show()
     app.exec_()
 
