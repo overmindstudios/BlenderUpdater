@@ -1,5 +1,5 @@
 # BlenderUpdater
-A small crossplatform (Linux, Windows, OSX) Python3 GUI application to check https://builder.blender.org/download for 
+A small crossplatform (Linux, Windows, OSX) Python3 GUI application to check https://builder.blender.org/download for
 the latest buildbot version. Download and install nightly builds with one click.
 
 ## Dependencies
@@ -14,3 +14,7 @@ Frozen binary files for Linux and OSX coming soon. As of now, just run "python B
 
 ## Known limitations
 Due to UAC starting in Windows Vista, you cannot use the "C:\Program Files\" directory. Please choose some other destination on your hard drive.
+
+## Screenshot
+
+![Screenshot](https://raw.githubusercontent.com/tobkum/BlenderUpdater/master/screenshot.png)
