@@ -1,0 +1,11 @@
+/__pycache__
+/.idea
+/.ropeproject
+/build
+/dist
+
+BlenderUpdater.log
+BlenderUpdater.spec
+build.bat
+config.ini
+oconsole.spec
