@@ -187,12 +187,12 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             sys.exit()
         # Check for new version on github
         try:
-            Appupdate = urllib.request.urlopen('https://api.github.com/repos/tobkum/BlenderUpdater/releases/latest')
+            Appupdate = urllib.request.urlopen('https://api.github.com/repos/tobkum/BlenderUpdater/releases/latest').read().decode('utf-8')
         except Exception:
             QtWidgets.QMessageBox.critical(
                 self, "Error", "Unable to get update information")
             logging.error('Unable to get update information from GitHub')
-        UpdateData = json.load(Appupdate)
+        UpdateData = json.loads(Appupdate)
         applatestversion = UpdateData['tag_name']
         # print(UpdateData['tag_name'])
         if StrictVersion(applatestversion) > StrictVersion(appversion):
