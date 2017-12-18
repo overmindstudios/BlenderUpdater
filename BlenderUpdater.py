@@ -30,6 +30,7 @@ from distutils.version import StrictVersion
 import json
 import webbrowser
 import logging
+import ssl
 
 
 app = QtWidgets.QApplication(sys.argv)
@@ -176,6 +177,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.btn_about.clicked.connect(self.about)  # connect About button
         self.btn_path.clicked.connect(self.select_path)  # connect the path button
         """Checking internet connection"""
+        ssl._create_default_https_context = ssl._create_unverified_context
         try:
             testConnection = urllib.request.urlopen("http://www.google.com")
         except Exception:
