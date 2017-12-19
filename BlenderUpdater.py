@@ -43,7 +43,8 @@ lastversion = ''
 installedversion = ''
 flavor = ''
 
-logging.basicConfig(filename='BlenderUpdater.log', format='%(asctime)s:%message)s')
+logging.basicConfig(filename='BlenderUpdater.log',
+                    format='%(asctime)s:%message)s')
 
 
 class WorkerThread(QtCore.QThread):
@@ -166,16 +167,16 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.btn_cancel.hide()
         self.frm_progress.hide()
         self.btngrp_filter.hide()
-        self.btn_Check.setFocus()                   # set focus to Check Now button
-        self.lbl_available.hide()                   # hide the message at the top
-        self.progressBar.setValue(0)                # reset progress bar
-        self.progressBar.hide()                     # Hide the progress bar on startup
-        self.lbl_task.hide()                        # Hide progress description on startup
-        self.statusbar.showMessage('Ready - Last check: ' + lastcheck)       # Update last checked label in status bar
-        self.btn_Quit.clicked.connect(QtCore.QCoreApplication.instance().quit)  # Implement quit button
-        self.btn_Check.clicked.connect(self.check_dir)  # connect Check Now button
-        self.btn_about.clicked.connect(self.about)  # connect About button
-        self.btn_path.clicked.connect(self.select_path)  # connect the path button
+        self.btn_Check.setFocus()
+        self.lbl_available.hide()
+        self.progressBar.setValue(0)
+        self.progressBar.hide()
+        self.lbl_task.hide()
+        self.statusbar.showMessage('Ready - Last check: ' + lastcheck)
+        self.btn_Quit.clicked.connect(QtCore.QCoreApplication.instance().quit)
+        self.btn_Check.clicked.connect(self.check_dir)
+        self.btn_about.clicked.connect(self.about)
+        self.btn_path.clicked.connect(self.select_path)
         """Checking internet connection"""
         ssl._create_default_https_context = ssl._create_unverified_context
         try:
