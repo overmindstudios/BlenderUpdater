@@ -35,7 +35,7 @@ import ssl
 
 
 app = QtWidgets.QApplication(sys.argv)
-appversion = '1.7'
+appversion = '1.6'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
@@ -617,8 +617,8 @@ def main():
                           QtGui.QColor(127, 127, 127))
     app.setPalette(dark_palette)
 
-    qfdarkstyle = open('darkstyle/darkstyle.qss').read()
-    app.setStyleSheet(qfdarkstyle)
+    #qfdarkstyle = open('darkstyle/darkstyle.qss').read()
+    #app.setStyleSheet(qfdarkstyle)
     window = BlenderUpdater()
 
     window.show()
