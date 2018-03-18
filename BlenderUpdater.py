@@ -35,7 +35,7 @@ import ssl
 
 
 app = QtWidgets.QApplication(sys.argv)
-appversion = '1.6'
+appversion = '1.7'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
@@ -124,7 +124,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.btn_newVersion.hide()
         self.lbl_caution.setStyleSheet('background: rgb(255, 155, 8);\n'
                                        'color: white')
-        '''self.scrollArea.hide()'''
         global lastversion
         global dir_
         global config
@@ -143,8 +142,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             if lastversion is not '':
                 self.btn_oneclick.setText(flavor + ' | ' + lastversion)
                 self.btn_oneclick.clicked.connect(self.quickupdate)
-                self.btn_oneclick.show()
-                self.lbl_quick.show()
+                # self.btn_oneclick.show()
+                # self.lbl_quick.show() Disable QuickUpdate for now
             else:
                 pass
 
@@ -261,9 +260,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.progressBar.hide()
         self.lbl_task.hide()
         self.btn_newVersion.hide()
-        self.scrollArea.show()
-        self.lay = QtWidgets.QVBoxLayout()
-        self.scrollArea.setLayout(self.lay)
+
         appleicon = QtGui.QIcon(':/newPrefix/images/Apple-icon.png')
         windowsicon = QtGui.QIcon(':/newPrefix/images/Windows-icon.png')
         linuxicon = QtGui.QIcon(':/newPrefix/images/Linux-icon.png')
@@ -297,7 +294,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             finallist.append(sub)
         finallist = list(filter(None, finallist))
         print(finallist)
-        del finallist[0]    # remove first entry which is the header of the table
+        # del finallist[0]    # remove first entry which is the header of the table
         if quicky:
             self.btn_Check.setDisabled(True)
             if lastversion == 'Windows 32bit':
@@ -387,12 +384,12 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             i = 0
             for index, text in enumerate(finallist):
                 btn[index] = QtWidgets.QPushButton(self)
-                if "OSX" in text[1]:
+                if "OSX" in text[0]:
                     btn[index].setIcon(appleicon)
                     version = str(text[0])
                     variation = str(text[0])
                     buttontext = str(
-                        text[0]) + " | " + str(text[1]) + " | " + str(text[3])
+                        text[0]) + " | " + str(text[1]) + " | " + str(text[2])
                     btn[index].setIconSize(QtCore.QSize(24, 24))
                     btn[index].setText(buttontext)
                     btn[index].setFixedWidth(686)
@@ -411,12 +408,12 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             i = 0
             for index, text in enumerate(finallist):
                 btn[index] = QtWidgets.QPushButton(self)
-                if "linux" in text[1]:
+                if "linux" in text[0]:
                     btn[index].setIcon(linuxicon)
                     version = str(text[0])
                     variation = str(text[0])
                     buttontext = str(
-                        text[0]) + " | " + str(text[1]) + " | " + str(text[3])
+                        text[0]) + " | " + str(text[1]) + " | " + str(text[2])
                     btn[index].setIconSize(QtCore.QSize(24, 24))
                     btn[index].setText(buttontext)
                     btn[index].setFixedWidth(686)
@@ -435,12 +432,12 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             i = 0
             for index, text in enumerate(finallist):
                 btn[index] = QtWidgets.QPushButton(self)
-                if "win" in text[1]:
+                if "win" in text[0]:
                     btn[index].setIcon(windowsicon)
                     version = str(text[0])
                     variation = str(text[0])
                     buttontext = str(
-                        text[0]) + " | " + str(text[1]) + " | " + str(text[3])
+                        text[0]) + " | " + str(text[1]) + " | " + str(text[2])
                     btn[index].setIconSize(QtCore.QSize(24, 24))
                     btn[index].setText(buttontext)
                     btn[index].setFixedWidth(686)
