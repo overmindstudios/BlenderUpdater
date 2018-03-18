@@ -17,4 +17,4 @@ Due to UAC starting in Windows Vista, you cannot use the "C:\Program Files\" dir
 
 ## Screenshot
 
-![Screenshot](https://raw.githubusercontent.com/tobkum/BlenderUpdater/master/screenshot.png)
+![Screenshot](https://raw.githubusercontent.com/overmindstudios/BlenderUpdater/master/screenshot.png)
