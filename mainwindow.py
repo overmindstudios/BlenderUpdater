@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\mainwindow.ui'
+# Form implementation generated from reading ui file 'mainwindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.9.2
 #
@@ -140,6 +140,16 @@ class Ui_MainWindow(object):
         self.lbl_cleanup = QtWidgets.QLabel(self.frm_progress)
         self.lbl_cleanup.setGeometry(QtCore.QRect(70, 140, 171, 24))
         self.lbl_cleanup.setObjectName("lbl_cleanup")
+        self.scrollArea = QtWidgets.QScrollArea(self.frm_progress)
+        self.scrollArea.setGeometry(QtCore.QRect(0, 0, 686, 271))
+        self.scrollArea.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        self.scrollArea.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollArea.setObjectName("scrollArea")
+        self.scrollAreaWidgetContents = QtWidgets.QWidget()
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 667, 269))
+        self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.btngrp_filter = QtWidgets.QGroupBox(self.centralwidget)
         self.btngrp_filter.setGeometry(QtCore.QRect(200, 340, 307, 61))
         self.btngrp_filter.setObjectName("btngrp_filter")

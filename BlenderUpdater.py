@@ -17,6 +17,7 @@ limitations under the License.
 from PyQt5 import QtWidgets, QtCore, QtGui
 import os.path
 from bs4 import BeautifulSoup
+import requests
 import urllib.request
 import urllib.parse
 from datetime import datetime
@@ -123,6 +124,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.btn_newVersion.hide()
         self.lbl_caution.setStyleSheet('background: rgb(255, 155, 8);\n'
                                        'color: white')
+        '''self.scrollArea.hide()'''
         global lastversion
         global dir_
         global config
@@ -259,11 +261,14 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.progressBar.hide()
         self.lbl_task.hide()
         self.btn_newVersion.hide()
+        self.scrollArea.show()
+        self.lay = QtWidgets.QVBoxLayout()
+        self.scrollArea.setLayout(self.lay)
         appleicon = QtGui.QIcon(':/newPrefix/images/Apple-icon.png')
         windowsicon = QtGui.QIcon(':/newPrefix/images/Windows-icon.png')
         linuxicon = QtGui.QIcon(':/newPrefix/images/Linux-icon.png')
         url = 'https://builder.blender.org/download/'
-        '''Do path settings save here, in case user has manually edited it'''
+        """Do path settings save here, in case user has manually edited it"""
         global config
         config.read('config.ini')
         config.set('main', 'path', dir_)
@@ -271,26 +276,28 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             config.write(f)
         f.close()
         try:
-            req = urllib.request.urlopen(url)
+            req = requests.get(url)
         except Exception:
             self.statusBar().showMessage(
                 'Error - check your internet connection')
             logging.error('No connection to server')
             self.frm_start.show()
-        soup = BeautifulSoup(req.read(), "html.parser")
+        soup = BeautifulSoup(req.text, "html.parser")
         """iterate through the found versions"""
-        table = soup.find("table")
-        # print(len(table))
+
         results = []
-        for col in table.find_all('tr', recursive=False)[0:]:
-            results.append([data.string for data in col])
-        results = [[item.strip().strip("\xa0") if item is not None else None for item in sublist] for sublist in results]
+        for tr in soup.find_all('tr'):
+            tds = tr.find_all('td')
+            print(tds)
+            results.append([data.string for data in tds])
+            results = [[item.strip().strip("\xa0") if item is not None else None for item in sublist] for sublist in results]
         finallist = []
         for sub in results:
             sub = list(filter(None, sub))
             finallist.append(sub)
         finallist = list(filter(None, finallist))
-        del finallist[0]            # remove first entry which is the header of the table
+        print(finallist)
+        del finallist[0]    # remove first entry which is the header of the table
         if quicky:
             self.btn_Check.setDisabled(True)
             if lastversion == 'Windows 32bit':
@@ -316,7 +323,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 variation = flavor
             for index, text in enumerate(finallist):
                 if quickversion in text[1] and variation in text[0]:
-                    version = str(text[1])
+                    version = str(text[0])
                     if version == installedversion and variation in text[0]:
                         reply = QtWidgets.QMessageBox.question(
                             self, 'Warning',
@@ -344,23 +351,24 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             btn = {}
             for index, text in enumerate(finallist):
                 btn[index] = QtWidgets.QPushButton(self)
-                if "OSX" in text[1]:             # set icon according to OS
+                print(text[0] + " | " + text[1] + " | " + text[2])
+                if "OSX" in text[0]:             # set icon according to OS
                     if opsys == "Darwin":
                         btn[index].setStyleSheet('background: rgb(22, 52, 73)')
                     btn[index].setIcon(appleicon)
-                elif "linux" in text[1]:
+                elif "linux" in text[0]:
                     if opsys == "Linux":
                         btn[index].setStyleSheet('background: rgb(22, 52, 73)')
                     btn[index].setIcon(linuxicon)
-                elif "win" in text[1]:
+                elif "win" in text[0]:
                     if opsys == "Windows":
                         btn[index].setStyleSheet('background: rgb(22, 52, 73)')
                     btn[index].setIcon(windowsicon)
 
-                version = str(text[1])
+                version = str(text[0])
                 variation = str(text[0])
                 buttontext = str(
-                    text[0]) + " | " + str(text[1]) + " | " + str(text[3])
+                    text[0]) + " | " + str(text[1]) + " | " + str(text[2])
                 btn[index].setIconSize(QtCore.QSize(24, 24))
                 btn[index].setText(buttontext)
                 btn[index].setFixedWidth(686)
@@ -381,7 +389,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 btn[index] = QtWidgets.QPushButton(self)
                 if "OSX" in text[1]:
                     btn[index].setIcon(appleicon)
-                    version = str(text[1])
+                    version = str(text[0])
                     variation = str(text[0])
                     buttontext = str(
                         text[0]) + " | " + str(text[1]) + " | " + str(text[3])
@@ -405,7 +413,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 btn[index] = QtWidgets.QPushButton(self)
                 if "linux" in text[1]:
                     btn[index].setIcon(linuxicon)
-                    version = str(text[1])
+                    version = str(text[0])
                     variation = str(text[0])
                     buttontext = str(
                         text[0]) + " | " + str(text[1]) + " | " + str(text[3])
@@ -429,7 +437,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 btn[index] = QtWidgets.QPushButton(self)
                 if "win" in text[1]:
                     btn[index].setIcon(windowsicon)
-                    version = str(text[1])
+                    version = str(text[0])
                     variation = str(text[0])
                     buttontext = str(
                         text[0]) + " | " + str(text[1]) + " | " + str(text[3])

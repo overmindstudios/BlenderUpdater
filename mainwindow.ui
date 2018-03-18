@@ -412,6 +412,35 @@
       <string>Cleaning up</string>
      </property>
     </widget>
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>686</width>
+       <height>271</height>
+      </rect>
+     </property>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOn</enum>
+     </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>667</width>
+        <height>269</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
    </widget>
    <widget class="QGroupBox" name="btngrp_filter">
     <property name="geometry">
