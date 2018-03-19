@@ -477,7 +477,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         """Download routines."""
         global dir_
         global filename
-        logger.debug('Starting download thread for version ' + version)
+        url = 'https://builder.blender.org/download/' + version
         if version == installedversion:
             reply = QtWidgets.QMessageBox.question(
                 self, 'Warning',
@@ -496,7 +496,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         if os.path.isdir('./blendertemp'):
             shutil.rmtree('./blendertemp')
         os.makedirs('./blendertemp')
-        url = 'https://builder.blender.org/download/' + version
         file = urllib.request.urlopen(url)
         totalsize = file.info()['Content-Length']
         size_readable = self.hbytes(float(totalsize))
@@ -513,6 +512,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         filename = './blendertemp/' + version
         for i in btn:
             btn[i].hide()
+        logger.debug('Starting download thread for ' + url + version)
         self.lbl_available.hide()
         self.lbl_caution.hide()
         self.progressBar.show()
