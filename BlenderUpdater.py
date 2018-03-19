@@ -144,6 +144,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 self.btn_oneclick.clicked.connect(self.quickupdate)
                 # self.btn_oneclick.show()
                 # self.lbl_quick.show() Disable QuickUpdate for now
+                # TODO re-implement Quickupdate, therefore refactor flavor
             else:
                 pass
 
@@ -285,7 +286,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         results = []
         for tr in soup.find_all('tr'):
             tds = tr.find_all('td')
-            print(tds)
             results.append([data.string for data in tds])
             results = [[item.strip().strip("\xa0") if item is not None else None for item in sublist] for sublist in results]
         finallist = []
@@ -293,8 +293,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             sub = list(filter(None, sub))
             finallist.append(sub)
         finallist = list(filter(None, finallist))
-        print(finallist)
-        # del finallist[0]    # remove first entry which is the header of the table
         if quicky:
             self.btn_Check.setDisabled(True)
             if lastversion == 'Windows 32bit':
@@ -348,7 +346,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             btn = {}
             for index, text in enumerate(finallist):
                 btn[index] = QtWidgets.QPushButton(self)
-                print(text[0] + " | " + text[1] + " | " + text[2])
+                logging.debug(text[0] + " | " + text[1] + " | " + text[2])
                 if "OSX" in text[0]:             # set icon according to OS
                     if opsys == "Darwin":
                         btn[index].setStyleSheet('background: rgb(22, 52, 73)')
