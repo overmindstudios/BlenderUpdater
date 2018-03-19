@@ -122,6 +122,7 @@ class WorkerThread(QtCore.QThread):
 
 class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
     def __init__(self, parent=None):
+        logger.debug('Constructing UI')
         super(BlenderUpdater, self).__init__(parent)
         self.setupUi(self)
         self.btn_oneclick.hide()
@@ -155,6 +156,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 pass
 
         else:
+            logger.debug('No previous config found')
             self.btn_oneclick.hide()
             config_exist = False
             config.read('config.ini')
@@ -205,6 +207,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         applatestversion = UpdateData['tag_name']
         # print(UpdateData['tag_name'])
         if StrictVersion(applatestversion) > StrictVersion(appversion):
+            logger.debug('Updated version found on Github')
             self.btn_newVersion.clicked.connect(self.getAppUpdate)
             self.btn_newVersion.show()
 
@@ -244,6 +247,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 'Please choose a valid destination directory first')
             logger.debug('No valid directory')
         else:
+            logger.debug('Checking for Blender versions')
             self.check()
 
     def hbytes(self, num):
@@ -473,14 +477,16 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         """Download routines."""
         global dir_
         global filename
-        logger.debug('Starting download thread')
+        logger.debug('Starting download thread for version ' + version)
         if version == installedversion:
             reply = QtWidgets.QMessageBox.question(
                 self, 'Warning',
                 "This version is already installed. Do you still want to continue?",
                 QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
                 QtWidgets.QMessageBox.No)
+            logger.debug('Duplicated version detected')
             if reply == QtWidgets.QMessageBox.No:
+                logger.debug('Skipping download of existing version')
                 return
             else:
                 pass
@@ -538,6 +544,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.progressBar.setValue(percent)
 
     def extraction(self):
+        logger.debug('Extracting')
         self.lbl_task.setText('Extracting...')
         self.btn_Quit.setEnabled(False)
         nowpixmap = QtGui.QPixmap(
@@ -549,12 +556,12 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.lbl_extraction.setText('<b>Extraction</b>')
         self.statusbar.showMessage(
             'Extracting to temporary folder, please wait...')
-        logger.debug('Extracting')
         self.progressBar.setMaximum(0)
         self.progressBar.setMinimum(0)
         self.progressBar.setValue(-1)
 
     def finalcopy(self):
+        logger.debug('Copying to ' + dir_)
         nowpixmap = QtGui.QPixmap(
             ':/newPrefix/images/Actions-arrow-right-icon.png')
         donepixmap = QtGui.QPixmap(':/newPrefix/images/Check-icon.png')
@@ -565,9 +572,9 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.lbl_task.setText('Copying files...')
         self.statusbar.showMessage(
             'Copying files to "' + dir_ + '", please wait... ')
-        logger.debug('Extracting to ' + dir_)
 
     def cleanup(self):
+        logger.debug('Cleaning up temp files')
         nowpixmap = QtGui.QPixmap(
             ':/newPrefix/images/Actions-arrow-right-icon.png')
         donepixmap = QtGui.QPixmap(':/newPrefix/images/Check-icon.png')
@@ -577,9 +584,9 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.lbl_cleanup.setText('<b>Cleaning up</b>')
         self.lbl_task.setText('Cleaning up...')
         self.statusbar.showMessage('Cleaning temporary files')
-        logger.debug('Cleaning up temp files')
 
     def done(self):
+        logger.debug('Finished')
         donepixmap = QtGui.QPixmap(':/newPrefix/images/Check-icon.png')
         self.lbl_clean_pic.setPixmap(donepixmap)
         self.lbl_cleanup.setText('Cleaning up')
@@ -588,7 +595,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.progressBar.setMaximum(100)
         self.progressBar.setValue(100)
         self.lbl_task.setText('Finished')
-        logger.debug('Finished')
         self.btn_Quit.setEnabled(True)
         self.btn_Check.setEnabled(True)
 
