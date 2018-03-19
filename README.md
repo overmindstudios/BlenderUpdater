@@ -13,7 +13,8 @@ You can grab the release .zip, extract it and execute BlenderUpdater.exe. Freezi
 Frozen binary files for Linux and OSX coming soon. As of now, just run "python BlenderUpdater.py" (make sure that the dependencies are met).
 
 ## Known limitations
-Due to UAC starting in Windows Vista, you cannot use the "C:\Program Files\" directory. Please choose some other destination on your hard drive.
+Due to UAC starting in Windows Vista, you cannot use the "C:\Program Files\" directory. Please choose some other destination on your hard drive OR right-click the application and choose
+"Run as Administrator" to be able to access those special folders.
 
 ## Screenshot
 

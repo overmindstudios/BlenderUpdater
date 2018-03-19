@@ -44,8 +44,14 @@ lastversion = ''
 installedversion = ''
 flavor = ''
 
+LOG_FORMAT = "%(levelname)s %(asctime)s - %(message)s"
 logging.basicConfig(filename='BlenderUpdater.log',
-                    format='%(asctime)s:%message)s')
+                    format = LOG_FORMAT,
+                    level = logging.DEBUG,
+                    filemode = 'w')
+
+logger = logging.getLogger()
+
 
 
 class WorkerThread(QtCore.QThread):
@@ -132,7 +138,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         global appversion
         if os.path.isfile('./config.ini'):
             config_exist = True
-            logging.debug('Reading existing configuration file')
+            logger.debug('Reading existing configuration file')
             config.read('config.ini')
             dir_ = config.get('main', 'path')
             lastcheck = config.get('main', 'lastcheck')
@@ -186,7 +192,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         except Exception:
             QtWidgets.QMessageBox.critical(
                 self, "Error", "Please check your internet connection")
-            logging.error('No internet connection')
+            logger.error('No internet connection')
             sys.exit()
         # Check for new version on github
         try:
@@ -194,7 +200,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         except Exception:
             QtWidgets.QMessageBox.critical(
                 self, "Error", "Unable to get update information")
-            logging.error('Unable to get update information from GitHub')
+            logger.error('Unable to get update information from GitHub')
         UpdateData = json.loads(Appupdate)
         applatestversion = UpdateData['tag_name']
         # print(UpdateData['tag_name'])
@@ -236,6 +242,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             QtWidgets.QMessageBox.about(
                 self, 'Directory not set',
                 'Please choose a valid destination directory first')
+            logger.debug('No valid directory')
         else:
             self.check()
 
@@ -278,7 +285,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         except Exception:
             self.statusBar().showMessage(
                 'Error - check your internet connection')
-            logging.error('No connection to server')
+            logger.error('No connection to server')
             self.frm_start.show()
         soup = BeautifulSoup(req.text, "html.parser")
         """iterate through the found versions"""
@@ -327,9 +334,9 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                             QtWidgets.QMessageBox.No)
                         if reply == QtWidgets.QMessageBox.Yes:
                             self.download(version, variation)
-                            logging.debug('Re-downloading installed version')
+                            logger.debug('Re-downloading installed version')
                         else:
-                            pass
+                            logger.debug('Skipping download of existing version')
                     else:
                         self.download(version, variation)
                         return
@@ -339,14 +346,14 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             global btn
             global flavor
             opsys = platform.system()
-            logging.debug('Operating system: ' + opsys)
+            logger.debug('Operating system: ' + opsys)
             for i in btn:
                 btn[i].hide()
             i = 0
             btn = {}
             for index, text in enumerate(finallist):
                 btn[index] = QtWidgets.QPushButton(self)
-                logging.debug(text[0] + " | " + text[1] + " | " + text[2])
+                logger.debug(text[0] + " | " + text[1] + " | " + text[2])
                 if "OSX" in text[0]:             # set icon according to OS
                     if opsys == "Darwin":
                         btn[index].setStyleSheet('background: rgb(22, 52, 73)')
@@ -466,6 +473,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         """Download routines."""
         global dir_
         global filename
+        logger.debug('Starting download thread')
         if version == installedversion:
             reply = QtWidgets.QMessageBox.question(
                 self, 'Warning',
@@ -513,7 +521,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.progressBar.setValue(0)
         self.btn_Check.setDisabled(True)
         self.statusbar.showMessage('Downloading ' + size_readable)
-        logging.debug('Starting download thread')
         thread = WorkerThread(url, filename)
         thread.update.connect(self.updatepb)
         thread.finishedDL.connect(self.extraction)
@@ -542,7 +549,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.lbl_extraction.setText('<b>Extraction</b>')
         self.statusbar.showMessage(
             'Extracting to temporary folder, please wait...')
-        logging.debug('Extracting')
+        logger.debug('Extracting')
         self.progressBar.setMaximum(0)
         self.progressBar.setMinimum(0)
         self.progressBar.setValue(-1)
@@ -558,7 +565,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.lbl_task.setText('Copying files...')
         self.statusbar.showMessage(
             'Copying files to "' + dir_ + '", please wait... ')
-        logging.debug('Extracting to ' + dir_)
+        logger.debug('Extracting to ' + dir_)
 
     def cleanup(self):
         nowpixmap = QtGui.QPixmap(
@@ -570,7 +577,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.lbl_cleanup.setText('<b>Cleaning up</b>')
         self.lbl_task.setText('Cleaning up...')
         self.statusbar.showMessage('Cleaning temporary files')
-        logging.debug('Cleaning up temp files')
+        logger.debug('Cleaning up temp files')
 
     def done(self):
         donepixmap = QtGui.QPixmap(':/newPrefix/images/Check-icon.png')
@@ -581,7 +588,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.progressBar.setMaximum(100)
         self.progressBar.setValue(100)
         self.lbl_task.setText('Finished')
-        logging.debug('Finished')
+        logger.debug('Finished')
         self.btn_Quit.setEnabled(True)
         self.btn_Check.setEnabled(True)
 
@@ -615,8 +622,8 @@ def main():
                           QtGui.QColor(127, 127, 127))
     app.setPalette(dark_palette)
 
-    #qfdarkstyle = open('darkstyle/darkstyle.qss').read()
-    #app.setStyleSheet(qfdarkstyle)
+    # qfdarkstyle = open('darkstyle/darkstyle.qss').read()
+    # app.setStyleSheet(qfdarkstyle)
     window = BlenderUpdater()
 
     window.show()
