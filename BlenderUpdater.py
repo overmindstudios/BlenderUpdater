@@ -1,4 +1,4 @@
-"""Copyright 2016-2017 Tobias Kummer/Overmind Studios.
+"""Copyright 2016-2018 Tobias Kummer/Overmind Studios.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -139,7 +139,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         global appversion
         if os.path.isfile('./config.ini'):
             config_exist = True
-            logger.debug('Reading existing configuration file')
+            logger.info('Reading existing configuration file')
             config.read('config.ini')
             dir_ = config.get('main', 'path')
             lastcheck = config.get('main', 'lastcheck')
@@ -194,7 +194,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         except Exception:
             QtWidgets.QMessageBox.critical(
                 self, "Error", "Please check your internet connection")
-            logger.error('No internet connection')
+            logger.critical('No internet connection')
             sys.exit()
         # Check for new version on github
         try:
@@ -207,7 +207,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         applatestversion = UpdateData['tag_name']
         # print(UpdateData['tag_name'])
         if StrictVersion(applatestversion) > StrictVersion(appversion):
-            logger.debug('Updated version found on Github')
+            logger.info('Updated version found on Github')
             self.btn_newVersion.clicked.connect(self.getAppUpdate)
             self.btn_newVersion.show()
 
@@ -233,7 +233,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0"><span style=" text-decoration:\
          underline; color:#2980b9;">Apache 2.0 license</span></a></p><p>Project home: \
          <a href="https://github.com/tobkum/BlenderUpdater"><span style=" text-decoration:\
-         underline; color:#2980b9;">https://github.com/tobkum/BlenderUpdater</a></p> \
+         underline; color:#2980b9;">https://github.com/overmindstudios/BlenderUpdater</a></p> \
          Application version: ' + appversion + '</body></html> '
         QtWidgets.QMessageBox.about(self, 'About', aboutText)
 
@@ -245,9 +245,9 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             QtWidgets.QMessageBox.about(
                 self, 'Directory not set',
                 'Please choose a valid destination directory first')
-            logger.debug('No valid directory')
+            logger.error('No valid directory')
         else:
-            logger.debug('Checking for Blender versions')
+            logger.info('Checking for Blender versions')
             self.check()
 
     def hbytes(self, num):
@@ -338,9 +338,9 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                             QtWidgets.QMessageBox.No)
                         if reply == QtWidgets.QMessageBox.Yes:
                             self.download(version, variation)
-                            logger.debug('Re-downloading installed version')
+                            logger.info('Re-downloading installed version')
                         else:
-                            logger.debug('Skipping download of existing version')
+                            logger.info('Skipping download of existing version')
                     else:
                         self.download(version, variation)
                         return
@@ -350,7 +350,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             global btn
             global flavor
             opsys = platform.system()
-            logger.debug('Operating system: ' + opsys)
+            logger.info('Operating system: ' + opsys)
             for i in btn:
                 btn[i].hide()
             i = 0
@@ -484,7 +484,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 "This version is already installed. Do you still want to continue?",
                 QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
                 QtWidgets.QMessageBox.No)
-            logger.debug('Duplicated version detected')
+            logger.info('Duplicated version detected')
             if reply == QtWidgets.QMessageBox.No:
                 logger.debug('Skipping download of existing version')
                 return
@@ -512,7 +512,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         filename = './blendertemp/' + version
         for i in btn:
             btn[i].hide()
-        logger.debug('Starting download thread for ' + url + version)
+        logger.info('Starting download thread for ' + url + version)
         self.lbl_available.hide()
         self.lbl_caution.hide()
         self.progressBar.show()
@@ -544,7 +544,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.progressBar.setValue(percent)
 
     def extraction(self):
-        logger.debug('Extracting')
+        logger.info('Extracting to temp directory')
         self.lbl_task.setText('Extracting...')
         self.btn_Quit.setEnabled(False)
         nowpixmap = QtGui.QPixmap(
@@ -561,7 +561,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.progressBar.setValue(-1)
 
     def finalcopy(self):
-        logger.debug('Copying to ' + dir_)
+        logger.info('Copying to ' + dir_)
         nowpixmap = QtGui.QPixmap(
             ':/newPrefix/images/Actions-arrow-right-icon.png')
         donepixmap = QtGui.QPixmap(':/newPrefix/images/Check-icon.png')
@@ -574,7 +574,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             'Copying files to "' + dir_ + '", please wait... ')
 
     def cleanup(self):
-        logger.debug('Cleaning up temp files')
+        logger.info('Cleaning up temp files')
         nowpixmap = QtGui.QPixmap(
             ':/newPrefix/images/Actions-arrow-right-icon.png')
         donepixmap = QtGui.QPixmap(':/newPrefix/images/Check-icon.png')
@@ -586,7 +586,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.statusbar.showMessage('Cleaning temporary files')
 
     def done(self):
-        logger.debug('Finished')
+        logger.info('Finished')
         donepixmap = QtGui.QPixmap(':/newPrefix/images/Check-icon.png')
         self.lbl_clean_pic.setPixmap(donepixmap)
         self.lbl_cleanup.setText('Cleaning up')
