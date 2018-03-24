@@ -46,12 +46,11 @@ flavor = ''
 
 LOG_FORMAT = "%(levelname)s %(asctime)s - %(message)s"
 logging.basicConfig(filename='BlenderUpdater.log',
-                    format = LOG_FORMAT,
-                    level = logging.DEBUG,
-                    filemode = 'w')
+                    format=LOG_FORMAT,
+                    level=logging.INFO,
+                    filemode='w')
 
 logger = logging.getLogger()
-
 
 
 class WorkerThread(QtCore.QThread):
@@ -222,7 +221,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             pass
 
     def getAppUpdate(self):
-        webbrowser.open("https://github.com/tobkum/BlenderUpdater/releases/latest")
+        webbrowser.open("https://github.com/overmindstudios/BlenderUpdater/releases/latest")
 
     def about(self):
         aboutText = '<html><head/><body><p>Utility to update Blender to the latest buildbot version available at \
