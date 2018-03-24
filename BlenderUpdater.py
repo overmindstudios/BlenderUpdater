@@ -47,7 +47,7 @@ flavor = ''
 LOG_FORMAT = "%(levelname)s %(asctime)s - %(message)s"
 logging.basicConfig(filename='BlenderUpdater.log',
                     format=LOG_FORMAT,
-                    level=logging.INFO,
+                    level=logging.DEBUG,
                     filemode='w')
 
 logger = logging.getLogger()
