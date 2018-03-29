@@ -36,7 +36,7 @@ import ssl
 
 
 app = QtWidgets.QApplication(sys.argv)
-appversion = '1.7'
+appversion = '1.8'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
@@ -210,6 +210,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         if StrictVersion(applatestversion) > StrictVersion(appversion):
             logger.info('Updated version found on Github')
             self.btn_newVersion.clicked.connect(self.getAppUpdate)
+            self.btn_newVersion.setStyleSheet('background: rgb(73, 50, 20)')
             self.btn_newVersion.show()
 
     def select_path(self):
