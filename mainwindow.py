@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'mainwindow.ui'
+# Form implementation generated from reading ui file '.\mainwindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.9.2
 #
@@ -178,7 +178,7 @@ class Ui_MainWindow(object):
         self.btn_linux.setAutoExclusive(True)
         self.btn_linux.setObjectName("btn_linux")
         self.btn_oneclick = QtWidgets.QPushButton(self.centralwidget)
-        self.btn_oneclick.setGeometry(QtCore.QRect(260, 481, 191, 35))
+        self.btn_oneclick.setGeometry(QtCore.QRect(260, 480, 191, 35))
         self.btn_oneclick.setStyleSheet("")
         icon9 = QtGui.QIcon()
         icon9.addPixmap(QtGui.QPixmap(":/newPrefix/images/Actions-quickopen-icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -206,6 +206,13 @@ class Ui_MainWindow(object):
         self.btn_newVersion.setCheckable(False)
         self.btn_newVersion.setChecked(False)
         self.btn_newVersion.setObjectName("btn_newVersion")
+        self.btn_execute = QtWidgets.QPushButton(self.centralwidget)
+        self.btn_execute.setGeometry(QtCore.QRect(260, 480, 191, 35))
+        self.btn_execute.setStyleSheet("")
+        icon11 = QtGui.QIcon()
+        icon11.addPixmap(QtGui.QPixmap(":/newPrefix/images/Blender-icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btn_execute.setIcon(icon11)
+        self.btn_execute.setObjectName("btn_execute")
         self.btngrp_filter.raise_()
         self.frm_start.raise_()
         self.btn_Quit.raise_()
@@ -220,6 +227,7 @@ class Ui_MainWindow(object):
         self.lbl_quick.raise_()
         self.lbl_caution.raise_()
         self.btn_newVersion.raise_()
+        self.btn_execute.raise_()
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -254,5 +262,7 @@ class Ui_MainWindow(object):
         self.lbl_caution.setText(_translate("MainWindow", " These builds are not as stable as releases, use at your own risk."))
         self.btn_newVersion.setToolTip(_translate("MainWindow", "New version available"))
         self.btn_newVersion.setText(_translate("MainWindow", "New version available"))
+        self.btn_execute.setToolTip(_translate("MainWindow", "Run downloaded Blender version"))
+        self.btn_execute.setText(_translate("MainWindow", "Run Blender"))
 
 import res_rc

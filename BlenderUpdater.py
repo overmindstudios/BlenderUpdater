@@ -16,6 +16,7 @@ limitations under the License.
 
 from PyQt5 import QtWidgets, QtCore, QtGui
 import os.path
+from os import system
 from bs4 import BeautifulSoup
 import requests
 import urllib.request
@@ -129,6 +130,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.lbl_quick.hide()
         self.lbl_caution.hide()
         self.btn_newVersion.hide()
+        self.btn_execute.hide()
         self.lbl_caution.setStyleSheet('background: rgb(255, 155, 8);\n'
                                        'color: white')
         global lastversion
@@ -272,6 +274,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.progressBar.hide()
         self.lbl_task.hide()
         self.btn_newVersion.hide()
+        self.btn_execute.hide()
 
         appleicon = QtGui.QIcon(':/newPrefix/images/Apple-icon.png')
         windowsicon = QtGui.QIcon(':/newPrefix/images/Windows-icon.png')
@@ -597,6 +600,26 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.lbl_task.setText('Finished')
         self.btn_Quit.setEnabled(True)
         self.btn_Check.setEnabled(True)
+        self.btn_execute.show()
+        opsys = platform.system()
+        if opsys == 'Windows':
+            self.btn_execute.clicked.connect(self.exec_windows)
+        if opsys == 'Darwin':
+            self.btn_execute.clicked.connect(self.exec_osx)
+        if opsys == 'Linux':
+            self.btn_execute.clicked.connect(self.exec_linux)
+
+
+    def exec_windows(self):
+        system(dir_ + 'blender.exe')
+        logger.info('Executing ' + dir_ + 'blender.exe' )
+
+    def exec_osx(self):
+        system(dir_ + 'blender.app')
+        logger.info('Executing ' + dir_ + 'blender.app')
+
+    def exec_linux(self):
+        logger.info('Executing ' + dir_ + 'blender')
 
 
 def main():

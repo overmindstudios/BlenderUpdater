@@ -533,7 +533,7 @@
     <property name="geometry">
      <rect>
       <x>260</x>
-      <y>481</y>
+      <y>480</y>
       <width>191</width>
       <height>35</height>
      </rect>
@@ -625,6 +625,29 @@
      <bool>false</bool>
     </property>
    </widget>
+   <widget class="QPushButton" name="btn_execute">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>480</y>
+      <width>191</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Run downloaded Blender version</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>Run Blender</string>
+    </property>
+    <property name="icon">
+     <iconset resource="res.qrc">
+      <normaloff>:/newPrefix/images/Blender-icon.png</normaloff>:/newPrefix/images/Blender-icon.png</iconset>
+    </property>
+   </widget>
    <zorder>btngrp_filter</zorder>
    <zorder>frm_start</zorder>
    <zorder>btn_Quit</zorder>
@@ -639,6 +662,7 @@
    <zorder>lbl_quick</zorder>
    <zorder>lbl_caution</zorder>
    <zorder>btn_newVersion</zorder>
+   <zorder>btn_execute</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
