@@ -1,6 +1,7 @@
 ![Screenshot](https://raw.githubusercontent.com/overmindstudios/BlenderUpdater/master/screenshot.png)
 
-# BlenderUpdater ![logo](https://raw.githubusercontent.com/overmindstudios/BlenderUpdater/master//images/appicon.png)
+# BlenderUpdater
+ ![logo](https://raw.githubusercontent.com/overmindstudios/BlenderUpdater/master//images/appicon.png)
 
 A small crossplatform (Linux, Windows, OSX) Python3 GUI application to check [https://builder.blender.org/download](https://builder.blender.org/download) for
 the latest buildbot version. Download and install nightly builds with one click. Brought to you by [Overmind Studios](http://www.overmind-studios.de).
