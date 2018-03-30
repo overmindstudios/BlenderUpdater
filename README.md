@@ -12,11 +12,14 @@ When everything has finished, you'll see a "Start Blender" button to start the n
 ![Screenshot](https://raw.githubusercontent.com/overmindstudios/BlenderUpdater/master/run_blender.png)
 
 In case there is an update for BlenderUpdater, you'll see a button in the top right corner to go to the download page.
+
 ![Screenshot](https://raw.githubusercontent.com/overmindstudios/BlenderUpdater/master/app_update.png)
 
-## Compiled releases
+## Download
+Here's the latest release: [https://github.com/overmindstudios/BlenderUpdater/releases/latest](https://github.com/overmindstudios/BlenderUpdater/releases/latest)
+
 ### Windows
-You can grab the release .zip, extract it and execute BlenderUpdater.exe.
+You can grab the release .zip, extract and execute BlenderUpdater.exe.
 
 ### Linux & OSX
 Frozen binary files for Linux and OSX coming soon. As of now, just run "python BlenderUpdater.py" on your system (make sure that the dependencies are met).
@@ -32,9 +35,5 @@ Freezing is done via pyinstaller (`pyinstaller --icon=icon.ico --onefile --windo
 ## Dependencies
 Built with PyQt5 for the UI and Beautiful Soup for HTML parsing.
 
-## Download
-Here's the latest release: [https://github.com/overmindstudios/BlenderUpdater/releases/latest](https://github.com/overmindstudios/BlenderUpdater/releases/latest)
-
-
 ## Disclaimer
-This application was developed for in-house usage at [Overmind Studios](http://www.overmind-studios.de). Released as-is.
+This application was originally developed for in-house usage at [Overmind Studios](http://www.overmind-studios.de). Released as-is.
