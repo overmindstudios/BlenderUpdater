@@ -1,7 +1,7 @@
 ![Screenshot](https://raw.githubusercontent.com/overmindstudios/BlenderUpdater/master/screenshot.png)
 
 # BlenderUpdater
-A small crossplatform (Linux, Windows, OSX) Python3 GUI application to check <https://builder.blender.org/download> for
+A small crossplatform (Linux, Windows, OSX) Python3 GUI application to check [https://builder.blender.org/download](https://builder.blender.org/download) for
 the latest buildbot version. Download and install nightly builds with one click.
 
 ## Usage
@@ -33,7 +33,8 @@ Freezing is done via pyinstaller (`pyinstaller --icon=icon.ico --onefile --windo
 Built with PyQt5 for the UI and Beautiful Soup for HTML parsing.
 
 ## Download
-Here's the latest release: <https://github.com/overmindstudios/BlenderUpdater/releases/latest>
+Here's the latest release: [https://github.com/overmindstudios/BlenderUpdater/releases/latest](https://github.com/overmindstudios/BlenderUpdater/releases/latest)
+
 
 ## Disclaimer
 This application was developed for in-house usage at
