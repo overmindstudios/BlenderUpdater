@@ -10,7 +10,7 @@ the latest buildbot version. Download and install nightly builds with one click.
 Here's the latest release: [https://github.com/overmindstudios/BlenderUpdater/releases/latest](https://github.com/overmindstudios/BlenderUpdater/releases/latest)
 
 ### Windows
-You can grab the release .zip, extract and execute BlenderUpdater.exe.
+You can grab the release .exe, copy it into a folder on your hard drive and execute BlenderUpdater.exe.
 
 ### Linux & OSX
 Frozen binary files for Linux and OSX coming soon. As of now, just run "python BlenderUpdater.py" on your system (make sure that the dependencies are met).
