@@ -609,13 +609,12 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         if opsys == 'Linux':
             self.btn_execute.clicked.connect(self.exec_linux)
 
-
     def exec_windows(self):
-        system(dir_ + 'blender.exe')
+        system(os.path.join('"' + dir_ + "\\blender.exe" + '"'))
         logger.info('Executing ' + dir_ + 'blender.exe' )
 
     def exec_osx(self):
-        system(dir_ + 'blender.app')
+        system(os.path.join('"' + dir_ + "\\blender.app" + '"'))
         logger.info('Executing ' + dir_ + 'blender.app')
 
     def exec_linux(self):
