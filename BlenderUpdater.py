@@ -36,7 +36,7 @@ import ssl
 
 
 app = QtWidgets.QApplication(sys.argv)
-appversion = '1.8'
+appversion = '1.9'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
