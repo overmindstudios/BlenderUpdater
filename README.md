@@ -1,11 +1,12 @@
 ![Screenshot](https://raw.githubusercontent.com/overmindstudios/BlenderUpdater/master/screenshot.png)
 
-# BlenderUpdater
+# BlenderUpdater ![logo](https://raw.githubusercontent.com/overmindstudios/BlenderUpdater/master//images/appicon.png)
+
 A small crossplatform (Linux, Windows, OSX) Python3 GUI application to check [https://builder.blender.org/download](https://builder.blender.org/download) for
-the latest buildbot version. Download and install nightly builds with one click.
+the latest buildbot version. Download and install nightly builds with one click. Brought to you by [Overmind Studios](http://www.overmind-studios.de).
 
 ## Usage
-Specify a folder on your system (e.g. C:\Blender) where the Blender build will be copied to. The tool will not create a new directory by itself, so make sure you create one first.
+Specify a folder on your system (e.g. `C:\Blender`) where the Blender build will be copied to. The tool will not create a new directory by itself, so make sure you create one first.
 Then click on the "Version Check" button to see a list of currently available builds. The ones matching your operating system will be highlighted. Click on the desired version to download and copy to your specified folder.
 When everything has finished, you'll see a "Start Blender" button to start the new version right away.
 
@@ -25,7 +26,7 @@ You can grab the release .zip, extract and execute BlenderUpdater.exe.
 Frozen binary files for Linux and OSX coming soon. As of now, just run "python BlenderUpdater.py" on your system (make sure that the dependencies are met).
 
 ## Known limitations
-Due to UAC starting in Windows Vista, you cannot use the "C:\Program Files\" directory as a
+Due to UAC starting in Windows Vista, you cannot use the `C:\Program Files\` directory as a
 normal user. Please choose some other destination on your hard drive OR right-click
 the application and choose "Run as Administrator" to be able to access those special folders.
 
