@@ -654,6 +654,7 @@ def main():
     # qfdarkstyle = open('darkstyle/darkstyle.qss').read()
     # app.setStyleSheet(qfdarkstyle)
     window = BlenderUpdater()
+    window.setWindowTitle('Overmind Studios Blender Updater ' + appversion)
 
     window.show()
     app.exec_()
