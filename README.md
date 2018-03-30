@@ -8,7 +8,7 @@ the latest buildbot version. Download and install nightly builds with one click.
 Specify a folder on your system (e.g. C:\Blender) where the Blender build will be copied to. The tool will not create a new directory by itself, so make sure you create one first.
 Then click on the "Version Check" button to see a list of currently available builds. The ones matching your operating system will be highlighted. Click on the desired version to download and copy to your specified folder.
 When everything has finished, you'll see a "Start Blender" button to start the new version right away.
-
+![Screenshot](https://raw.githubusercontent.com/overmindstudios/BlenderUpdater/master/run_blender.png)
 In case there is an update for BlenderUpdater, you'll see a button in the top right corner to go to the download page.
 ![Screenshot](https://raw.githubusercontent.com/overmindstudios/BlenderUpdater/master/app_update.png)
 
@@ -31,4 +31,4 @@ Freezing is done via pyinstaller (`pyinstaller --icon=icon.ico --onefile --windo
 Built with PyQt5 for the UI and Beautiful Soup for HTML parsing.
 
 ## Download
-Here's the lates release: https://github.com/overmindstudios/BlenderUpdater/releases/latest
+Here's the latest release: https://github.com/overmindstudios/BlenderUpdater/releases/latest
