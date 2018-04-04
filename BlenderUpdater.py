@@ -15,7 +15,6 @@ limitations under the License.
 
 
 from Qt import QtWidgets, QtCore, QtGui
-#from PyQt5 import QtWidgets, QtCore, QtGui
 import os.path
 from os import system
 from bs4 import BeautifulSoup
