@@ -35,7 +35,7 @@ the application and choose "Run as Administrator" to be able to access those spe
 Freezing is done via pyinstaller (`pyinstaller --icon=icon.ico --onefile --windowed BlenderUpdater.py`)
 
 ## Dependencies
-Built with PyQt5 for the UI and Beautiful Soup for HTML parsing.
+Built with Qt.py (which depends on PyQt5 or PySide2) for the UI and Beautiful Soup for HTML parsing.
 
 ## Disclaimer
 This application was originally developed for in-house usage at [Overmind Studios](http://www.overmind-studios.de). Released as-is.

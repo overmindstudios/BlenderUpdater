@@ -14,7 +14,8 @@ limitations under the License.
 """
 
 
-from PyQt5 import QtWidgets, QtCore, QtGui
+from Qt import QtWidgets, QtCore, QtGui
+#from PyQt5 import QtWidgets, QtCore, QtGui
 import os.path
 from os import system
 from bs4 import BeautifulSoup
@@ -55,11 +56,11 @@ logger = logging.getLogger()
 
 
 class WorkerThread(QtCore.QThread):
-    update = QtCore.pyqtSignal(int)
-    finishedDL = QtCore.pyqtSignal()
-    finishedEX = QtCore.pyqtSignal()
-    finishedCP = QtCore.pyqtSignal()
-    finishedCL = QtCore.pyqtSignal()
+    update = QtCore.Signal(int)
+    finishedDL = QtCore.Signal()
+    finishedEX = QtCore.Signal()
+    finishedCP = QtCore.Signal()
+    finishedCL = QtCore.Signal()
 
     def __init__(self, url, file):
         super(WorkerThread, self).__init__(parent=app)
