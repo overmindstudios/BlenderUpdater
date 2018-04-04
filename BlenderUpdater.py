@@ -36,7 +36,7 @@ import ssl
 
 
 app = QtWidgets.QApplication(sys.argv)
-appversion = '1.9.1'
+appversion = '1.8.1'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
@@ -190,14 +190,14 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         """Checking internet connection"""
         ssl._create_default_https_context = ssl._create_unverified_context
         try:
-            testConnection = urllib.request.urlopen("http://www.google.com")
+            testConnection = requests.get("http://www.google.com")
         except Exception:
             QtWidgets.QMessageBox.critical(
                 self, "Error", "Please check your internet connection")
             logger.critical('No internet connection')
         # Check for new version on github
         try:
-            Appupdate = urllib.request.urlopen('https://api.github.com/repos/overmindstudios/BlenderUpdater/releases/latest').read().decode('utf-8')
+            Appupdate = requests.get('https://api.github.com/repos/overmindstudios/BlenderUpdater/releases/latest').text
             logger.info('Getting update info - success')
         except Exception:
             logger.error('Unable to get update information from GitHub')
@@ -205,7 +205,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         try:
             UpdateData = json.loads(Appupdate)
             applatestversion = UpdateData['tag_name']
-            logger.info('Version found online: ' + UpdateData['tag_name'])
+            logger.info('Version found online: ' + applatestversion)
             if StrictVersion(applatestversion) > StrictVersion(appversion):
                 logger.info('Newer version found on Github')
                 self.btn_newVersion.clicked.connect(self.getAppUpdate)
