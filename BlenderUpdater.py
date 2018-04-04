@@ -294,8 +294,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             req = requests.get(url)
         except Exception:
             self.statusBar().showMessage(
-                'Error - check your internet connection')
-            logger.error('No connection to server')
+                'Error reaching server - check your internet connection')
+            logger.error('No connection to Blender nightly builds server')
             self.frm_start.show()
         soup = BeautifulSoup(req.text, "html.parser")
         """iterate through the found versions"""
