@@ -237,7 +237,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         Overmind Studios</span></a></p><p>\
         Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0"><span style=" text-decoration:\
          underline; color:#2980b9;">Apache 2.0 license</span></a></p><p>Project home: \
-         <a href="https://github.com/tobkum/BlenderUpdater"><span style=" text-decoration:\
+         <a href="https://github.com/overmindstudios/BlenderUpdater"><span style=" text-decoration:\
          underline; color:#2980b9;">https://github.com/overmindstudios/BlenderUpdater</a></p> \
          Application version: ' + appversion + '</body></html> '
         QtWidgets.QMessageBox.about(self, 'About', aboutText)
