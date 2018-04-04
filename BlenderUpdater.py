@@ -622,6 +622,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         logger.info('Executing ' + BlenderOSXPath)
 
     def exec_linux(self):
+        system(os.path.join(dir_ + '/blender'))
         logger.info('Executing ' + dir_ + 'blender')
 
 
