@@ -614,7 +614,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
     def exec_windows(self):
         system(os.path.join('"' + dir_ + "\\blender.exe" + '"'))
-        logger.info('Executing ' + dir_ + 'blender.exe' )
+        logger.info('Executing ' + dir_ + 'blender.exe')
 
     def exec_osx(self):
         BlenderOSXPath = os.path.join('"' + dir_ + "\\blender.app/Contents/MacOS/blender" + '"')
