@@ -36,7 +36,7 @@ import ssl
 
 
 app = QtWidgets.QApplication(sys.argv)
-appversion = '1.9'
+appversion = '1.9.1'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
@@ -138,7 +138,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         global config
         global installedversion
         global flavor
-        global appversion
         if os.path.isfile('./config.ini'):
             config_exist = True
             logger.info('Reading existing configuration file')
@@ -197,23 +196,25 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             QtWidgets.QMessageBox.critical(
                 self, "Error", "Please check your internet connection")
             logger.critical('No internet connection')
-            sys.exit()
         # Check for new version on github
         try:
             Appupdate = urllib.request.urlopen('https://api.github.com/repos/overmindstudios/BlenderUpdater/releases/latest').read().decode('utf-8')
             logger.info('Getting update info - success')
         except Exception:
-            QtWidgets.QMessageBox.critical(
-                self, "Error", "Unable to get update information")
             logger.error('Unable to get update information from GitHub')
-        UpdateData = json.loads(Appupdate)
-        applatestversion = UpdateData['tag_name']
-        logger.info('Version found online: ' + UpdateData['tag_name'])
-        if StrictVersion(applatestversion) > StrictVersion(appversion):
-            logger.info('Newer version found on Github')
-            self.btn_newVersion.clicked.connect(self.getAppUpdate)
-            self.btn_newVersion.setStyleSheet('background: rgb(73, 50, 20)')
-            self.btn_newVersion.show()
+
+        try:
+            UpdateData = json.loads(Appupdate)
+            applatestversion = UpdateData['tag_name']
+            logger.info('Version found online: ' + UpdateData['tag_name'])
+            if StrictVersion(applatestversion) > StrictVersion(appversion):
+                logger.info('Newer version found on Github')
+                self.btn_newVersion.clicked.connect(self.getAppUpdate)
+                self.btn_newVersion.setStyleSheet('background: rgb(73, 50, 20)')
+                self.btn_newVersion.show()
+        except Exception:
+            QtWidgets.QMessageBox.critical(
+                self, "Error", "Unable to get Github update information")
 
     def select_path(self):
         global dir_
