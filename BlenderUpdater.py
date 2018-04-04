@@ -44,7 +44,6 @@ quicky = False
 lastversion = ''
 installedversion = ''
 flavor = ''
-
 LOG_FORMAT = "%(levelname)s %(asctime)s - %(message)s"
 logging.basicConfig(filename='BlenderUpdater.log',
                     format=LOG_FORMAT,
