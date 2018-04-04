@@ -122,6 +122,7 @@ class WorkerThread(QtCore.QThread):
 
 class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
     def __init__(self, parent=None):
+        logger.info('Running version ' + appversion)
         logger.debug('Constructing UI')
         super(BlenderUpdater, self).__init__(parent)
         self.setupUi(self)
@@ -200,15 +201,16 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         # Check for new version on github
         try:
             Appupdate = urllib.request.urlopen('https://api.github.com/repos/overmindstudios/BlenderUpdater/releases/latest').read().decode('utf-8')
+            logger.info('Getting update info - success')
         except Exception:
             QtWidgets.QMessageBox.critical(
                 self, "Error", "Unable to get update information")
             logger.error('Unable to get update information from GitHub')
         UpdateData = json.loads(Appupdate)
         applatestversion = UpdateData['tag_name']
-        # print(UpdateData['tag_name'])
+        logger.info('Version found online: ' + UpdateData['tag_name'])
         if StrictVersion(applatestversion) > StrictVersion(appversion):
-            logger.info('Updated version found on Github')
+            logger.info('Newer version found on Github')
             self.btn_newVersion.clicked.connect(self.getAppUpdate)
             self.btn_newVersion.setStyleSheet('background: rgb(73, 50, 20)')
             self.btn_newVersion.show()
@@ -614,8 +616,10 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         logger.info('Executing ' + dir_ + 'blender.exe' )
 
     def exec_osx(self):
-        system(os.path.join('"' + dir_ + "\\blender.app" + '"'))
-        logger.info('Executing ' + dir_ + 'blender.app')
+        BlenderOSXPath = os.path.join('"' + dir_ + "\\blender.app/Contents/MacOS/blender" + '"')
+        system("chmod +x " + BlenderOSXPath)
+        system(BlenderOSXPath)
+        logger.info('Executing ' + BlenderOSXPath)
 
     def exec_linux(self):
         logger.info('Executing ' + dir_ + 'blender')
