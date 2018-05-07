@@ -27,6 +27,7 @@ import configparser
 import shutil
 from distutils.dir_util import copy_tree
 import sys
+import subprocess
 import platform
 from distutils.version import StrictVersion
 import json
@@ -528,7 +529,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         nowpixmap = QtGui.QPixmap(
             ':/newPrefix/images/Actions-arrow-right-icon.png')
         self.lbl_download_pic.setPixmap(nowpixmap)
-        self.lbl_downloading.setText('<b>Downloading</b>')
+        self.lbl_downloading.setText('<b>Downloading: </b>' + version)
         self.progressBar.setValue(0)
         self.btn_Check.setDisabled(True)
         self.statusbar.showMessage('Downloading ' + size_readable)
@@ -555,7 +556,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         nowpixmap = QtGui.QPixmap(
             ':/newPrefix/images/Actions-arrow-right-icon.png')
         donepixmap = QtGui.QPixmap(':/newPrefix/images/Check-icon.png')
-        self.lbl_downloading.setText('Downloading')
+        self.lbl_downloading.setText('Downloading: ' + version)
         self.lbl_download_pic.setPixmap(donepixmap)
         self.lbl_extract_pic.setPixmap(nowpixmap)
         self.lbl_extraction.setText('<b>Extraction</b>')
@@ -612,17 +613,17 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             self.btn_execute.clicked.connect(self.exec_linux)
 
     def exec_windows(self):
-        system(os.path.join('"' + dir_ + "\\blender.exe" + '"'))
+        p = subprocess.Popen([os.path.join('"' + dir_ + "\\blender.exe" + '"')])
         logger.info('Executing ' + dir_ + 'blender.exe')
 
     def exec_osx(self):
         BlenderOSXPath = os.path.join('"' + dir_ + "\\blender.app/Contents/MacOS/blender" + '"')
         system("chmod +x " + BlenderOSXPath)
-        system(BlenderOSXPath)
+        p = subprocess.Popen([BlenderOSXPath])
         logger.info('Executing ' + BlenderOSXPath)
 
     def exec_linux(self):
-        system(os.path.join(dir_ + '/blender'))
+        p = subprocess.Popen([(os.path.join(dir_ + '/blender'))])
         logger.info('Executing ' + dir_ + 'blender')
 
 

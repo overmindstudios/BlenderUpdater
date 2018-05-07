@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\mainwindow.ui'
+# Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.10.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -124,7 +124,7 @@ class Ui_MainWindow(object):
         self.lbl_copy_pic.setText("")
         self.lbl_copy_pic.setObjectName("lbl_copy_pic")
         self.lbl_downloading = QtWidgets.QLabel(self.frm_progress)
-        self.lbl_downloading.setGeometry(QtCore.QRect(70, 50, 161, 24))
+        self.lbl_downloading.setGeometry(QtCore.QRect(70, 50, 561, 24))
         self.lbl_downloading.setStyleSheet("")
         self.lbl_downloading.setObjectName("lbl_downloading")
         self.lbl_extraction = QtWidgets.QLabel(self.frm_progress)
