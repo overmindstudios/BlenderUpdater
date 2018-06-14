@@ -529,7 +529,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         nowpixmap = QtGui.QPixmap(
             ':/newPrefix/images/Actions-arrow-right-icon.png')
         self.lbl_download_pic.setPixmap(nowpixmap)
-        self.lbl_downloading.setText('<b>Downloading: </b>' + version)
+        self.lbl_downloading.setText('<b>Downloading: ' + version + '</b>')
         self.progressBar.setValue(0)
         self.btn_Check.setDisabled(True)
         self.statusbar.showMessage('Downloading ' + size_readable)
