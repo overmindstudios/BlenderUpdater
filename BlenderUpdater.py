@@ -230,15 +230,15 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         webbrowser.open("https://github.com/overmindstudios/BlenderUpdater/releases/latest")
 
     def about(self):
-        aboutText = '<html><head/><body><p>Utility to update Blender to the latest buildbot version available at \
+        aboutText = '<html><head/><body><p>Utility to update Blender to the latest buildbot version available at<br> \
         <a href="https://builder.blender.org/download/"><span style=" text-decoration: underline; color:#2980b9;">\
         https://builder.blender.org/download/</span></a></p><p><br/>Developed by Tobias Kummer for \
         <a href="http://www.overmind-studios.de"><span style="text-decoration:underline; color:#2980b9;"> \
         Overmind Studios</span></a></p><p>\
         Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0"><span style=" text-decoration:\
          underline; color:#2980b9;">Apache 2.0 license</span></a></p><p>Project home: \
-         <a href="https://github.com/overmindstudios/BlenderUpdater"><span style=" text-decoration:\
-         underline; color:#2980b9;">https://github.com/overmindstudios/BlenderUpdater</a></p> \
+         <a href="https://overmindstudios.github.io/BlenderUpdater/"><span style=" text-decoration:\
+         underline; color:#2980b9;">https://overmindstudios.github.io/BlenderUpdater/</a></p> \
          Application version: ' + appversion + '</body></html> '
         QtWidgets.QMessageBox.about(self, 'About', aboutText)
 
