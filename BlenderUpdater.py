@@ -592,7 +592,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         logger.info('Finished')
         donepixmap = QtGui.QPixmap(':/newPrefix/images/Check-icon.png')
         self.lbl_clean_pic.setPixmap(donepixmap)
-        self.lbl_cleanup.setText('Cleaning up')
         self.statusbar.showMessage('Ready')
         self.progressBar.setMinimum(0)
         self.progressBar.setMaximum(100)
