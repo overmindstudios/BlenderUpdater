@@ -615,7 +615,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
     def exec_osx(self):
         BlenderOSXPath = os.path.join('"' + dir_ + "\\blender.app/Contents/MacOS/blender" + '"')
         system("chmod +x " + BlenderOSXPath)
-        p = subprocess.Popen([BlenderOSXPath])
+        p = subprocess.Popen(BlenderOSXPath)
         logger.info('Executing ' + BlenderOSXPath)
 
     def exec_linux(self):
