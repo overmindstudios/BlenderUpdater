@@ -529,7 +529,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         nowpixmap = QtGui.QPixmap(
             ':/newPrefix/images/Actions-arrow-right-icon.png')
         self.lbl_download_pic.setPixmap(nowpixmap)
-        self.lbl_downloading.setText('<b>Downloading: ' + version + '</b>')
+        self.lbl_downloading.setText('<b>Downloading ' + version + '</b>')
         self.progressBar.setValue(0)
         self.btn_Check.setDisabled(True)
         self.statusbar.showMessage('Downloading ' + size_readable)
@@ -556,7 +556,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         nowpixmap = QtGui.QPixmap(
             ':/newPrefix/images/Actions-arrow-right-icon.png')
         donepixmap = QtGui.QPixmap(':/newPrefix/images/Check-icon.png')
-        self.lbl_downloading.setText('Downloading: ' + version)
         self.lbl_download_pic.setPixmap(donepixmap)
         self.lbl_extract_pic.setPixmap(nowpixmap)
         self.lbl_extraction.setText('<b>Extraction</b>')
@@ -573,7 +572,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         donepixmap = QtGui.QPixmap(':/newPrefix/images/Check-icon.png')
         self.lbl_extract_pic.setPixmap(donepixmap)
         self.lbl_copy_pic.setPixmap(nowpixmap)
-        self.lbl_extraction.setText('Extraction')
         self.lbl_copying.setText('<b>Copying</b>')
         self.lbl_task.setText('Copying files...')
         self.statusbar.showMessage(
@@ -586,7 +584,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         donepixmap = QtGui.QPixmap(':/newPrefix/images/Check-icon.png')
         self.lbl_copy_pic.setPixmap(donepixmap)
         self.lbl_clean_pic.setPixmap(nowpixmap)
-        self.lbl_copying.setText('Copying')
         self.lbl_cleanup.setText('<b>Cleaning up</b>')
         self.lbl_task.setText('Cleaning up...')
         self.statusbar.showMessage('Cleaning temporary files')
