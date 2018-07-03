@@ -453,7 +453,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                     buttontext = str(
                         text[0]) + " | " + str(text[1]) + " | " + str(text[2])
                     btn[index].setIconSize(QtCore.QSize(24, 24))
-                    btn[index].setText(buttontext)
+                    btn[index].setText(" " + buttontext)
                     btn[index].setFixedWidth(686)
                     btn[index].move(6, 50 + i)
                     i += 32
@@ -654,7 +654,6 @@ def main():
     # qfdarkstyle = open('darkstyle/darkstyle.qss').read()
     # app.setStyleSheet(qfdarkstyle)
     window = BlenderUpdater()
-    # window.setWindowFlag(QtCore.Qt.FramelessWindowHint)
     window.setWindowTitle('Overmind Studios Blender Updater ' + appversion)
     window.statusbar.setSizeGripEnabled(False)
 
