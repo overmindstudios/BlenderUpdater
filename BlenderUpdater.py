@@ -13,7 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-
 from Qt import QtWidgets, QtCore, QtGui
 import os.path
 from os import system
@@ -655,7 +654,9 @@ def main():
     # qfdarkstyle = open('darkstyle/darkstyle.qss').read()
     # app.setStyleSheet(qfdarkstyle)
     window = BlenderUpdater()
+    # window.setWindowFlag(QtCore.Qt.FramelessWindowHint)
     window.setWindowTitle('Overmind Studios Blender Updater ' + appversion)
+    window.statusbar.setSizeGripEnabled(False)
 
     window.show()
     app.exec_()
