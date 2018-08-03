@@ -649,7 +649,7 @@ def main():
     dark_palette.setColor(dark_palette.Disabled, dark_palette.HighlightedText, QtGui.QColor(255, 255, 255))
     dark_palette.setColor(dark_palette.Disabled, dark_palette.ButtonText,
                           QtGui.QColor(127, 127, 127))
-    app.setPalette(dark_palette)
+    app.setPalette(dark_palette) 
 
     # qfdarkstyle = open('darkstyle/darkstyle.qss').read()
     # app.setStyleSheet(qfdarkstyle)

@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'mainwindow.ui'
+# Form implementation generated from reading ui file 'mainwindow.ui',
+# licensing of 'mainwindow.ui' applies.
 #
-# Created by: PyQt5 UI code generator 5.10.1
+# Created: Fri Aug  3 15:34:51 2018
+#      by: pyside2-uic  running on PySide2 5.11.1
 #
 # WARNING! All changes made in this file will be lost!
 
 from Qt import QtCore, QtGui, QtWidgets
-
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -58,8 +59,8 @@ class Ui_MainWindow(object):
         self.lbl_available = QtWidgets.QLabel(self.centralwidget)
         self.lbl_available.setGeometry(QtCore.QRect(6, 25, 645, 20))
         font = QtGui.QFont()
-        font.setBold(True)
         font.setWeight(75)
+        font.setBold(True)
         self.lbl_available.setFont(font)
         self.lbl_available.setAlignment(QtCore.Qt.AlignCenter)
         self.lbl_available.setObjectName("lbl_available")
@@ -192,8 +193,8 @@ class Ui_MainWindow(object):
         self.lbl_caution = QtWidgets.QLabel(self.centralwidget)
         self.lbl_caution.setGeometry(QtCore.QRect(6, 3, 645, 20))
         font = QtGui.QFont()
-        font.setBold(True)
         font.setWeight(75)
+        font.setBold(True)
         self.lbl_caution.setFont(font)
         self.lbl_caution.setAutoFillBackground(True)
         self.lbl_caution.setAlignment(QtCore.Qt.AlignCenter)
@@ -214,21 +215,6 @@ class Ui_MainWindow(object):
         icon11.addPixmap(QtGui.QPixmap(":/newPrefix/images/Blender-icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_execute.setIcon(icon11)
         self.btn_execute.setObjectName("btn_execute")
-        self.btngrp_filter.raise_()
-        self.frm_start.raise_()
-        self.btn_Quit.raise_()
-        self.btn_Check.raise_()
-        self.progressBar.raise_()
-        self.lbl_task.raise_()
-        self.lbl_available.raise_()
-        self.btn_about.raise_()
-        self.btn_cancel.raise_()
-        self.frm_progress.raise_()
-        self.btn_oneclick.raise_()
-        self.lbl_quick.raise_()
-        self.lbl_caution.raise_()
-        self.btn_newVersion.raise_()
-        self.btn_execute.raise_()
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -238,32 +224,31 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "Overmind Studios BlenderUpdater"))
-        self.btn_Quit.setText(_translate("MainWindow", "Quit"))
-        self.btn_Check.setText(_translate("MainWindow", "Version Check"))
-        self.lbl_task.setText(_translate("MainWindow", "TextLabel"))
-        self.lbl_available.setText(_translate("MainWindow", "Available versions from buildbot:"))
-        self.btn_about.setToolTip(_translate("MainWindow", "Settings"))
-        self.lbl_start.setText(_translate("MainWindow", "<html><head/><body><p>Press &quot;Version Check&quot; to get a list of the most current buildbot versions.</p></body></html>"))
-        self.line_path.setText(_translate("MainWindow", "not set"))
-        self.label.setText(_translate("MainWindow", "Choose path (must be an existing folder):"))
-        self.lbl_downloading.setText(_translate("MainWindow", "Downloading"))
-        self.lbl_extraction.setText(_translate("MainWindow", "Extraction"))
-        self.lbl_copying.setText(_translate("MainWindow", "Copying files"))
-        self.lbl_cleanup.setText(_translate("MainWindow", "Cleaning up"))
-        self.btngrp_filter.setTitle(_translate("MainWindow", "Filter results"))
-        self.btn_osx.setText(_translate("MainWindow", "OSX"))
-        self.btn_windows.setText(_translate("MainWindow", "Windows"))
-        self.btn_allos.setText(_translate("MainWindow", "all OS"))
-        self.btn_linux.setText(_translate("MainWindow", "Linux"))
-        self.btn_oneclick.setToolTip(_translate("MainWindow", "Use last used settings to update blender. Uses the path in the above text field and specified version on the button."))
-        self.btn_oneclick.setText(_translate("MainWindow", "PushButton"))
-        self.lbl_quick.setText(_translate("MainWindow", "Quick Update"))
-        self.lbl_caution.setText(_translate("MainWindow", " These builds are not as stable as releases, use at your own risk."))
-        self.btn_newVersion.setToolTip(_translate("MainWindow", "New version available"))
-        self.btn_newVersion.setText(_translate("MainWindow", "New version available"))
-        self.btn_execute.setToolTip(_translate("MainWindow", "Run downloaded Blender version"))
-        self.btn_execute.setText(_translate("MainWindow", "Run Blender"))
+        MainWindow.setWindowTitle(QtWidgets.QApplication.translate("MainWindow", "Overmind Studios BlenderUpdater", None, -1))
+        self.btn_Quit.setText(QtWidgets.QApplication.translate("MainWindow", "Quit", None, -1))
+        self.btn_Check.setText(QtWidgets.QApplication.translate("MainWindow", "Version Check", None, -1))
+        self.lbl_task.setText(QtWidgets.QApplication.translate("MainWindow", "TextLabel", None, -1))
+        self.lbl_available.setText(QtWidgets.QApplication.translate("MainWindow", "Available versions from buildbot:", None, -1))
+        self.btn_about.setToolTip(QtWidgets.QApplication.translate("MainWindow", "Settings", None, -1))
+        self.lbl_start.setText(QtWidgets.QApplication.translate("MainWindow", "<html><head/><body><p>Press &quot;Version Check&quot; to get a list of the most current buildbot versions.</p></body></html>", None, -1))
+        self.line_path.setText(QtWidgets.QApplication.translate("MainWindow", "not set", None, -1))
+        self.label.setText(QtWidgets.QApplication.translate("MainWindow", "Choose path (must be an existing folder):", None, -1))
+        self.lbl_downloading.setText(QtWidgets.QApplication.translate("MainWindow", "Downloading", None, -1))
+        self.lbl_extraction.setText(QtWidgets.QApplication.translate("MainWindow", "Extraction", None, -1))
+        self.lbl_copying.setText(QtWidgets.QApplication.translate("MainWindow", "Copying files", None, -1))
+        self.lbl_cleanup.setText(QtWidgets.QApplication.translate("MainWindow", "Cleaning up", None, -1))
+        self.btngrp_filter.setTitle(QtWidgets.QApplication.translate("MainWindow", "Filter results", None, -1))
+        self.btn_osx.setText(QtWidgets.QApplication.translate("MainWindow", "OSX", None, -1))
+        self.btn_windows.setText(QtWidgets.QApplication.translate("MainWindow", "Windows", None, -1))
+        self.btn_allos.setText(QtWidgets.QApplication.translate("MainWindow", "all OS", None, -1))
+        self.btn_linux.setText(QtWidgets.QApplication.translate("MainWindow", "Linux", None, -1))
+        self.btn_oneclick.setToolTip(QtWidgets.QApplication.translate("MainWindow", "Use last used settings to update blender. Uses the path in the above text field and specified version on the button.", None, -1))
+        self.btn_oneclick.setText(QtWidgets.QApplication.translate("MainWindow", "PushButton", None, -1))
+        self.lbl_quick.setText(QtWidgets.QApplication.translate("MainWindow", "Quick Update", None, -1))
+        self.lbl_caution.setText(QtWidgets.QApplication.translate("MainWindow", " These builds are not as stable as releases, use at your own risk.", None, -1))
+        self.btn_newVersion.setToolTip(QtWidgets.QApplication.translate("MainWindow", "New version available", None, -1))
+        self.btn_newVersion.setText(QtWidgets.QApplication.translate("MainWindow", "New version available", None, -1))
+        self.btn_execute.setToolTip(QtWidgets.QApplication.translate("MainWindow", "Run downloaded Blender version", None, -1))
+        self.btn_execute.setText(QtWidgets.QApplication.translate("MainWindow", "Run Blender", None, -1))
 
 import res_rc
