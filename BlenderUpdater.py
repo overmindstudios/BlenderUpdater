@@ -652,8 +652,6 @@ def main():
                           QtGui.QColor(127, 127, 127))
     app.setPalette(dark_palette)
 
-    # qfdarkstyle = open('darkstyle/darkstyle.qss').read()
-    # app.setStyleSheet(qfdarkstyle)
     window = BlenderUpdater()
     window.setWindowTitle('Overmind Studios Blender Updater ' + appversion)
     window.statusbar.setSizeGripEnabled(False)
