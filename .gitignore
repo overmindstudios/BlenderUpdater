@@ -3,6 +3,7 @@
 /.ropeproject
 /build
 /dist
+/vendor/__pycache__
 
 BlenderUpdater.log
 BlenderUpdater.spec

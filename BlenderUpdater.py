@@ -15,7 +15,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from Qt import QtWidgets, QtCore, QtGui
+from vendor.Qt import QtWidgets, QtCore, QtGui
 import os.path
 from os import system
 from bs4 import BeautifulSoup

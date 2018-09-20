@@ -7,7 +7,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from Qt import QtCore
+from vendor.Qt import QtCore
 
 qt_resource_data = b"\
 \x00\x00\x01\x1e\
