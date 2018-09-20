@@ -15,6 +15,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+import sys
 from vendor.Qt import QtWidgets, QtCore, QtGui
 import os.path
 from os import system
@@ -27,7 +28,6 @@ import mainwindow
 import configparser
 import shutil
 from distutils.dir_util import copy_tree
-import sys
 import subprocess
 import platform
 from distutils.version import StrictVersion
