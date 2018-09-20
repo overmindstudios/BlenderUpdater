@@ -4,6 +4,7 @@
 /build
 /dist
 /vendor/__pycache__
+/.vscode
 
 BlenderUpdater.log
 BlenderUpdater.spec
