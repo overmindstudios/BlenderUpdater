@@ -3,8 +3,8 @@
 # Form implementation generated from reading ui file 'mainwindow.ui',
 # licensing of 'mainwindow.ui' applies.
 #
-# Created: Fri Aug  3 15:34:51 2018
-#      by: pyside2-uic  running on PySide2 5.11.1
+# Created: Thu Sep 20 20:58:57 2018
+#      by: pyside2-uic  running on PySide2 5.11.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -143,7 +143,7 @@ class Ui_MainWindow(object):
         self.lbl_cleanup.setGeometry(QtCore.QRect(70, 140, 171, 24))
         self.lbl_cleanup.setObjectName("lbl_cleanup")
         self.btngrp_filter = QtWidgets.QGroupBox(self.centralwidget)
-        self.btngrp_filter.setGeometry(QtCore.QRect(200, 455, 307, 61))
+        self.btngrp_filter.setGeometry(QtCore.QRect(200, 445, 307, 81))
         self.btngrp_filter.setObjectName("btngrp_filter")
         self.btn_osx = QtWidgets.QPushButton(self.btngrp_filter)
         self.btn_osx.setGeometry(QtCore.QRect(227, 30, 75, 23))
@@ -168,7 +168,7 @@ class Ui_MainWindow(object):
         self.btn_allos.setGeometry(QtCore.QRect(5, 30, 75, 23))
         self.btn_allos.setStyleSheet("")
         self.btn_allos.setCheckable(True)
-        self.btn_allos.setChecked(True)
+        self.btn_allos.setChecked(False)
         self.btn_allos.setAutoExclusive(True)
         self.btn_allos.setObjectName("btn_allos")
         self.btn_linux = QtWidgets.QPushButton(self.btngrp_filter)
@@ -179,6 +179,19 @@ class Ui_MainWindow(object):
         self.btn_linux.setCheckable(True)
         self.btn_linux.setAutoExclusive(True)
         self.btn_linux.setObjectName("btn_linux")
+        self.btn_64 = QtWidgets.QPushButton(self.btngrp_filter)
+        self.btn_64.setGeometry(QtCore.QRect(79, 52, 75, 23))
+        self.btn_64.setStyleSheet("")
+        self.btn_64.setCheckable(True)
+        self.btn_64.setChecked(True)
+        self.btn_64.setAutoExclusive(False)
+        self.btn_64.setObjectName("btn_64")
+        self.btn_32 = QtWidgets.QPushButton(self.btngrp_filter)
+        self.btn_32.setGeometry(QtCore.QRect(153, 52, 75, 23))
+        self.btn_32.setCheckable(True)
+        self.btn_32.setChecked(True)
+        self.btn_32.setAutoExclusive(False)
+        self.btn_32.setObjectName("btn_32")
         self.btn_oneclick = QtWidgets.QPushButton(self.centralwidget)
         self.btn_oneclick.setGeometry(QtCore.QRect(260, 480, 191, 35))
         self.btn_oneclick.setStyleSheet("")
@@ -242,6 +255,8 @@ class Ui_MainWindow(object):
         self.btn_windows.setText(QtWidgets.QApplication.translate("MainWindow", "Windows", None, -1))
         self.btn_allos.setText(QtWidgets.QApplication.translate("MainWindow", "all OS", None, -1))
         self.btn_linux.setText(QtWidgets.QApplication.translate("MainWindow", "Linux", None, -1))
+        self.btn_64.setText(QtWidgets.QApplication.translate("MainWindow", "64 bit", None, -1))
+        self.btn_32.setText(QtWidgets.QApplication.translate("MainWindow", "32 bit", None, -1))
         self.btn_oneclick.setToolTip(QtWidgets.QApplication.translate("MainWindow", "Use last used settings to update blender. Uses the path in the above text field and specified version on the button.", None, -1))
         self.btn_oneclick.setText(QtWidgets.QApplication.translate("MainWindow", "PushButton", None, -1))
         self.lbl_quick.setText(QtWidgets.QApplication.translate("MainWindow", "Quick Update", None, -1))
@@ -252,3 +267,13 @@ class Ui_MainWindow(object):
         self.btn_execute.setText(QtWidgets.QApplication.translate("MainWindow", "Run Blender", None, -1))
 
 import res_rc
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
+

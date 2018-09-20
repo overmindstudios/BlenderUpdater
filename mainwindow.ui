@@ -417,9 +417,9 @@
     <property name="geometry">
      <rect>
       <x>200</x>
-      <y>455</y>
+      <y>445</y>
       <width>307</width>
-      <height>61</height>
+      <height>81</height>
      </rect>
     </property>
     <property name="title">
@@ -499,7 +499,7 @@
       <bool>true</bool>
      </property>
      <property name="checked">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="autoExclusive">
       <bool>true</bool>
@@ -526,6 +526,53 @@
      </property>
      <property name="autoExclusive">
       <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_64">
+     <property name="geometry">
+      <rect>
+       <x>79</x>
+       <y>52</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="text">
+      <string>64 bit</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_32">
+     <property name="geometry">
+      <rect>
+       <x>153</x>
+       <y>52</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>32 bit</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>false</bool>
      </property>
     </widget>
    </widget>
@@ -648,7 +695,6 @@
       <normaloff>:/newPrefix/images/Blender-icon.png</normaloff>:/newPrefix/images/Blender-icon.png</iconset>
     </property>
    </widget>
-   <zorder>btngrp_filter</zorder>
    <zorder>frm_start</zorder>
    <zorder>btn_Quit</zorder>
    <zorder>btn_Check</zorder>
@@ -663,6 +709,7 @@
    <zorder>lbl_caution</zorder>
    <zorder>btn_newVersion</zorder>
    <zorder>btn_execute</zorder>
+   <zorder>btngrp_filter</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
