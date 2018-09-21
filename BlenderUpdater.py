@@ -384,8 +384,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             global btn
             global current_filter
 
-            print(str(os) + " " + current_filter)
-
             if os in [64, 32]:
                 filterBtns(current_filter)
                 return
