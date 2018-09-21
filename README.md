@@ -1,7 +1,7 @@
-![Screenshot](https://raw.githubusercontent.com/overmindstudios/BlenderUpdater/master/screenshot.png)
+![Screenshot](https://raw.githubusercontent.com/ogierm/BlenderUpdater/master/screenshot.png)
 
 # BlenderUpdater
- ![logo](https://raw.githubusercontent.com/overmindstudios/BlenderUpdater/master//images/appicon.png)
+ ![logo](https://raw.githubusercontent.com/ogierm/BlenderUpdater/master//images/appicon.png)
 
 A small crossplatform (Linux, Windows, OSX) Python3 GUI application to check [https://builder.blender.org/download](https://builder.blender.org/download) for
 the latest buildbot version. Download and install nightly builds with one click. Brought to you by [Overmind Studios](http://www.overmind-studios.de).
@@ -20,11 +20,11 @@ Specify a folder on your system (e.g. `C:\Blender`) where the Blender build will
 Then click on the "Version Check" button to see a list of currently available builds. The ones matching your operating system will be highlighted. Click on the desired version to download and copy to your specified folder.
 When everything has finished, you'll see a "Run Blender" button to start the new version right away.
 
-![Screenshot](https://raw.githubusercontent.com/overmindstudios/BlenderUpdater/master/run_blender.png)
+![Screenshot](https://raw.githubusercontent.com/ogierm/BlenderUpdater/master/run_blender.png)
 
 In case there is an update for BlenderUpdater, you'll see a button in the top right corner to go to the download page.
 
-![Screenshot](https://raw.githubusercontent.com/overmindstudios/BlenderUpdater/master/app_update.png)
+![Screenshot](https://raw.githubusercontent.com/ogierm/BlenderUpdater/master/app_update.png)
 
 ## Known limitations
 Due to UAC starting in Windows Vista, you cannot use the `C:\Program Files\` directory as a
