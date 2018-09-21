@@ -38,7 +38,7 @@ import ssl
 import setstyle
 
 app = QtWidgets.QApplication(sys.argv)
-appversion = '1.9.3'
+appversion = '1.10.0'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
@@ -200,7 +200,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             logger.critical('No internet connection')
         # Check for new version on github
         try:
-            Appupdate = requests.get('https://api.github.com/repos/overmindstudios/BlenderUpdater/releases/latest').text
+            Appupdate = requests.get('https://api.github.com/repos/ogierm/BlenderUpdater/releases/latest').text
             logger.info('Getting update info - success')
         except Exception:
             logger.error('Unable to get update information from GitHub')
@@ -229,18 +229,18 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             pass
 
     def getAppUpdate(self):
-        webbrowser.open("https://github.com/overmindstudios/BlenderUpdater/releases/latest")
+        webbrowser.open("https://github.com/ogierm/BlenderUpdater/releases/latest")
 
     def about(self):
         aboutText = '<html><head/><body><p>Utility to update Blender to the latest buildbot version available at<br> \
         <a href="https://builder.blender.org/download/"><span style=" text-decoration: underline; color:#2980b9;">\
-        https://builder.blender.org/download/</span></a></p><p><br/>Developed by Tobias Kummer for \
+        https://builder.blender.org/download/</span></a></p><p><br/>Originally developed by Tobias Kummer for \
         <a href="http://www.overmind-studios.de"><span style="text-decoration:underline; color:#2980b9;"> \
         Overmind Studios</span></a></p><p>\
         Licensed under the <a href="https://www.gnu.org/licenses/gpl-3.0-standalone.html"><span style=" text-decoration:\
          underline; color:#2980b9;">GPL v3 license</span></a></p><p>Project home: \
-         <a href="https://overmindstudios.github.io/BlenderUpdater/"><span style=" text-decoration:\
-         underline; color:#2980b9;">https://overmindstudios.github.io/BlenderUpdater/</a></p> \
+         <a href="https://ogierm.github.io/BlenderUpdater/"><span style=" text-decoration:\
+         underline; color:#2980b9;">https://ogierm.github.io/BlenderUpdater/</a></p> \
          Application version: ' + appversion + '</body></html> '
         QtWidgets.QMessageBox.about(self, 'About', aboutText)
 
