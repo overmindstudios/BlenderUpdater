@@ -528,7 +528,7 @@
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="btn_64">
+    <widget class="QCheckBox" name="btn_64">
      <property name="geometry">
       <rect>
        <x>79</x>
@@ -553,7 +553,7 @@
       <bool>false</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="btn_32">
+    <widget class="QCheckBox" name="btn_32">
      <property name="geometry">
       <rect>
        <x>153</x>

@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'mainwindow.ui',
 # licensing of 'mainwindow.ui' applies.
 #
-# Created: Thu Sep 20 20:58:57 2018
+# Created: Fri Sep 21 15:39:34 2018
 #      by: pyside2-uic  running on PySide2 5.11.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -179,14 +179,14 @@ class Ui_MainWindow(object):
         self.btn_linux.setCheckable(True)
         self.btn_linux.setAutoExclusive(True)
         self.btn_linux.setObjectName("btn_linux")
-        self.btn_64 = QtWidgets.QPushButton(self.btngrp_filter)
+        self.btn_64 = QtWidgets.QCheckBox(self.btngrp_filter)
         self.btn_64.setGeometry(QtCore.QRect(79, 52, 75, 23))
         self.btn_64.setStyleSheet("")
         self.btn_64.setCheckable(True)
         self.btn_64.setChecked(True)
         self.btn_64.setAutoExclusive(False)
         self.btn_64.setObjectName("btn_64")
-        self.btn_32 = QtWidgets.QPushButton(self.btngrp_filter)
+        self.btn_32 = QtWidgets.QCheckBox(self.btngrp_filter)
         self.btn_32.setGeometry(QtCore.QRect(153, 52, 75, 23))
         self.btn_32.setCheckable(True)
         self.btn_32.setChecked(True)
