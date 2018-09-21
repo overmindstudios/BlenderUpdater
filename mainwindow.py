@@ -143,7 +143,7 @@ class Ui_MainWindow(object):
         self.lbl_cleanup.setGeometry(QtCore.QRect(70, 140, 171, 24))
         self.lbl_cleanup.setObjectName("lbl_cleanup")
         self.btngrp_filter = QtWidgets.QGroupBox(self.centralwidget)
-        self.btngrp_filter.setGeometry(QtCore.QRect(200, 445, 307, 81))
+        self.btngrp_filter.setGeometry(QtCore.QRect(200, 447, 307, 81))
         self.btngrp_filter.setObjectName("btngrp_filter")
         self.btn_osx = QtWidgets.QPushButton(self.btngrp_filter)
         self.btn_osx.setGeometry(QtCore.QRect(227, 30, 75, 23))
