@@ -42,10 +42,13 @@ appversion = '1.9.2'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
+opsys = platform.system()
+oparch = platform.architecture()[0][:2]
 quicky = False
 lastversion = ''
 installedversion = ''
 flavor = ''
+current_filter = "all"
 LOG_FORMAT = "%(levelname)s %(asctime)s - %(message)s"
 logging.basicConfig(filename='BlenderUpdater.log',
                     format=LOG_FORMAT,
@@ -53,6 +56,8 @@ logging.basicConfig(filename='BlenderUpdater.log',
                     filemode='w')
 
 logger = logging.getLogger()
+logger.info('Operating system: ' + opsys) 
+logger.info('System architechture: ' + oparch + 'bit')
 
 
 class WorkerThread(QtCore.QThread):
@@ -352,125 +357,89 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                         self.download(version, variation)
                         return
 
-        def filterall():
-            """Generate buttons for downloadable versions."""
-            global btn
-            global flavor
-            opsys = platform.system()
-            logger.info('Operating system: ' + opsys)
-            for i in btn:
-                btn[i].hide()
-            i = 0
-            btn = {}
-            for index, text in enumerate(finallist):
-                btn[index] = QtWidgets.QPushButton(self)
-                logger.debug(text[0] + " | " + text[1] + " | " + text[2])
-                if "OSX" in text[0]:             # set icon according to OS
-                    if opsys == "Darwin":
-                        btn[index].setStyleSheet('background: rgb(22, 52, 73)')
-                    btn[index].setIcon(appleicon)
-                elif "linux" in text[0]:
-                    if opsys == "Linux":
-                        btn[index].setStyleSheet('background: rgb(22, 52, 73)')
-                    btn[index].setIcon(linuxicon)
-                elif "win" in text[0]:
-                    if opsys == "Windows":
-                        btn[index].setStyleSheet('background: rgb(22, 52, 73)')
-                    btn[index].setIcon(windowsicon)
+        def isArchNotFiltered(text):
+            if self.btn_64.isChecked() and buildIsArch(text, 64):
+                return True
+            elif self.btn_32.isChecked() and buildIsArch(text, 32):
+                return True
+            return False
 
-                version = str(text[0])
-                variation = str(text[0])
-                buttontext = str(
-                    text[0]) + " | " + str(text[1]) + " | " + str(text[2])
-                btn[index].setIconSize(QtCore.QSize(24, 24))
-                btn[index].setText(buttontext)
-                btn[index].setFixedWidth(686)
-                btn[index].move(6, 50 + i)
-                i += 32
-                btn[index].clicked.connect(
-                    lambda throwaway=0,
-                    version=version: self.download(version, variation))
-                btn[index].show()
+        def matchesArch(text):
+            if oparch == "64" and buildIsArch(text, 64):
+                return True
+            elif oparch == "32" and buildIsArch(text, 32):
+                return True
+            return False
 
-        def filterosx():
+        def buildIsArch(text, arch):
+            if arch == 64:
+                if "win64" in text or "x86_64" in text:
+                    return True
+            elif arch == 32:
+                if "win32" in text or "i686" in text:
+                    return True
+            return False
+
+        def filterBtns(os):
             global btn
+            global current_filter
+
+            print(str(os) + " " + current_filter)
+
+            if os in [64, 32]:
+                filterBtns(current_filter)
+                return
+            else:
+                current_filter = os
+
             for i in btn:
                 btn[i].hide()
             btn = {}
             i = 0
             for index, text in enumerate(finallist):
                 btn[index] = QtWidgets.QPushButton(self)
-                if "OSX" in text[0]:
-                    btn[index].setIcon(appleicon)
-                    version = str(text[0])
-                    variation = str(text[0])
-                    buttontext = str(
-                        text[0]) + " | " + str(text[1]) + " | " + str(text[2])
-                    btn[index].setIconSize(QtCore.QSize(24, 24))
-                    btn[index].setText(buttontext)
-                    btn[index].setFixedWidth(686)
-                    btn[index].move(6, 50 + i)
+                if os in text[0] and isArchNotFiltered(text[0]) or os == "all" and isArchNotFiltered(text[0]):
+                    setIcon(index, text, btn)
+                    readyButton(index, text, btn, i)
                     i += 32
-                    btn[index].clicked.connect(
-                        lambda throwaway=0,
-                        version=version: self.download(version, variation))
-                    btn[index].show()
 
-        def filterlinux():
-            global btn
-            for i in btn:
-                btn[i].hide()
-            btn = {}
-            i = 0
-            for index, text in enumerate(finallist):
-                btn[index] = QtWidgets.QPushButton(self)
-                if "linux" in text[0]:
-                    btn[index].setIcon(linuxicon)
-                    version = str(text[0])
-                    variation = str(text[0])
-                    buttontext = str(
-                        text[0]) + " | " + str(text[1]) + " | " + str(text[2])
-                    btn[index].setIconSize(QtCore.QSize(24, 24))
-                    btn[index].setText(buttontext)
-                    btn[index].setFixedWidth(686)
-                    btn[index].move(6, 50 + i)
-                    i += 32
-                    btn[index].clicked.connect(
-                        lambda throwaway=0,
-                        version=version: self.download(version, variation))
-                    btn[index].show()
+        def setIcon(index, text, btn):
+            if "OSX" in text[0]:             # set icon according to OS
+                if opsys == "Darwin" and matchesArch(text[0]):
+                    btn[index].setStyleSheet('background: rgb(22, 52, 73)')
+                btn[index].setIcon(appleicon)
+            elif "linux" in text[0]:
+                if opsys == "Linux" and matchesArch(text[0]):
+                    btn[index].setStyleSheet('background: rgb(22, 52, 73)')
+                btn[index].setIcon(linuxicon)
+            elif "win" in text[0]:
+                if opsys == "Windows" and matchesArch(text[0]):
+                    btn[index].setStyleSheet('background: rgb(22, 52, 73)')
+                btn[index].setIcon(windowsicon)
 
-        def filterwindows():
-            global btn
-            for i in btn:
-                btn[i].hide()
-            btn = {}
-            i = 0
-            for index, text in enumerate(finallist):
-                btn[index] = QtWidgets.QPushButton(self)
-                if "win" in text[0]:
-                    btn[index].setIcon(windowsicon)
-                    version = str(text[0])
-                    variation = str(text[0])
-                    buttontext = str(
-                        text[0]) + " | " + str(text[1]) + " | " + str(text[2])
-                    btn[index].setIconSize(QtCore.QSize(24, 24))
-                    btn[index].setText(" " + buttontext)
-                    btn[index].setFixedWidth(686)
-                    btn[index].move(6, 50 + i)
-                    i += 32
-                    btn[index].clicked.connect(
-                        lambda throwaway=0,
-                        version=version: self.download(version, variation))
-                    btn[index].show()
+        def readyButton(index, text, btn, i):
+            version = str(text[0])
+            variation = str(text[0])
+            buttontext = str(
+                text[0]) + " | " + str(text[1]) + " | " + str(text[2])
+            btn[index].setIconSize(QtCore.QSize(24, 24))
+            btn[index].setText(" " + buttontext)
+            btn[index].setFixedWidth(686)
+            btn[index].move(6, 50 + i)
+            btn[index].clicked.connect(
+                lambda throwaway=0,
+                version=version: self.download(version, variation))
+            btn[index].show()
 
         self.lbl_available.show()
         self.lbl_caution.show()
         self.btngrp_filter.show()
-        self.btn_osx.clicked.connect(filterosx)
-        self.btn_linux.clicked.connect(filterlinux)
-        self.btn_windows.clicked.connect(filterwindows)
-        self.btn_allos.clicked.connect(filterall)
+        self.btn_osx.clicked.connect(lambda: filterBtns("OSX"))
+        self.btn_linux.clicked.connect(lambda: filterBtns("linux"))
+        self.btn_windows.clicked.connect(lambda: filterBtns("win"))
+        self.btn_allos.clicked.connect(lambda: filterBtns("all"))
+        self.btn_64.clicked.connect(lambda: filterBtns(64))
+        self.btn_32.clicked.connect(lambda: filterBtns(32))
         lastcheck = datetime.now().strftime('%a %b %d %H:%M:%S %Y')
         self.statusbar.showMessage("Ready - Last check: " + str(lastcheck))
         config.read('config.ini')
@@ -478,7 +447,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         with open('config.ini', 'w') as f:
             config.write(f)
         f.close()
-        filterall()
+        filterBtns("all")
 
     def download(self, version, variation):
         """Download routines."""
