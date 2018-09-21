@@ -15,7 +15,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import sys
 from vendor.Qt import QtWidgets, QtCore, QtGui
 import os.path
 import os
@@ -28,6 +27,7 @@ import mainwindow
 import configparser
 import shutil
 from distutils.dir_util import copy_tree
+import sys
 import subprocess
 import platform
 from distutils.version import StrictVersion
@@ -44,7 +44,6 @@ config = configparser.ConfigParser()
 btn = {}
 opsys = platform.system()
 oparch = platform.architecture()[0][:2]
-quicky = False
 lastversion = ''
 installedversion = ''
 flavor = ''
