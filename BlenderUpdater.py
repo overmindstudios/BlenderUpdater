@@ -18,7 +18,7 @@
 import sys
 from vendor.Qt import QtWidgets, QtCore, QtGui
 import os.path
-from os import system
+import os
 from bs4 import BeautifulSoup
 import requests
 import urllib.request
@@ -35,7 +35,7 @@ import json
 import webbrowser
 import logging
 import ssl
-
+import setstyle
 
 app = QtWidgets.QApplication(sys.argv)
 appversion = '1.9.3'
@@ -50,6 +50,7 @@ installedversion = ''
 flavor = ''
 current_filter = "all"
 LOG_FORMAT = "%(levelname)s %(asctime)s - %(message)s"
+
 logging.basicConfig(filename='BlenderUpdater.log',
                     format=LOG_FORMAT,
                     level=logging.DEBUG,
@@ -61,6 +62,7 @@ logger.info('System architechture: ' + oparch + 'bit')
 
 
 class WorkerThread(QtCore.QThread):
+    '''Does all the actual work in the background, informs GUI about status'''
     update = QtCore.Signal(int)
     finishedDL = QtCore.Signal()
     finishedEX = QtCore.Signal()
@@ -108,11 +110,11 @@ class WorkerThread(QtCore.QThread):
                 f.close()
 
     def progress(self, count, blockSize, totalSize):
+        '''Updates progress bar'''
         percent = int(count * blockSize * 100 / totalSize)
         self.update.emit(percent)
 
     def run(self):
-        global quicky
         urllib.request.urlretrieve(self.url, self.filename,
                                    reporthook=self.progress)
         self.finishedDL.emit()
@@ -122,7 +124,6 @@ class WorkerThread(QtCore.QThread):
         copy_tree(os.path.join('./blendertemp/', source[0]), dir_)
         self.finishedCP.emit()
         shutil.rmtree('./blendertemp')
-        quicky = False
         self.finishedCL.emit()
 
 
@@ -155,10 +156,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             flavor = config.get('main', 'flavor')
             if lastversion is not '':
                 self.btn_oneclick.setText(flavor + ' | ' + lastversion)
-                self.btn_oneclick.clicked.connect(self.quickupdate)
-                # self.btn_oneclick.show()
-                # self.lbl_quick.show() Disable QuickUpdate for now
-                # TODO re-implement Quickupdate, therefore refactor flavor
             else:
                 pass
 
@@ -271,7 +268,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
     def check(self):
         global dir_
-        global quicky
         global lastversion
         global installedversion
         dir_ = self.line_path.text()
@@ -316,46 +312,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             sub = list(filter(None, sub))
             finallist.append(sub)
         finallist = list(filter(None, finallist))
-        if quicky:
-            self.btn_Check.setDisabled(True)
-            if lastversion == 'Windows 32bit':
-                quickversion = 'win32'
-                variation = flavor
-            if lastversion == 'Windows 64bit':
-                quickversion = 'win64'
-                variation = flavor
-            if lastversion == 'OSX':
-                quickversion = 'OSX'
-                variation = flavor
-            if lastversion == 'Linux glibc211 i686':
-                quickversion = 'linux-glibc211-i686'
-                variation = flavor
-            if lastversion == 'Linux glibc219 i686':
-                quickversion = 'linux-glibc219-i686'
-                variation = flavor
-            if lastversion == 'Linux glibc211 x86_64':
-                quickversion = 'linux-glibc211-x86_64'
-                variation = flavor
-            if lastversion == 'Linux glibc219 x86_64':
-                quickversion = 'linux-glibc219_x86_64'
-                variation = flavor
-            for index, text in enumerate(finallist):
-                if quickversion in text[1] and variation in text[0]:
-                    version = str(text[0])
-                    if version == installedversion and variation in text[0]:
-                        reply = QtWidgets.QMessageBox.question(
-                            self, 'Warning',
-                            "This version is already installed. Do you still want to continue?",
-                            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
-                            QtWidgets.QMessageBox.No)
-                        if reply == QtWidgets.QMessageBox.Yes:
-                            self.download(version, variation)
-                            logger.info('Re-downloading installed version')
-                        else:
-                            logger.info('Skipping download of existing version')
-                    else:
-                        self.download(version, variation)
-                        return
 
         def isArchNotFiltered(text):
             if self.btn_64.isChecked() and buildIsArch(text, 64):
@@ -509,11 +465,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         thread.finishedCL.connect(self.done)
         thread.start()
 
-    def quickupdate(self):
-        global quicky
-        quicky = True
-        self.check()
-
     def updatepb(self, percent):
         self.progressBar.setValue(percent)
 
@@ -571,7 +522,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         opsys = platform.system()
         if opsys == 'Windows':
             self.btn_execute.clicked.connect(self.exec_windows)
-        if opsys == 'Darwin':
+        if opsys.lower == 'darwin':
             self.btn_execute.clicked.connect(self.exec_osx)
         if opsys == 'Linux':
             self.btn_execute.clicked.connect(self.exec_linux)
@@ -592,38 +543,13 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
 
 def main():
+
     app.setStyle("Fusion")
 
-    dark_palette = QtGui.QPalette()
-
-    dark_palette.setColor(dark_palette.Window, QtGui.QColor(53, 53, 53))
-    dark_palette.setColor(dark_palette.WindowText, QtGui.QColor(255, 255, 255))
-    dark_palette.setColor(dark_palette.Disabled, dark_palette.WindowText, QtGui.QColor(127, 127, 127))
-    dark_palette.setColor(dark_palette.Base, QtGui.QColor(42, 42, 42))
-    dark_palette.setColor(dark_palette.AlternateBase, QtGui.QColor(66, 66, 66))
-    dark_palette.setColor(dark_palette.ToolTipBase, QtGui.QColor(255, 255, 255))
-    dark_palette.setColor(dark_palette.ToolTipText, QtGui.QColor(255, 255, 255))
-    dark_palette.setColor(dark_palette.Text, QtGui.QColor(255, 255, 255))
-    dark_palette.setColor(dark_palette.Disabled, dark_palette.Text, QtGui.QColor(127, 127, 127))
-    dark_palette.setColor(dark_palette.Dark, QtGui.QColor(35, 35, 35))
-    dark_palette.setColor(dark_palette.Shadow, QtGui.QColor(20, 20, 20))
-
-    dark_palette.setColor(dark_palette.Button, QtGui.QColor(53, 53, 53))
-    dark_palette.setColor(dark_palette.ButtonText, QtGui.QColor(255, 255, 255))
-    dark_palette.setColor(dark_palette.BrightText, QtGui.QColor(255, 0, 0))
-    dark_palette.setColor(dark_palette.Link, QtGui.QColor(42, 130, 218))
-    dark_palette.setColor(dark_palette.Highlight, QtGui.QColor(42, 130, 218))
-    dark_palette.setColor(dark_palette.Disabled, dark_palette.Highlight, QtGui.QColor(80, 80, 80))
-    dark_palette.setColor(dark_palette.HighlightedText, QtGui.QColor(255, 255, 255))
-    dark_palette.setColor(dark_palette.Disabled, dark_palette.HighlightedText, QtGui.QColor(255, 255, 255))
-    dark_palette.setColor(dark_palette.Disabled, dark_palette.ButtonText,
-                          QtGui.QColor(127, 127, 127))
-    app.setPalette(dark_palette)
-
+    app.setPalette(setstyle.setPalette())
     window = BlenderUpdater()
     window.setWindowTitle('Overmind Studios Blender Updater ' + appversion)
     window.statusbar.setSizeGripEnabled(False)
-
     window.show()
     app.exec_()
 
