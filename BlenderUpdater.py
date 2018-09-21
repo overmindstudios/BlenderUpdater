@@ -56,6 +56,7 @@ logger = logging.getLogger()
 
 
 class WorkerThread(QtCore.QThread):
+    '''Does all the actual work in the background, informs GUI about status'''
     update = QtCore.Signal(int)
     finishedDL = QtCore.Signal()
     finishedEX = QtCore.Signal()
@@ -103,6 +104,7 @@ class WorkerThread(QtCore.QThread):
                 f.close()
 
     def progress(self, count, blockSize, totalSize):
+        '''Updates progress bar'''
         percent = int(count * blockSize * 100 / totalSize)
         self.update.emit(percent)
 
