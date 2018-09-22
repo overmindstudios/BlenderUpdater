@@ -9,6 +9,7 @@ requests = "*"
 "bs4" = "*"
 "qt.py" = "*"
 "urllib3" = "*"
+pyinstaller = "*"
 
 [dev-packages]
 

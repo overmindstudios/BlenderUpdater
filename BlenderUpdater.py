@@ -14,8 +14,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
+import sys
+'''Do a check if running from frozen binary'''
+if getattr( sys, 'frozen', False ):
+    from PySide2 import QtWidgets, QtCore, QtGui
+else:
+    from Qt import QtWidgets, QtCore, QtGui
 
-from Qt import QtWidgets, QtCore, QtGui
 import os.path
 import os
 from bs4 import BeautifulSoup
@@ -27,7 +32,6 @@ import mainwindow
 import configparser
 import shutil
 from distutils.dir_util import copy_tree
-import sys
 import subprocess
 import platform
 from distutils.version import StrictVersion
