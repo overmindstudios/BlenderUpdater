@@ -14,12 +14,6 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-import sys
-'''Do a check if running from frozen binary'''
-if getattr( sys, 'frozen', False ):
-    from PySide2 import QtWidgets, QtCore, QtGui
-else:
-    from Qt import QtWidgets, QtCore, QtGui
 
 import os.path
 import os
@@ -40,6 +34,12 @@ import webbrowser
 import logging
 import ssl
 import setstyle
+import sys
+'''Do a check if running from frozen binary'''
+if getattr(sys, 'frozen', False):
+    from PySide2 import QtWidgets, QtCore, QtGui
+else:
+    from Qt import QtWidgets, QtCore, QtGui
 
 app = QtWidgets.QApplication(sys.argv)
 appversion = '1.9.2'
@@ -569,7 +569,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
     def exec_osx(self):
         BlenderOSXPath = os.path.join('"' + dir_ + "\\blender.app/Contents/MacOS/blender" + '"')
-        system("chmod +x " + BlenderOSXPath)
+        os.system("chmod +x " + BlenderOSXPath)
         p = subprocess.Popen(BlenderOSXPath)
         logger.info('Executing ' + BlenderOSXPath)
 
