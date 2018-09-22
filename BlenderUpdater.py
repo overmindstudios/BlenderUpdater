@@ -35,8 +35,7 @@ import logging
 import ssl
 import setstyle
 import sys
-'''Do a check if running from frozen binary'''
-if getattr(sys, 'frozen', False):
+if getattr(sys, 'frozen', False):  # Do a check if running from frozen binary
     from PySide2 import QtWidgets, QtCore, QtGui
 else:
     from Qt import QtWidgets, QtCore, QtGui
@@ -48,7 +47,6 @@ config = configparser.ConfigParser()
 btn = {}
 lastversion = ''
 installedversion = ''
-flavor = ''
 LOG_FORMAT = "%(levelname)s %(asctime)s - %(message)s"
 
 logging.basicConfig(filename='BlenderUpdater.log',
@@ -142,7 +140,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         global dir_
         global config
         global installedversion
-        global flavor
         if os.path.isfile('./config.ini'):
             config_exist = True
             logger.info('Reading existing configuration file')
@@ -314,7 +311,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         def filterall():
             """Generate buttons for downloadable versions."""
             global btn
-            global flavor
             opsys = platform.system()
             logger.info('Operating system: ' + opsys)
             for i in btn:
