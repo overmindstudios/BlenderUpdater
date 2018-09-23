@@ -547,7 +547,7 @@ def main():
 
     app.setPalette(setstyle.setPalette())
     window = BlenderUpdater()
-    window.setWindowTitle('Overmind Studios Blender Updater ' + appversion)
+    window.setWindowTitle('Blender Updater ' + appversion)
     window.statusbar.setSizeGripEnabled(False)
     window.show()
     app.exec_()
