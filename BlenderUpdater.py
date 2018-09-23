@@ -38,7 +38,7 @@ import sys
 from PySide2 import QtWidgets, QtCore, QtGui
 
 app = QtWidgets.QApplication(sys.argv)
-appversion = '1.10.0'
+appversion = '1.10.1'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
@@ -232,20 +232,18 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         webbrowser.open("https://github.com/ogierm/BlenderUpdater/releases/latest")
 
     def about(self):
-        aboutText = '<html><head/><body><p>Utility to update Blender to the latest buildbot version available at<br> \
-        <a href="https://builder.blender.org/download/"><span style=" text-decoration: underline; color:#2980b9;">\
-        https://builder.blender.org/download/</span></a></p><p><br/>Originally developed by Tobias Kummer for \
-        <a href="http://www.overmind-studios.de"><span style="text-decoration:underline; color:#2980b9;"> \
-        Overmind Studios</span></a></p><p>\
-        Licensed under the <a href="https://www.gnu.org/licenses/gpl-3.0-standalone.html"><span style=" text-decoration:\
-         underline; color:#2980b9;">GPL v3 license</span></a></p><p>Project home: \
-         <a href="https://ogierm.github.io/BlenderUpdater/"><span style=" text-decoration:\
-         underline; color:#2980b9;">https://ogierm.github.io/BlenderUpdater/</a></p> \
-         Application version: ' + appversion + '</body></html> '
+        aboutText = r''' <html><head></head><body>
+        <p>Utility to update Blender to the latest buildbot version available at<br>
+        <a href="https://builder.blender.org/download/"><span style=" text-decoration: underline; color:#2980b9;">https://builder.blender.org/download/</span></a></p>
+        <br/><br/>Originally developed by Tobias Kummer for <a href="http://www.overmind-studios.de"><span style="text-decoration:underline; color:#2980b9;">Overmind Studios</span></a></p>
+        <p>Icon by <a href="https://www.instagram.com/nils.lueschow"><span style="text-decoration:underline; color:#2980b9;">Nils Lüschow</span></a></p>
+        <p>Licensed under the <a href="https://www.gnu.org/licenses/gpl-3.0-standalone.html"><span style=" text-decoration:underline; color:#2980b9;">GPL v3 license</span></a></p>
+        <p>Project home: <a href="https://ogierm.github.io/BlenderUpdater/"><span style=" text-decoration:underline; color:#2980b9;">https://ogierm.github.io/BlenderUpdater/</a></p>
+        <br/><br/><br/>Application version: ''' + appversion + r'''</body></html> '''
         QtWidgets.QMessageBox.about(self, 'About', aboutText)
 
     def check_dir(self):
-        """Check if a vaild directory has been set by the user."""
+        """Check if a valid directory has been set by the user."""
         global dir_
         dir_ = self.line_path.text()
         if not os.path.exists(dir_):

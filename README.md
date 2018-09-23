@@ -1,7 +1,7 @@
 ![Screenshot](https://raw.githubusercontent.com/ogierm/BlenderUpdater/master/screenshot.png)
 
 # BlenderUpdater
- ![logo](https://raw.githubusercontent.com/ogierm/BlenderUpdater/master//images/appicon.png)
+ ![logo](https://raw.githubusercontent.com/ogierm/BlenderUpdater/master//images/appicon.svg)
 
 A small crossplatform (Linux, Windows, OSX) Python3 GUI application to check [https://builder.blender.org/download](https://builder.blender.org/download) for
 the latest buildbot version. Download and install nightly builds with one click.
