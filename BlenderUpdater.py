@@ -15,7 +15,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from PySide2 import QtWidgets, QtCore, QtGui
 import os.path
 import os
 from bs4 import BeautifulSoup
@@ -27,7 +26,6 @@ import mainwindow
 import configparser
 import shutil
 from distutils.dir_util import copy_tree
-import sys
 import subprocess
 import platform
 from distutils.version import StrictVersion
@@ -36,6 +34,8 @@ import webbrowser
 import logging
 import ssl
 import setstyle
+import sys
+from PySide2 import QtWidgets, QtCore, QtGui
 
 app = QtWidgets.QApplication(sys.argv)
 appversion = '1.10.0'
