@@ -104,14 +104,6 @@
             ],
             "version": "==0.2.0"
         },
-        "qt.py": {
-            "hashes": [
-                "sha256:866d0c0307631cfac4f33829806549a3f208fdbfc9c02fabf2277d1ab2d80e93",
-                "sha256:f2df0a8a71573b741ac0c6a6c99498261d85cfbd5552e8995da840da3240b73a"
-            ],
-            "index": "pypi",
-            "version": "==1.1.0"
-        },
         "requests": {
             "hashes": [
                 "sha256:63b52e3c866428a224f97cab011de738c36aec0185aa91cfacd418b5d58911d1",
