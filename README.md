@@ -9,11 +9,12 @@ the latest buildbot version. Download and install nightly builds with one click.
 ## Download
 Here's the latest release: [https://github.com/ogierm/BlenderUpdater/releases/latest](https://github.com/ogierm/BlenderUpdater/releases/latest)
 
-### Windows
-You can grab the release .exe, copy it into a folder on your hard drive and execute BlenderUpdater.exe.
+### Windows x86-64
+You can grab the release .exe, copy it into a folder on your hard drive and execute BlenderUpdater.exe. If it fails to run, try running it as admin.
 
-### Linux & OSX
-Frozen binary files for Linux and OSX coming soon. As of now, just run "python BlenderUpdater.py" on your system (make sure that the dependencies are met).
+### Windows x86, Linux & OSX
+As I am not using these, I can't freeze (build) any executable files for them. Please check out the [original repository](https://github.com/ogierm/BlenderUpdater/releases/latest), as the main dev planned on adding those down the line.
+As of now, just run "python BlenderUpdater.py" on your system (make sure that the dependencies are met).
 
 ## Usage
 Specify a folder on your system (e.g. `C:\Blender`) where the Blender build will be copied to. The tool will not create a new directory by itself, so make sure you create one first.
