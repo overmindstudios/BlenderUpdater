@@ -174,8 +174,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 config.write(f)
         if config_exist:
             self.line_path.setText(dir_)
-        else:
-            pass
         dir_ = self.line_path.text()
         self.btn_cancel.hide()
         self.frm_progress.hide()
@@ -190,7 +188,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.btn_Check.clicked.connect(self.check_dir)
         self.btn_about.clicked.connect(self.about)
         self.btn_path.clicked.connect(self.select_path)
-        """Checking internet connection"""
+        # Checking internet connection
         ssl._create_default_https_context = ssl._create_unverified_context
         try:
             testConnection = requests.get("http://www.google.com")
@@ -243,7 +241,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         QtWidgets.QMessageBox.about(self, 'About', aboutText)
 
     def check_dir(self):
-        """Check if a valid directory has been set by the user."""
+        # Check if a valid directory has been set by the user.
         global dir_
         dir_ = self.line_path.text()
         if not os.path.exists(dir_):
@@ -256,7 +254,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             self.check()
 
     def hbytes(self, num):
-        """Translate to human readable file size."""
+        # Translate to human readable file size.
         for x in [' bytes', ' KB', ' MB', ' GB']:
             if num < 1024.0:
                 return "%3.1f%s" % (num, x)
@@ -282,7 +280,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         windowsicon = QtGui.QIcon(':/newPrefix/images/Windows-icon.png')
         linuxicon = QtGui.QIcon(':/newPrefix/images/Linux-icon.png')
         url = 'https://builder.blender.org/download/'
-        """Do path settings save here, in case user has manually edited it"""
+        # Do path settings save here, in case user has manually edited it
         global config
         config.read('config.ini')
         config.set('main', 'path', dir_)
@@ -297,7 +295,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             logger.error('No connection to Blender nightly builds server')
             self.frm_start.show()
         soup = BeautifulSoup(req.text, "html.parser")
-        """iterate through the found versions"""
+        # iterate through the found versions
 
         results = []
         for tr in soup.find_all('tr'):
@@ -401,7 +399,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         filterBtns("all")
 
     def download(self, version, variation):
-        """Download routines."""
+        # Download routines.
         global dir_
         global filename
         url = 'https://builder.blender.org/download/' + version
