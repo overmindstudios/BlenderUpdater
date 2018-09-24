@@ -6,5 +6,6 @@ install:
   - pip install pipenv
   - pipenv sync
   - pipenv install
+  - pipenv run pip install setuptools
 # command to run tests
 script: pyinstaller --icon=icon.ico --onefile --windowed BlenderUpdater.py
