@@ -186,7 +186,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.btn_Check.clicked.connect(self.check_dir)
         self.btn_about.clicked.connect(self.about)
         self.btn_path.clicked.connect(self.select_path)
-        """Checking internet connection"""
+        """Check internet connection, disable SSL"""
+        #  WARNING - should be changed!
         ssl._create_default_https_context = ssl._create_unverified_context
         try:
             testConnection = requests.get("http://www.google.com")
