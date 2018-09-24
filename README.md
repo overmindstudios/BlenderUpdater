@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/overmindstudios/BlenderUpdater.svg?branch=master)](https://travis-ci.org/overmindstudios/BlenderUpdater)
+
 ![Screenshot](https://raw.githubusercontent.com/overmindstudios/BlenderUpdater/master/screenshot.png)
 
 # BlenderUpdater
