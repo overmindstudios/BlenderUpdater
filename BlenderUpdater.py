@@ -35,10 +35,14 @@ import logging
 import ssl
 import setstyle
 import sys
-if getattr(sys, 'frozen', False):  # Do a check if running from frozen binary
+if getattr(sys, 'frozen', False):  # Do a check if running from frozen
     from PySide2 import QtWidgets, QtCore, QtGui
 else:
-    from Qt import QtWidgets, QtCore, QtGui
+    try:
+        from PyQt5 import QtWidgets, QtCore, QtGui
+    except:
+        print("PyQt5 not found, trying PySide2...")
+        from Qt import QtWidgets, QtCore, QtGui
 
 app = QtWidgets.QApplication(sys.argv)
 appversion = '1.9.2'
