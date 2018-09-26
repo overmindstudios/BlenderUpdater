@@ -4,6 +4,7 @@
 /build
 /dist
 /.vscode
+/blendertemp
 
 BlenderUpdater.log
 BlenderUpdater.spec
