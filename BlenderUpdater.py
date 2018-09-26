@@ -38,7 +38,7 @@ import sys
 from PySide2 import QtWidgets, QtCore, QtGui
 
 app = QtWidgets.QApplication(sys.argv)
-appversion = '1.10.2'
+appversion = '1.10.3'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
@@ -309,6 +309,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         finallist = list(filter(None, finallist))
 
         def isArchNotFiltered(text):
+            print(text)
             if self.btn_64.isChecked() and buildIsArch(text, 64):
                 return True
             elif self.btn_32.isChecked() and buildIsArch(text, 32):
@@ -334,6 +335,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         def filterBtns(os):
             global btn
             global current_filter
+            print(current_filter)
 
             if os in [64, 32]:
                 filterBtns(current_filter)
@@ -389,6 +391,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 return "win"
 
         def setFilters(os, arch):
+            global current_filter
             if os == "win":
                 self.btn_windows.toggle()
             elif os == "linux":
@@ -397,9 +400,11 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 self.btn_osx.toggle()
             
             if arch == "64":
-                self.btn_32.toggle()
+                self.btn_32.setChecked(False)
+                self.btn_64.setChecked(True)
             else:
-                self.btn_64.toggle()
+                self.btn_32.setChecked(True)
+                self.btn_64.setChecked(False)
             
             filterBtns(os)
 
