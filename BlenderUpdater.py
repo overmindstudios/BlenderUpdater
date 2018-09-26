@@ -188,7 +188,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.btn_about.clicked.connect(self.about)
         self.btn_path.clicked.connect(self.select_path)
         # Check internet connection, disable SSL
-        #  WARNING - should be changed!
+        # WARNING - should be changed!
         ssl._create_default_https_context = ssl._create_unverified_context
         try:
             testConnection = requests.get("http://www.google.com")
@@ -380,6 +380,29 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 version=version: self.download(version, variation))
             btn[index].show()
 
+        def opsysShort(os):
+            if "Darwin" in os:
+                return "OSX"
+            elif "Linux" in os:
+                return "linus"
+            elif "Windows" in os:
+                return "win"
+
+        def setFilters(os, arch):
+            if os == "win":
+                self.btn_windows.toggle()
+            elif os == "linux":
+                self.btn_linux.toggle()
+            else:
+                self.btn_osx.toggle()
+            
+            if arch == "64":
+                self.btn_32.toggle()
+            else:
+                self.btn_64.toggle()
+            
+            filterBtns(os)
+
         self.lbl_available.show()
         self.lbl_caution.show()
         self.btngrp_filter.show()
@@ -396,7 +419,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         with open('config.ini', 'w') as f:
             config.write(f)
         f.close()
-        filterBtns("all")
+        setFilters(opsysShort(opsys), oparch)
 
     def download(self, version, variation):
         # Download routines.
