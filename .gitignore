@@ -11,3 +11,4 @@ BlenderUpdater.spec
 build.bat
 config.ini
 oconsole.spec
+buildnumber.txt
