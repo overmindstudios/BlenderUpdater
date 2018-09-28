@@ -3,10 +3,10 @@
 /.ropeproject
 /build
 /dist
-/.vscode
 
 BlenderUpdater.log
 BlenderUpdater.spec
 build.bat
 config.ini
 oconsole.spec
+.vscode/settings.json
