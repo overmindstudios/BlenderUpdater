@@ -3,6 +3,7 @@
 /.ropeproject
 /build
 /dist
+/.vscode
 
 BlenderUpdater.log
 BlenderUpdater.spec
