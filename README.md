@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/overmindstudios/BlenderUpdater.svg?branch=master)](https://travis-ci.org/overmindstudios/BlenderUpdater)
+[![GPL3 License](https://img.shields.io/badge/license-GPL3-blue.svg)](https://github.com/overmindstudios/BlenderUpdater/blob/master/LICENSE) [![Build Status](https://travis-ci.org/overmindstudios/BlenderUpdater.svg?branch=master)](https://travis-ci.org/overmindstudios/BlenderUpdater)
 
 ![Screenshot](https://raw.githubusercontent.com/overmindstudios/BlenderUpdater/master/screenshot.png)
 
@@ -37,7 +37,8 @@ the application and choose "Run as Administrator" to be able to access those spe
 Freezing is done via pyinstaller (`pyinstaller --icon=icon.ico --onefile --windowed BlenderUpdater.py`)
 
 ## Dependencies
-Built with Qt.py (which depends on PyQt5 or PySide2) for the UI and Beautiful Soup for HTML parsing.
+Developed with Python 3.7. It *should* work with Python 3.6 as well, but no guarantees here.
+It uses [Qt.py](https://github.com/mottosso/Qt.py) as an abstraction layer for Qt, so you should be able to use either PySide2 or PyQt5 in the background. BeautifulSoup is used for website parsing.
 
 ## Disclaimer
 This application was originally developed for in-house usage at [Overmind Studios](http://www.overmind-studios.de). Released as-is.
