@@ -1,5 +1,4 @@
 [![GPL3 License](https://img.shields.io/badge/license-GPL3-blue.svg)](https://github.com/ogierm/BlenderUpdater/blob/master/LICENSE)
-
 ![Screenshot](https://raw.githubusercontent.com/ogierm/BlenderUpdater/master/screenshot.png)
 
 # BlenderUpdater
@@ -10,6 +9,7 @@ the latest buildbot version. Download and install nightly builds with one click.
 
 ## Download
 Here's the latest release: [https://github.com/ogierm/BlenderUpdater/releases/latest](https://github.com/ogierm/BlenderUpdater/releases/latest)
+You can also download it on [Itch.io](https://fettiemettie.itch.io/blenderupdater)
 
 ### Windows x86-64
 You can grab the release .exe, copy it into a folder on your hard drive and execute BlenderUpdater.exe. If it fails to run, try running it as admin.
