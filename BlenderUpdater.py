@@ -35,7 +35,7 @@ import logging
 import ssl
 import setstyle
 import sys
-if getattr(sys, 'frozen', False):  # Do a check if running from frozen
+if getattr(sys, 'frozen', False):  # Do a check if running from frozen application or .py script
     from PySide2 import QtWidgets, QtCore, QtGui
 else:
     try:
@@ -190,8 +190,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.btn_Check.clicked.connect(self.check_dir)
         self.btn_about.clicked.connect(self.about)
         self.btn_path.clicked.connect(self.select_path)
-        """Check internet connection, disable SSL"""
-        # FIXME - should be changed!
+        # Check internet connection, disable SSL
+        # FIXME - should be changed! (preliminary fix to work in OSX)
         ssl._create_default_https_context = ssl._create_unverified_context
         try:
             testConnection = requests.get("http://www.github.com")
@@ -285,7 +285,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         windowsicon = QtGui.QIcon(':/newPrefix/images/Windows-icon.png')
         linuxicon = QtGui.QIcon(':/newPrefix/images/Linux-icon.png')
         url = 'https://builder.blender.org/download/'
-        """Do path settings save here, in case user has manually edited it"""
+        # Do path settings save here, in case user has manually edited it
         global config
         config.read('config.ini')
         config.set('main', 'path', dir_)
@@ -300,7 +300,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             logger.error('No connection to Blender nightly builds server')
             self.frm_start.show()
         soup = BeautifulSoup(req.text, "html.parser")
-        """iterate through the found versions"""
+        # iterate through the found versions
 
         results = []
         for tr in soup.find_all('tr'):
@@ -314,7 +314,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         finallist = list(filter(None, finallist))
 
         def filterall():
-            """Generate buttons for downloadable versions."""
+            # Generate buttons for downloadable versions.
             global btn
             opsys = platform.system()
             logger.info('Operating system: ' + opsys)
