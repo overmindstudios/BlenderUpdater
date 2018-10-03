@@ -194,7 +194,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         # FIXME - should be changed!
         ssl._create_default_https_context = ssl._create_unverified_context
         try:
-            testConnection = requests.get("http://www.google.com")
+            testConnection = requests.get("http://www.github.com")
         except Exception:
             QtWidgets.QMessageBox.critical(
                 self, "Error", "Please check your internet connection")
