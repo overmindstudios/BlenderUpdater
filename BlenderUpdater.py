@@ -38,7 +38,7 @@ import sys
 from PySide2 import QtWidgets, QtCore, QtGui
 
 app = QtWidgets.QApplication(sys.argv)
-appversion = '1.10.3'
+appversion = '1.10.4'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
