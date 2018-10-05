@@ -25,10 +25,10 @@ from datetime import datetime
 import mainwindow
 import configparser
 import shutil
-from distutils.dir_util import copy_tree
+from distutils.dir_util import copy_tree # pylint: disable=no-name-in-module,import-error
 import subprocess
 import platform
-from distutils.version import StrictVersion
+from distutils.version import StrictVersion # pylint: disable=no-name-in-module,import-error
 import json
 import webbrowser
 import logging
@@ -191,7 +191,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         # WARNING - should be changed!
         ssl._create_default_https_context = ssl._create_unverified_context
         try:
-            testConnection = requests.get("http://www.google.com")
+            testConnection = requests.get("http://www.github.com")
         except Exception:
             QtWidgets.QMessageBox.critical(
                 self, "Error", "Please check your internet connection")
