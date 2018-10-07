@@ -41,7 +41,7 @@ if getattr(sys, 'frozen', False):  # Do a check if running from frozen applicati
     except ImportError:
         from PyQt5 import QtWidgets, QtCore, QtGui
 else:  # when running from script, use the Qt.py shim
-    from Qt import QtWidgets, QtCore, QtGui
+    from Qt import QtWidgets, QtCore, QtGui  # pylint: disable=no-name-in-module,import-error
     
 app = QtWidgets.QApplication(sys.argv)
 appversion = '1.9.2'
