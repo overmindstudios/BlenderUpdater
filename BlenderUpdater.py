@@ -36,14 +36,13 @@ import ssl
 import setstyle
 import sys
 if getattr(sys, 'frozen', False):  # Do a check if running from frozen application or .py script
-    from PySide2 import QtWidgets, QtCore, QtGui
-else:
-    try:
+    try:  # when frozen, try PySide2 first, then PyQt5. Frozen application fails to run when using Qt.py
+        from PySide2 import QtWidgets, QtCore, QtGui
+    except ImportError:
         from PyQt5 import QtWidgets, QtCore, QtGui
-    except:
-        print("PyQt5 not found, trying PySide2...")
-        from Qt import QtWidgets, QtCore, QtGui
-
+else:  # when running from script, use the Qt.py shim
+    from Qt import QtWidgets, QtCore, QtGui  # pylint: disable=no-name-in-module,import-error
+    
 app = QtWidgets.QApplication(sys.argv)
 appversion = '1.9.2'
 dir_ = ''
