@@ -300,8 +300,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             logger.error('No connection to Blender nightly builds server')
             self.frm_start.show()
         soup = BeautifulSoup(req.text, "html.parser")
+        
         # iterate through the found versions
-
         results = []
         for tr in soup.find_all('tr'):
             tds = tr.find_all('td')
