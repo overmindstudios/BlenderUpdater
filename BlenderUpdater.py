@@ -187,6 +187,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.btn_Check.clicked.connect(self.check_dir)
         self.btn_about.clicked.connect(self.about)
         self.btn_path.clicked.connect(self.select_path)
+
         # Check internet connection, disable SSL
         # WARNING - should be changed!
         ssl._create_default_https_context = ssl._create_unverified_context
@@ -298,18 +299,24 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         # iterate through the found versions
 
         results = []
-        for tr in soup.find_all('tr'):
-            tds = tr.find_all('td')
-            results.append([data.string for data in tds])
-            results = [[item.strip().strip("\xa0") if item is not None else None for item in sublist] for sublist in results]
+        for ul in soup.find('div', {'class': 'page-footer-main-text'}).find_all('ul'):
+            for li in ul.find_all('li', class_ = 'os'):
+                info = list()
+                info.append(li.find('a', href = True)['href']) # Download URL to build
+                info.append(li.find('span', class_ = 'size').text) # Build file size
+                info.append(li.find('small').text) # Build date
+                results.append(info)
+            results = [[item.strip().strip("\xa0") if item is not None else None for item in sublist] for sublist in results] # Removes spaces
+
         finallist = []
+        # Checks for duplicates (?)
         for sub in results:
             sub = list(filter(None, sub))
+            sub[0] = sub[0][11:] # Remove redundant parts of the URL (download...)
             finallist.append(sub)
         finallist = list(filter(None, finallist))
 
         def isArchNotFiltered(text):
-            print(text)
             if self.btn_64.isChecked() and buildIsArch(text, 64):
                 return True
             elif self.btn_32.isChecked() and buildIsArch(text, 32):
@@ -335,7 +342,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         def filterBtns(os):
             global btn
             global current_filter
-            print(current_filter)
 
             if os in [64, 32]:
                 filterBtns(current_filter)
@@ -347,8 +353,10 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 btn[i].hide()
             btn = {}
             i = 0
+            # Important! The finallist is here being used
             for index, text in enumerate(finallist):
                 btn[index] = QtWidgets.QPushButton(self)
+                # text[0] is the URL to the build, text is a list with that info + size + date; check line 308
                 if os in text[0] and isArchNotFiltered(text[0]) or os == "all" and isArchNotFiltered(text[0]):
                     setIcon(index, text, btn)
                     readyButton(index, text, btn, i)
@@ -460,7 +468,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         with open('config.ini', 'w') as f:
             config.write(f)
         f.close()
-        '''Do the actual download'''
+
+        # Do the actual download
         dir_ = os.path.join(dir_, '')
         filename = './blendertemp/' + version
         for i in btn:
