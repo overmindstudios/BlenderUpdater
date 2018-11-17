@@ -8,12 +8,6 @@
 A small crossplatform (Linux, Windows, OSX) Python3 GUI application to check [https://builder.blender.org/download](https://builder.blender.org/download) for
 the latest buildbot version. Download and install nightly builds with one click. Brought to you by [Overmind Studios](http://www.overmind-studios.de).
 
----
-# CAUTION
-The script is broken as of Nov 14th, 2018 since the layout of the download page has been changed - so BlenderUpdater cannot scrape the page at the moment. I'll update it as soon as possible!
-
----
-
 ## Download
 Here's the latest release: [https://github.com/overmindstudios/BlenderUpdater/releases/latest](https://github.com/overmindstudios/BlenderUpdater/releases/latest)
 
