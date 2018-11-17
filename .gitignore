@@ -3,6 +3,7 @@
 /.ropeproject
 /build
 /dist
+/blendertemp
 
 BlenderUpdater.log
 BlenderUpdater.spec
