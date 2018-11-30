@@ -21,7 +21,6 @@ import logging
 import os
 import os.path
 import platform
-import qdarkstyle
 import shutil
 import ssl
 import subprocess
