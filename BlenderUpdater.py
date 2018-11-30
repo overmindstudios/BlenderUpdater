@@ -15,26 +15,30 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import os.path
-import os
-from bs4 import BeautifulSoup
-import requests
-import urllib.request
-import urllib.parse
-from datetime import datetime
-import mainwindow
 import configparser
-import shutil
-from distutils.dir_util import copy_tree # pylint: disable=no-name-in-module,import-error
-import subprocess
-import platform
-from distutils.version import StrictVersion # pylint: disable=no-name-in-module,import-error
 import json
-import webbrowser
 import logging
+import os
+import os.path
+import platform
+import qdarkstyle
+import shutil
 import ssl
-import setstyle
+import subprocess
 import sys
+import urllib.parse
+import urllib.request
+import webbrowser
+from datetime import datetime
+from distutils.dir_util import copy_tree  # pylint: disable=no-name-in-module,import-error
+from distutils.version import StrictVersion  # pylint: disable=no-name-in-module,import-error
+
+import requests
+from bs4 import BeautifulSoup
+
+import mainwindow
+import setstyle
+
 if getattr(sys, 'frozen', False):  # Do a check if running from frozen application or .py script
     try:  # when frozen, try PySide2 first, then PyQt5. Frozen application fails to run when using Qt.py
         from PySide2 import QtWidgets, QtCore, QtGui
@@ -586,7 +590,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 def main():
 
     app.setStyle("Fusion")
-
     app.setPalette(setstyle.setPalette())
     window = BlenderUpdater()
     window.setWindowTitle('Overmind Studios Blender Updater ' + appversion)
