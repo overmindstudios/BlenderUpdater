@@ -15,26 +15,29 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import os.path
-import os
-from bs4 import BeautifulSoup
-import requests
-import urllib.request
-import urllib.parse
-from datetime import datetime
-import mainwindow
 import configparser
-import shutil
-from distutils.dir_util import copy_tree # pylint: disable=no-name-in-module,import-error
-import subprocess
-import platform
-from distutils.version import StrictVersion # pylint: disable=no-name-in-module,import-error
 import json
-import webbrowser
 import logging
+import os
+import os.path
+import platform
+import shutil
 import ssl
-import setstyle
+import subprocess
 import sys
+import urllib.parse
+import urllib.request
+import webbrowser
+from datetime import datetime
+from distutils.dir_util import copy_tree  # pylint: disable=no-name-in-module,import-error
+from distutils.version import StrictVersion  # pylint: disable=no-name-in-module,import-error
+
+import requests
+from bs4 import BeautifulSoup
+
+import mainwindow
+import setstyle
+
 if getattr(sys, 'frozen', False):  # Do a check if running from frozen application or .py script
     try:  # when frozen, try PySide2 first, then PyQt5. Frozen application fails to run when using Qt.py
         from PySide2 import QtWidgets, QtCore, QtGui
@@ -44,7 +47,7 @@ else:  # when running from script, use the Qt.py shim
     from Qt import QtWidgets, QtCore, QtGui  # pylint: disable=no-name-in-module,import-error
     
 app = QtWidgets.QApplication(sys.argv)
-appversion = '1.9.2'
+appversion = '1.9.3'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
@@ -299,16 +302,21 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             logger.error('No connection to Blender nightly builds server')
             self.frm_start.show()
         soup = BeautifulSoup(req.text, "html.parser")
+        
         # iterate through the found versions
-
         results = []
-        for tr in soup.find_all('tr'):
-            tds = tr.find_all('td')
-            results.append([data.string for data in tds])
-            results = [[item.strip().strip("\xa0") if item is not None else None for item in sublist] for sublist in results]
+        for ul in soup.find('div', {'class': 'page-footer-main-text'}).find_all('ul'):
+            for li in ul.find_all('li', class_ = 'os'):
+                info = list()
+                info.append(li.find('a', href = True)['href']) # Download URL to build
+                info.append(li.find('span', class_ = 'size').text) # Build file size
+                info.append(li.find('small').text) # Build date
+                results.append(info)
+            results = [[item.strip().strip("\xa0") if item is not None else None for item in sublist] for sublist in results] # Removes spaces
         finallist = []
         for sub in results:
             sub = list(filter(None, sub))
+            sub[0] = sub[0][11:] # Remove redundant parts of the URL (download...)
             finallist.append(sub)
         finallist = list(filter(None, finallist))
 
@@ -581,7 +589,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 def main():
 
     app.setStyle("Fusion")
-
     app.setPalette(setstyle.setPalette())
     window = BlenderUpdater()
     window.setWindowTitle('Overmind Studios Blender Updater ' + appversion)

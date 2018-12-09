@@ -45,6 +45,16 @@
             ],
             "version": "==3.0.4"
         },
+<<<<<<< HEAD
+=======
+        "future": {
+            "hashes": [
+                "sha256:67045236dcfd6816dc439556d009594abf643e5eb48992e36beac09c2ca659b8"
+            ],
+            "markers": "python_version != '3.1.*' and python_version >= '2.6' and python_version != '3.2.*' and python_version != '3.0.*'",
+            "version": "==0.17.1"
+        },
+>>>>>>> e3b3952e8e3bb0c9230c08a6bde30720665c2a92
         "idna": {
             "hashes": [
                 "sha256:156a6814fb5ac1fc6850fb002e0852d56c0c8d2531923a51032d1b70760e186e",
@@ -63,6 +73,13 @@
             ],
             "index": "pypi",
             "version": "==5.11.2"
+        },
+        "pywin32-ctypes": {
+            "hashes": [
+                "sha256:24ffc3b341d457d48e8922352130cf2644024a4ff09762a2261fd34c36ee5942",
+                "sha256:9dc2d991b3479cc2df15930958b674a48a227d5361d413827a4cfd0b5876fc98"
+            ],
+            "version": "==0.2.0"
         },
         "qt.py": {
             "hashes": [
@@ -101,6 +118,7 @@
             "hashes": [
                 "sha256:35b032003d6a863f5dcd7ec11abd5cd5893428beaa31ab164982403bcb311f22",
                 "sha256:6a5d668d7dc69110de01cdf7aeec69a679ef486862a0850cc0fd5571505b6b7e"
+<<<<<<< HEAD
             ],
             "version": "==2.1.0"
         },
@@ -117,6 +135,18 @@
                 "sha256:67045236dcfd6816dc439556d009594abf643e5eb48992e36beac09c2ca659b8"
             ],
             "version": "==0.17.1"
+=======
+            ],
+            "version": "==2.1.0"
+        },
+        "colorama": {
+            "hashes": [
+                "sha256:05eed71e2e327246ad6b38c540c4a3117230b19679b875190486ddd2d721422d",
+                "sha256:f8ac84de7840f5b9c4e3347b3c1eaa50f7e49c2b07596221daec5edaabbd7c48"
+            ],
+            "markers": "sys_platform == 'win32'",
+            "version": "==0.4.1"
+>>>>>>> e3b3952e8e3bb0c9230c08a6bde30720665c2a92
         },
         "isort": {
             "hashes": [
@@ -124,6 +154,10 @@
                 "sha256:b9c40e9750f3d77e6e4d441d8b0266cf555e7cdabdcff33c4fd06366ca761ef8",
                 "sha256:ec9ef8f4a9bc6f71eec99e1806bfa2de401650d996c59330782b89a5555c1497"
             ],
+<<<<<<< HEAD
+=======
+            "markers": "python_version != '3.0.*' and python_version != '3.2.*' and python_version >= '2.7' and python_version != '3.1.*' and python_version != '3.3.*'",
+>>>>>>> e3b3952e8e3bb0c9230c08a6bde30720665c2a92
             "version": "==4.3.4"
         },
         "lazy-object-proxy": {
@@ -195,6 +229,7 @@
             ],
             "index": "pypi",
             "version": "==2.2.2"
+<<<<<<< HEAD
         },
         "pywin32-ctypes": {
             "hashes": [
@@ -202,6 +237,8 @@
                 "sha256:9dc2d991b3479cc2df15930958b674a48a227d5361d413827a4cfd0b5876fc98"
             ],
             "version": "==0.2.0"
+=======
+>>>>>>> e3b3952e8e3bb0c9230c08a6bde30720665c2a92
         },
         "six": {
             "hashes": [
