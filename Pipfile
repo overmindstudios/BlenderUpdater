@@ -9,10 +9,10 @@ requests = "*"
 "bs4" = "*"
 "qt.py" = "*"
 "urllib3" = "*"
-pyinstaller = "*"
 
 [dev-packages]
 pylint = "*"
+pyinstaller = "*"
 
 [requires]
 python_version = "3.7"
