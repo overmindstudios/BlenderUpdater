@@ -4,6 +4,7 @@
 
 # BlenderUpdater
  ![logo](https://raw.githubusercontent.com/overmindstudios/BlenderUpdater/master//images/appicon.png)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fovermindstudios%2FBlenderUpdater.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fovermindstudios%2FBlenderUpdater?ref=badge_shield)
 
 A small crossplatform (Linux, Windows, OSX) Python3 GUI application to check [https://builder.blender.org/download](https://builder.blender.org/download) for
 the latest buildbot version. Download and install nightly builds with one click. Brought to you by [Overmind Studios](http://www.overmind-studios.de).
@@ -42,3 +43,7 @@ It uses [Qt.py](https://github.com/mottosso/Qt.py) as an abstraction layer for Q
 
 ## Disclaimer
 This application was originally developed for in-house usage at [Overmind Studios](http://www.overmind-studios.de). Released as-is.
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fovermindstudios%2FBlenderUpdater.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fovermindstudios%2FBlenderUpdater?ref=badge_large)
