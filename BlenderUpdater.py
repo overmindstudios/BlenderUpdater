@@ -587,7 +587,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
 
 def main():
-
     app.setStyle("Fusion")
     app.setPalette(setstyle.setPalette())
     window = BlenderUpdater()
