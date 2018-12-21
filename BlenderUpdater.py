@@ -47,7 +47,7 @@ else:  # when running from script, use the Qt.py shim
     from Qt import QtWidgets, QtCore, QtGui  # pylint: disable=no-name-in-module,import-error
     
 app = QtWidgets.QApplication(sys.argv)
-appversion = '1.9.3'
+appversion = '1.9.4'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
