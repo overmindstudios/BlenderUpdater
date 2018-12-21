@@ -316,7 +316,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         finallist = []
         for sub in results:
             sub = list(filter(None, sub))
-            sub[0] = sub[0][11:] # Remove redundant parts of the URL (download...)
+            sub[0] = sub[0][10:] # Remove redundant parts of the URL (download...)
             finallist.append(sub)
         finallist = list(filter(None, finallist))
 
