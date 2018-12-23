@@ -562,17 +562,17 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             self.btn_execute.clicked.connect(self.exec_linux)
 
     def exec_windows(self):
-        p = subprocess.Popen(os.path.join('"' + dir_ + "\\blender.exe" + '"'))
+        subprocess.Popen(os.path.join('"' + dir_ + "\\blender.exe" + '"'))
         logger.info('Executing ' + dir_ + 'blender.exe')
 
     def exec_osx(self):
         BlenderOSXPath = os.path.join('"' + dir_ + "\\blender.app/Contents/MacOS/blender" + '"')
         os.system("chmod +x " + BlenderOSXPath)
-        p = subprocess.Popen(BlenderOSXPath)
+        subprocess.Popen(BlenderOSXPath)
         logger.info('Executing ' + BlenderOSXPath)
 
     def exec_linux(self):
-        p = subprocess.Popen(os.path.join(dir_ + '/blender'))
+        subprocess.Popen(os.path.join(dir_ + '/blender'))
         logger.info('Executing ' + dir_ + 'blender')
 
 
