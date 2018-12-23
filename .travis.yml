@@ -1,0 +1,10 @@
+language: python
+python:
+  - "3.7"
+# command to install dependencies
+install:
+  - pip install pipenv
+  - pipenv install
+  - pipenv run python -m pip install --upgrade pip setuptools wheel
+# command to run tests
+script: pyinstaller --icon=icon.ico --onefile --windowed BlenderUpdater.py

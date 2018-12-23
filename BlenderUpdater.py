@@ -15,30 +15,32 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import os.path
-import os
-from bs4 import BeautifulSoup
-import requests
-import urllib.request
-import urllib.parse
-from datetime import datetime
-import mainwindow
 import configparser
-import shutil
-from distutils.dir_util import copy_tree # pylint: disable=no-name-in-module,import-error
-import subprocess
-import platform
-from distutils.version import StrictVersion # pylint: disable=no-name-in-module,import-error
 import json
-import webbrowser
 import logging
+import os
+import os.path
+import platform
+import shutil
 import ssl
-import setstyle
+import subprocess
 import sys
-from PySide2 import QtWidgets, QtCore, QtGui
+import urllib.parse
+import urllib.request
+import webbrowser
+from datetime import datetime
+from distutils.dir_util import copy_tree
+from distutils.version import StrictVersion
+
+import requests
+from bs4 import BeautifulSoup
+from PySide2 import QtCore, QtGui, QtWidgets
+
+import mainwindow
+import setstyle
 
 app = QtWidgets.QApplication(sys.argv)
-appversion = '1.10.5'
+appversion = '1.10.6'
 dir_ = ''
 config = configparser.ConfigParser()
 btn = {}
@@ -192,7 +194,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         # WARNING - should be changed!
         ssl._create_default_https_context = ssl._create_unverified_context
         try:
-            testConnection = requests.get("http://www.github.com")
+            requests.get("http://www.github.com")
         except Exception:
             QtWidgets.QMessageBox.critical(
                 self, "Error", "Please check your internet connection")
@@ -296,8 +298,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             logger.error('No connection to Blender nightly builds server')
             self.frm_start.show()
         soup = BeautifulSoup(req.text, "html.parser")
+        
         # iterate through the found versions
-
         results = []
         for ul in soup.find('div', {'class': 'page-footer-main-text'}).find_all('ul'):
             for li in ul.find_all('li', class_ = 'os'):
@@ -307,12 +309,12 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 info.append(li.find('small').text) # Build date
                 results.append(info)
             results = [[item.strip().strip("\xa0") if item is not None else None for item in sublist] for sublist in results] # Removes spaces
-
         finallist = []
+
         # Checks for duplicates (?)
         for sub in results:
             sub = list(filter(None, sub))
-            sub[0] = sub[0][11:] # Remove redundant parts of the URL (download...)
+            sub[0] = sub[0][10:] # Remove redundant parts of the URL (download...)
             finallist.append(sub)
         finallist = list(filter(None, finallist))
 
@@ -575,9 +577,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
 
 def main():
-
     app.setStyle("Fusion")
-
     app.setPalette(setstyle.setPalette())
     window = BlenderUpdater()
     window.setWindowTitle('Blender Updater ' + appversion)
