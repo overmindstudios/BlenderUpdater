@@ -2,6 +2,8 @@
 
 ![Screenshot](https://raw.githubusercontent.com/overmindstudios/BlenderUpdater/master/screenshot.png)
 
+[![Coffee](https://www.buymeacoffee.com/assets/img/custom_images/black_img.png)](https://www.buymeacoffee.com/tobkum)
+
 # BlenderUpdater
  ![logo](https://raw.githubusercontent.com/overmindstudios/BlenderUpdater/master//images/appicon.png)
 
