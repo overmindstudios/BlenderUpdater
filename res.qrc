@@ -14,6 +14,7 @@
         <file>images/Application-exit-icon.png</file>
         <file>images/software-update-icon.png</file>
         <file>images/Blender-icon.png</file>
+        <file>images/orange_img.png</file>
     </qresource>
     <qresource prefix="/">
         <file>darkstyle/darkstyle.qss</file>
