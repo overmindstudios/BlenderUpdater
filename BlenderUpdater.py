@@ -241,10 +241,12 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         <a href="http://www.overmind-studios.de"><span style="text-decoration:underline; color:#2980b9;"> \
         Overmind Studios</span></a></p><p>\
         Licensed under the <a href="https://www.gnu.org/licenses/gpl-3.0-standalone.html"><span style=" text-decoration:\
-         underline; color:#2980b9;">GPL v3 license</span></a></p><p>Project home: \
-         <a href="https://overmindstudios.github.io/BlenderUpdater/"><span style=" text-decoration:\
-         underline; color:#2980b9;">https://overmindstudios.github.io/BlenderUpdater/</a></p> \
-         Application version: ' + appversion + '</body></html> '
+        underline; color:#2980b9;">GPL v3 license</span></a></p><p>Project home: \
+        <a href="https://overmindstudios.github.io/BlenderUpdater/"><span style=" text-decoration:\
+        underline; color:#2980b9;">https://overmindstudios.github.io/BlenderUpdater/</a></p> \
+        <p style="text-align: center;"><a href="https://www.buymeacoffee.com/tobkum" target="_blank"> \
+        <img src="qrc://newPrefix/images/orange_img.png"></a></p> \
+        <p>Application version: ' + appversion + '</p></body></html> '
         QtWidgets.QMessageBox.about(self, 'About', aboutText)
 
     def check_dir(self):
