@@ -1,4 +1,5 @@
 [![GPL3 License](https://img.shields.io/badge/license-GPL3-blue.svg)](https://github.com/overmindstudios/BlenderUpdater/blob/master/LICENSE) 
+
 ![Screenshot](https://raw.githubusercontent.com/overmindstudios/BlenderUpdater/master/screenshot.png)
 
 # BlenderUpdater
