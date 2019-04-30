@@ -475,14 +475,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         file = urllib.request.urlopen(url)
         totalsize = file.info()['Content-Length']
         size_readable = self.hbytes(float(totalsize))
-        global config
-        config.read('config.ini')
-        config.set('main', 'path', dir_)
-        config.set('main', 'flavor', variation)
-        config.set('main', 'installed', version)
-        with open('config.ini', 'w') as f:
-            config.write(f)
-        f.close()
         '''Do the actual download'''
         dir_ = os.path.join(dir_, '')
         filename = './blendertemp/' + version
@@ -556,6 +548,14 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
     def done(self):
         logger.info('Finished')
         donepixmap = QtGui.QPixmap(':/newPrefix/images/Check-icon.png')
+        global config
+        config.read('config.ini')
+        config.set('main', 'path', dir_)
+        config.set('main', 'flavor', variation)
+        config.set('main', 'installed', version)
+        with open('config.ini', 'w') as f:
+            config.write(f)
+        f.close()
         self.lbl_clean_pic.setPixmap(donepixmap)
         self.statusbar.showMessage('Ready')
         self.progressBar.setMinimum(0)
