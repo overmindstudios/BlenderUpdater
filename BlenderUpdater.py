@@ -53,6 +53,8 @@ config = configparser.ConfigParser()
 btn = {}
 lastversion = ''
 installedversion = ''
+version = ''
+variation = ''
 LOG_FORMAT = "%(levelname)s %(asctime)s - %(message)s"
 
 logging.basicConfig(filename='BlenderUpdater.log',
@@ -154,11 +156,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             lastcheck = config.get('main', 'lastcheck')
             lastversion = config.get('main', 'lastdl')
             installedversion = config.get('main', 'installed')
-            flavor = config.get('main', 'flavor')
-            if lastversion is not '':
-                self.btn_oneclick.setText(flavor + ' | ' + lastversion)
-            else:
-                pass
 
         else:
             logger.debug('No previous config found')
@@ -171,7 +168,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             config.set('main', 'lastcheck', lastcheck)
             config.set('main', 'lastdl', '')
             config.set('main', 'installed', '')
-            config.set('main', 'flavor', '')
             with open('config.ini', 'w') as f:
                 config.write(f)
         if config_exist:
@@ -274,6 +270,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         global dir_
         global lastversion
         global installedversion
+        global variation
+        global version
         dir_ = self.line_path.text()
         self.frm_start.hide()
         self.frm_progress.hide()
@@ -325,6 +323,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         def filterall():
             # Generate buttons for downloadable versions.
             global btn
+            global variation
+            global version
             opsys = platform.system()
             logger.info('Operating system: ' + opsys)
             for i in btn:
@@ -363,6 +363,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
         def filterosx():
             global btn
+            global variation
+            global version
             for i in btn:
                 btn[i].hide()
             btn = {}
@@ -386,6 +388,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                     btn[index].show()
 
         def filterlinux():
+            global variation
+            global version
             global btn
             for i in btn:
                 btn[i].hide()
@@ -410,6 +414,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                     btn[index].show()
 
         def filterwindows():
+            global variation
+            global version
             global btn
             for i in btn:
                 btn[i].hide()
@@ -453,6 +459,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         """Download routines."""
         global dir_
         global filename
+        global installedversion
         url = 'https://builder.blender.org/download/' + version
         if version == installedversion:
             reply = QtWidgets.QMessageBox.question(
@@ -549,9 +556,11 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         logger.info('Finished')
         donepixmap = QtGui.QPixmap(':/newPrefix/images/Check-icon.png')
         global config
+        global version
+        global variation
+        global dir_
         config.read('config.ini')
         config.set('main', 'path', dir_)
-        config.set('main', 'flavor', variation)
         config.set('main', 'installed', version)
         with open('config.ini', 'w') as f:
             config.write(f)
