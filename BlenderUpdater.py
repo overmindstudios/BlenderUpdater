@@ -1,5 +1,5 @@
 """
-    Copyright 2016-2018 Tobias Kummer/Overmind Studios.
+    Copyright 2016-2019 Tobias Kummer/Overmind Studios.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ if getattr(sys, 'frozen', False):  # Do a check if running from frozen applicati
         from PyQt5 import QtWidgets, QtCore, QtGui
 else:  # when running from script, use the Qt.py shim
     from Qt import QtWidgets, QtCore, QtGui  # pylint: disable=no-name-in-module,import-error
-    
+
 app = QtWidgets.QApplication(sys.argv)
 appversion = '1.9.4'
 dir_ = ''
@@ -155,7 +155,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             lastversion = config.get('main', 'lastdl')
             installedversion = config.get('main', 'installed')
             flavor = config.get('main', 'flavor')
-            if lastversion is not '':
+            if lastversion != '':
                 self.btn_oneclick.setText(flavor + ' | ' + lastversion)
             else:
                 pass
@@ -304,17 +304,17 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             logger.error('No connection to Blender nightly builds server')
             self.frm_start.show()
         soup = BeautifulSoup(req.text, "html.parser")
-        
+
         # iterate through the found versions
         results = []
         for ul in soup.find('div', {'class': 'page-footer-main-text'}).find_all('ul'):
-            for li in ul.find_all('li', class_ = 'os'):
+            for li in ul.find_all('li', class_='os'):
                 info = list()
-                info.append(li.find('a', href = True)['href']) # Download URL to build
-                info.append(li.find('span', class_ = 'size').text) # Build file size
-                info.append(li.find('small').text) # Build date
+                info.append(li.find('a', href=True)['href'])  # Download URL to build
+                info.append(li.find('span', class_='size').text)  # Build file size
+                info.append(li.find('small').text)  # Build date
                 results.append(info)
-            results = [[item.strip().strip("\xa0") if item is not None else None for item in sublist] for sublist in results] # Removes spaces
+            results = [[item.strip().strip("\xa0") if item is not None else None for item in sublist] for sublist in results]  # Removes spaces
         finallist = []
         for sub in results:
             sub = list(filter(None, sub))

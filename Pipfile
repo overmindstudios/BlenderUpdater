@@ -11,8 +11,12 @@ requests = "*"
 "urllib3" = "*"
 
 [dev-packages]
-pylint = "*"
 pyinstaller = "*"
+flake8 = "*"
+black = "*"
 
 [requires]
 python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true
