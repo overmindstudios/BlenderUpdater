@@ -1,5 +1,5 @@
 from Qt import QtWidgets, QtGui
-import sys
+
 
 def setPalette():
 
