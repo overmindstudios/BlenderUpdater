@@ -29,8 +29,8 @@ import urllib.parse
 import urllib.request
 import webbrowser
 from datetime import datetime
-from distutils.dir_util import copy_tree  # pylint: disable=no-name-in-module,import-error
-from distutils.version import StrictVersion  # pylint: disable=no-name-in-module,import-error
+from distutils.dir_util import copy_tree
+from distutils.version import StrictVersion
 
 import requests
 from bs4 import BeautifulSoup
