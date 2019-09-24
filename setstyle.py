@@ -1,11 +1,8 @@
-from Qt import QtWidgets, QtGui
-import sys
+from Qt import QtGui
+
 
 def setPalette():
-
-
     dark_palette = QtGui.QPalette()
-
     dark_palette.setColor(dark_palette.Window, QtGui.QColor(53, 53, 53))
     dark_palette.setColor(dark_palette.WindowText, QtGui.QColor(255, 255, 255))
     dark_palette.setColor(dark_palette.Disabled, dark_palette.WindowText, QtGui.QColor(127, 127, 127))
