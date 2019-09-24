@@ -244,7 +244,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         underline; color:#2980b9;">GPL v3 license</span></a></p><p>Project home: \
         <a href="https://overmindstudios.github.io/BlenderUpdater/"><span style=" text-decoration:\
         underline; color:#2980b9;">https://overmindstudios.github.io/BlenderUpdater/</a></p> \
-        <p style="text-align: center;"><a href="https://www.buymeacoffee.com/tobkum" target="_blank"> \
+        <p style="text-align: center;"><a href="https://ko-fi.com/tobkum" target="_blank"> \
         <img src="qrc://newPrefix/images/orange_img.png"></a></p> \
         <p>Application version: ' + appversion + '</p></body></html> '
         QtWidgets.QMessageBox.about(self, 'About', aboutText)
