@@ -75,7 +75,7 @@ class WorkerThread(QtCore.QThread):
         super(WorkerThread, self).__init__(parent=app)
         self.filename = file
         self.url = url
-        if "OSX" in file:
+        if "macOS" in file:
             config.set('main', 'lastdl', 'OSX')
             with open('config.ini', 'w') as f:
                 config.write(f)
@@ -334,7 +334,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             for index, text in enumerate(finallist):
                 btn[index] = QtWidgets.QPushButton(self)
                 logger.debug(text[0] + " | " + text[1] + " | " + text[2])
-                if "OSX" in text[0]:             # set icon according to OS
+                if "macOS" in text[0]:             # set icon according to OS
                     if opsys.lower == "darwin":
                         btn[index].setStyleSheet('background: rgb(22, 52, 73)')
                     btn[index].setIcon(appleicon)
@@ -369,7 +369,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             i = 0
             for index, text in enumerate(finallist):
                 btn[index] = QtWidgets.QPushButton(self)
-                if "OSX" in text[0]:
+                if "macOS" in text[0]:
                     btn[index].setIcon(appleicon)
                     version = str(text[0])
                     variation = str(text[0])
