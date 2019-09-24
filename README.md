@@ -8,7 +8,9 @@
 A small crossplatform (Linux, Windows, OSX) Python3 GUI application to check [https://builder.blender.org/download](https://builder.blender.org/download) for
 the latest buildbot version. Download and install nightly builds with one click. Brought to you by [Overmind Studios](http://www.overmind-studios.de).
 
-[![Coffee](https://az743702.vo.msecnd.net/cdn/kofi1.png?v=2)](https://ko-fi.com/tobkum)
+If you want to support me, feel free to donate on Ko-Fi!
+
+<a href="https://ko-fi.com/tobkum"><img src="https://az743702.vo.msecnd.net/cdn/kofi1.png?v=2" width="150"></a>
 
 ## Download
 Here's the latest release: [https://github.com/overmindstudios/BlenderUpdater/releases/latest](https://github.com/overmindstudios/BlenderUpdater/releases/latest)
