@@ -136,7 +136,7 @@ class WorkerThread(QtCore.QThread):
 
 class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
     def __init__(self, parent=None):
-        logger.info("Running version " + appversion)
+        logger.info(f"Running version {appversion}")
         logger.debug("Constructing UI")
         super(BlenderUpdater, self).__init__(parent)
         self.setupUi(self)
@@ -160,7 +160,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             installedversion = config.get("main", "installed")
             flavor = config.get("main", "flavor")
             if lastversion != "":
-                self.btn_oneclick.setText(flavor + " | " + lastversion)
+                self.btn_oneclick.setText(f"{flavor} | {lastversion}")
             else:
                 pass
 
@@ -191,7 +191,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.progressBar.setValue(0)
         self.progressBar.hide()
         self.lbl_task.hide()
-        self.statusbar.showMessage("Ready - Last check: " + lastcheck)
+        self.statusbar.showMessage(f"Ready - Last check: {lastcheck}")
         self.btn_Quit.clicked.connect(QtCore.QCoreApplication.instance().quit)
         self.btn_Check.clicked.connect(self.check_dir)
         self.btn_about.clicked.connect(self.about)
@@ -218,7 +218,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         try:
             UpdateData = json.loads(Appupdate)
             applatestversion = UpdateData["tag_name"]
-            logger.info("Version found online: " + applatestversion)
+            logger.info(f"Version found online: {applatestversion}")
             if StrictVersion(applatestversion) > StrictVersion(appversion):
                 logger.info("Newer version found on Github")
                 self.btn_newVersion.clicked.connect(self.getAppUpdate)
@@ -349,7 +349,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             # Generate buttons for downloadable versions.
             global btn
             opsys = platform.system()
-            logger.info("Operating system: " + opsys)
+            logger.info(f"Operating system: {opsys}")
             for i in btn:
                 btn[i].hide()
             i = 0
@@ -474,7 +474,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.btn_windows.clicked.connect(filterwindows)
         self.btn_allos.clicked.connect(filterall)
         lastcheck = datetime.now().strftime("%a %b %d %H:%M:%S %Y")
-        self.statusbar.showMessage("Ready - Last check: " + str(lastcheck))
+        self.statusbar.showMessage(f"Ready - Last check: {str(lastcheck)}")
         config.read("config.ini")
         config.set("main", "lastcheck", str(lastcheck))
         with open("config.ini", "w") as f:
@@ -523,7 +523,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         filename = "./blendertemp/" + version
         for i in btn:
             btn[i].hide()
-        logger.info("Starting download thread for " + url + version)
+        logger.info(f"Starting download thread for {url}{version}")
         self.lbl_available.hide()
         self.lbl_caution.hide()
         self.progressBar.show()
@@ -533,10 +533,10 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.frm_progress.show()
         nowpixmap = QtGui.QPixmap(":/newPrefix/images/Actions-arrow-right-icon.png")
         self.lbl_download_pic.setPixmap(nowpixmap)
-        self.lbl_downloading.setText("<b>Downloading " + version + "</b>")
+        self.lbl_downloading.setText(f"<b>Downloading {version}</b>")
         self.progressBar.setValue(0)
         self.btn_Check.setDisabled(True)
-        self.statusbar.showMessage("Downloading " + size_readable)
+        self.statusbar.showMessage(f"Downloading {size_readable}")
         thread = WorkerThread(url, filename)
         thread.update.connect(self.updatepb)
         thread.finishedDL.connect(self.extraction)
@@ -570,7 +570,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.lbl_copy_pic.setPixmap(nowpixmap)
         self.lbl_copying.setText("<b>Copying</b>")
         self.lbl_task.setText("Copying files...")
-        self.statusbar.showMessage('Copying files to "' + dir_ + '", please wait... ')
+        self.statusbar.showMessage(f'Copying files to {dir_}, please wait... ')
 
     def cleanup(self):
         logger.info("Cleaning up temp files")
@@ -623,7 +623,7 @@ def main():
     app.setStyle("Fusion")
     app.setPalette(setstyle.setPalette())
     window = BlenderUpdater()
-    window.setWindowTitle("Overmind Studios Blender Updater " + appversion)
+    window.setWindowTitle(f"Overmind Studios Blender Updater {appversion}")
     window.statusbar.setSizeGripEnabled(False)
     window.show()
     app.exec_()
