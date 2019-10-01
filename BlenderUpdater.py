@@ -499,7 +499,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         nowpixmap = QtGui.QPixmap(
             ':/newPrefix/images/Actions-arrow-right-icon.png')
         self.lbl_download_pic.setPixmap(nowpixmap)
-        self.lbl_downloading.setText('<b>Downloading ' + version + '</b>')
+        self.lbl_downloading.setText(f'<b>Downloading {version}</b>')
         self.progressBar.setValue(0)
         self.btn_Check.setDisabled(True)
         self.statusbar.showMessage('Downloading ' + size_readable)
@@ -540,7 +540,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.lbl_copying.setText('<b>Copying</b>')
         self.lbl_task.setText('Copying files...')
         self.statusbar.showMessage(
-            'Copying files to "' + dir_ + '", please wait... ')
+            f'Copying files to {dir_}, please wait... ')
 
     def cleanup(self):
         logger.info('Cleaning up temp files')
@@ -592,7 +592,7 @@ def main():
     app.setStyle("Fusion")
     app.setPalette(setstyle.setPalette())
     window = BlenderUpdater()
-    window.setWindowTitle('Overmind Studios Blender Updater ' + appversion)
+    window.setWindowTitle(f'Overmind Studios Blender Updater {appversion}')
     window.statusbar.setSizeGripEnabled(False)
     window.show()
     app.exec_()
