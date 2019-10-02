@@ -570,7 +570,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.lbl_copy_pic.setPixmap(nowpixmap)
         self.lbl_copying.setText("<b>Copying</b>")
         self.lbl_task.setText("Copying files...")
-        self.statusbar.showMessage(f'Copying files to {dir_}, please wait... ')
+        self.statusbar.showMessage(f"Copying files to {dir_}, please wait... ")
 
     def cleanup(self):
         logger.info("Cleaning up temp files")
