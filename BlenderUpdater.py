@@ -604,7 +604,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
     def exec_windows(self):
         p = subprocess.Popen(os.path.join('"' + dir_ + "\\blender.exe" + '"'))
-        logger.info("Executing " + dir_ + "blender.exe")
+        logger.info(f"Executing {dir_}blender.exe")
 
     def exec_osx(self):
         BlenderOSXPath = os.path.join(
@@ -612,11 +612,11 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         )
         os.system("chmod +x " + BlenderOSXPath)
         p = subprocess.Popen(BlenderOSXPath)
-        logger.info("Executing " + BlenderOSXPath)
+        logger.info(f"Executing {BlenderOSXPath}")
 
     def exec_linux(self):
-        p = subprocess.Popen(os.path.join(dir_ + "/blender"))
-        logger.info("Executing " + dir_ + "blender")
+        p = subprocess.Popen(os.path.join(f"{dir_}/blender"))
+        logger.info(f"Executing {dir_}blender")
 
 
 def main():
