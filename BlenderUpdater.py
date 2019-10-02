@@ -200,7 +200,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         # FIXME - should be changed! (preliminary fix to work in OSX)
         ssl._create_default_https_context = ssl._create_unverified_context
         try:
-            testConnection = requests.get("http://www.github.com")
+            _ = requests.get("http://www.github.com")
         except Exception:
             QtWidgets.QMessageBox.critical(
                 self, "Error", "Please check your internet connection"
@@ -485,7 +485,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
     def download(self, version, variation):
         """Download routines."""
         global dir_
-        global filename
         url = "https://builder.blender.org/download/" + version
         if version == installedversion:
             reply = QtWidgets.QMessageBox.question(
@@ -603,7 +602,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             self.btn_execute.clicked.connect(self.exec_linux)
 
     def exec_windows(self):
-        p = subprocess.Popen(os.path.join('"' + dir_ + "\\blender.exe" + '"'))
+        _ = subprocess.Popen(os.path.join('"' + dir_ + "\\blender.exe" + '"'))
         logger.info(f"Executing {dir_}blender.exe")
 
     def exec_osx(self):
@@ -611,11 +610,11 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             '"' + dir_ + "\\blender.app/Contents/MacOS/blender" + '"'
         )
         os.system("chmod +x " + BlenderOSXPath)
-        p = subprocess.Popen(BlenderOSXPath)
+        _ = subprocess.Popen(BlenderOSXPath)
         logger.info(f"Executing {BlenderOSXPath}")
 
     def exec_linux(self):
-        p = subprocess.Popen(os.path.join(f"{dir_}/blender"))
+        _ = subprocess.Popen(os.path.join(f"{dir_}/blender"))
         logger.info(f"Executing {dir_}blender")
 
 
