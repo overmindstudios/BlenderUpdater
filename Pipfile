@@ -8,7 +8,6 @@ requests = "*"
 "pyside2" = "*"
 "bs4" = "*"
 "urllib3" = "*"
-nuitka = "*"
 qt-py = "*"
 
 [dev-packages]
