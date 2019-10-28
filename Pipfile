@@ -7,8 +7,9 @@ name = "pypi"
 requests = "*"
 "pyside2" = "*"
 "bs4" = "*"
-"qt.py" = "*"
 "urllib3" = "*"
+nuitka = "*"
+qt-py = "*"
 
 [dev-packages]
 pyinstaller = "*"

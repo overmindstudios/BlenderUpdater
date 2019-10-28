@@ -1,4 +1,4 @@
-from Qt import QtGui
+from PySide2 import QtGui
 
 
 def setPalette():
