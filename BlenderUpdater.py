@@ -36,7 +36,7 @@ import requests
 from bs4 import BeautifulSoup
 
 import mainwindow
-import setstyle
+import qdarkstyle
 
 from PySide2 import QtWidgets, QtCore, QtGui
 
@@ -607,8 +607,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
 
 def main():
-    app.setStyle("Fusion")
-    app.setPalette(setstyle.setPalette())
+    app.setStyleSheet(qdarkstyle.load_stylesheet_pyside2())    
     window = BlenderUpdater()
     window.setWindowTitle(f"Overmind Studios Blender Updater {appversion}")
     window.statusbar.setSizeGripEnabled(False)
