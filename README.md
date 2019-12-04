@@ -1,4 +1,5 @@
 [![GPL3 License](https://img.shields.io/badge/license-GPL3-blue.svg)](https://github.com/overmindstudios/BlenderUpdater/blob/master/LICENSE) 
+![Downloads](https://img.shields.io/github/downloads/overmindstudios/BlenderUpdater/total)
 
 ![Screenshot](https://raw.githubusercontent.com/overmindstudios/BlenderUpdater/master/screenshot.png)
 
