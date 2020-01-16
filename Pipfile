@@ -12,7 +12,7 @@ qt-py = "*"
 qdarkstyle = "*"
 
 [dev-packages]
-pyinstaller = "*"
+pyinstaller = ">=3.6"
 flake8 = "*"
 black = "*"
 
