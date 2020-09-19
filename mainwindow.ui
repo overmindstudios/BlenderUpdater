@@ -151,7 +151,7 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QPushButton" name="btn_about">
+   <widget class="QToolButton" name="btn_about">
     <property name="geometry">
      <rect>
       <x>657</x>
@@ -230,7 +230,7 @@
       <string>not set</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="btn_path">
+    <widget class="QToolButton" name="btn_path">
      <property name="geometry">
       <rect>
        <x>576</x>
@@ -425,7 +425,7 @@
     <property name="title">
      <string>Filter results</string>
     </property>
-    <widget class="QPushButton" name="btn_osx">
+    <widget class="QToolButton" name="btn_osx">
      <property name="geometry">
       <rect>
        <x>227</x>
@@ -451,7 +451,7 @@
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="btn_windows">
+    <widget class="QToolButton" name="btn_windows">
      <property name="geometry">
       <rect>
        <x>79</x>
@@ -476,11 +476,8 @@
      <property name="autoExclusive">
       <bool>true</bool>
      </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
     </widget>
-    <widget class="QPushButton" name="btn_allos">
+    <widget class="QToolButton" name="btn_allos">
      <property name="geometry">
       <rect>
        <x>5</x>
@@ -505,7 +502,7 @@
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="btn_linux">
+    <widget class="QToolButton" name="btn_linux">
      <property name="geometry">
       <rect>
        <x>153</x>
@@ -631,7 +628,7 @@
       <x>260</x>
       <y>480</y>
       <width>191</width>
-      <height>35</height>
+      <height>40</height>
      </rect>
     </property>
     <property name="toolTip">

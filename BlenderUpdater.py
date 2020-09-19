@@ -41,7 +41,7 @@ import qdarkstyle
 from PySide2 import QtWidgets, QtCore, QtGui
 
 app = QtWidgets.QApplication(sys.argv)
-appversion = "1.9.5"
+appversion = "1.9.6"
 dir_ = ""
 config = configparser.ConfigParser()
 btn = {}
@@ -607,8 +607,9 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
 
 def main():
-    app.setStyleSheet(qdarkstyle.load_stylesheet_pyside2())    
+    app.setStyleSheet(qdarkstyle.load_stylesheet_pyside2())
     window = BlenderUpdater()
+    QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
     window.setWindowTitle(f"Overmind Studios Blender Updater {appversion}")
     window.statusbar.setSizeGripEnabled(False)
     window.show()
