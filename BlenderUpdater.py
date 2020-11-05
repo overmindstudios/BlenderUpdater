@@ -71,6 +71,14 @@ class WorkerThread(QtCore.QThread):
     finishedCL = QtCore.Signal()
 
     def __init__(self, url, file):
+        """
+        Initialize config file.
+
+        Args:
+            self: (todo): write your description
+            url: (str): write your description
+            file: (str): write your description
+        """
         super(WorkerThread, self).__init__(parent=app)
         self.filename = file
         self.url = url
@@ -116,6 +124,12 @@ class WorkerThread(QtCore.QThread):
         self.update.emit(percent)
 
     def run(self):
+        """
+        Run the archive
+
+        Args:
+            self: (todo): write your description
+        """
         urllib.request.urlretrieve(self.url, self.filename, reporthook=self.progress)
         self.finishedDL.emit()
         shutil.unpack_archive(self.filename, "./blendertemp/")
@@ -129,6 +143,13 @@ class WorkerThread(QtCore.QThread):
 
 class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
     def __init__(self, parent=None):
+        """
+        Init the global config.
+
+        Args:
+            self: (todo): write your description
+            parent: (todo): write your description
+        """
         logger.info(f"Running version {appversion}")
         logger.debug("Constructing UI")
         super(BlenderUpdater, self).__init__(parent)
@@ -223,6 +244,12 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             )
 
     def select_path(self):
+        """
+        Select the path dialog.
+
+        Args:
+            self: (todo): write your description
+        """
         global dir_
         dir_ = QtWidgets.QFileDialog.getExistingDirectory(
             None, "Select a folder:", "C:\\", QtWidgets.QFileDialog.ShowDirsOnly
@@ -233,11 +260,23 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             pass
 
     def getAppUpdate(self):
+        """
+        Called when a browser
+
+        Args:
+            self: (todo): write your description
+        """
         webbrowser.open(
             "https://github.com/overmindstudios/BlenderUpdater/releases/latest"
         )
 
     def about(self):
+        """
+        Prints a text message
+
+        Args:
+            self: (todo): write your description
+        """
         aboutText = (
             '<html><head/><body><p>Utility to update Blender to the latest buildbot version available at<br> \
         <a href="https://builder.blender.org/download/"><span style=" text-decoration: underline; color:#2980b9;">\
@@ -280,6 +319,12 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         return "%3.1f%s" % (num, " TB")
 
     def check(self):
+        """
+        Check the installed version checkversion.
+
+        Args:
+            self: (todo): write your description
+        """
         global dir_
         global lastversion
         global installedversion
@@ -339,6 +384,11 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         finallist = list(filter(None, finallist))
 
         def filterall():
+            """
+            Filter out all available buttons
+
+            Args:
+            """
             # Generate buttons for downloadable versions.
             global btn
             opsys = platform.system()
@@ -379,6 +429,11 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 btn[index].show()
 
         def filterosx():
+            """
+            Filters outos
+
+            Args:
+            """
             global btn
             for i in btn:
                 btn[i].hide()
@@ -406,6 +461,11 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                     btn[index].show()
 
         def filterlinux():
+            """
+            Filter out all the text.
+
+            Args:
+            """
             global btn
             for i in btn:
                 btn[i].hide()
@@ -433,6 +493,11 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                     btn[index].show()
 
         def filterwindows():
+            """
+            Removes all the filter from the filter.
+
+            Args:
+            """
             global btn
             for i in btn:
                 btn[i].hide()
@@ -538,9 +603,22 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         thread.start()
 
     def updatepb(self, percent):
+        """
+        Updates the progress bar.
+
+        Args:
+            self: (todo): write your description
+            percent: (float): write your description
+        """
         self.progressBar.setValue(percent)
 
     def extraction(self):
+        """
+        Updates the progress bar.
+
+        Args:
+            self: (todo): write your description
+        """
         logger.info("Extracting to temp directory")
         self.lbl_task.setText("Extracting...")
         self.btn_Quit.setEnabled(False)
@@ -555,6 +633,12 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.progressBar.setValue(-1)
 
     def finalcopy(self):
+        """
+        Finalizes the thumbnail.
+
+        Args:
+            self: (todo): write your description
+        """
         logger.info("Copying to " + dir_)
         nowpixmap = QtGui.QPixmap(":/newPrefix/images/Actions-arrow-right-icon.png")
         donepixmap = QtGui.QPixmap(":/newPrefix/images/Check-icon.png")
@@ -565,6 +649,12 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.statusbar.showMessage(f"Copying files to {dir_}, please wait... ")
 
     def cleanup(self):
+        """
+        Cleanup the clipboard.
+
+        Args:
+            self: (todo): write your description
+        """
         logger.info("Cleaning up temp files")
         nowpixmap = QtGui.QPixmap(":/newPrefix/images/Actions-arrow-right-icon.png")
         donepixmap = QtGui.QPixmap(":/newPrefix/images/Check-icon.png")
@@ -575,6 +665,12 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.statusbar.showMessage("Cleaning temporary files")
 
     def done(self):
+        """
+        Connects the interface.
+
+        Args:
+            self: (todo): write your description
+        """
         logger.info("Finished")
         donepixmap = QtGui.QPixmap(":/newPrefix/images/Check-icon.png")
         self.lbl_clean_pic.setPixmap(donepixmap)
@@ -595,10 +691,22 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             self.btn_execute.clicked.connect(self.exec_linux)
 
     def exec_windows(self):
+        """
+        Execute windows in windows.
+
+        Args:
+            self: (todo): write your description
+        """
         _ = subprocess.Popen(os.path.join('"' + dir_ + "\\blender.exe" + '"'))
         logger.info(f"Executing {dir_}blender.exe")
 
     def exec_osx(self):
+        """
+        Execute osx osx and osx
+
+        Args:
+            self: (todo): write your description
+        """
         BlenderOSXPath = os.path.join(
             '"' + dir_ + "\\blender.app/Contents/MacOS/blender" + '"'
         )
@@ -607,11 +715,22 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         logger.info(f"Executing {BlenderOSXPath}")
 
     def exec_linux(self):
+        """
+        Execute linux executable
+
+        Args:
+            self: (todo): write your description
+        """
         _ = subprocess.Popen(os.path.join(f"{dir_}/blender"))
         logger.info(f"Executing {dir_}blender")
 
 
 def main():
+    """
+    Main function.
+
+    Args:
+    """
     app.setStyleSheet(qdarkstyle.load_stylesheet_pyside2())
     window = BlenderUpdater()
     window.setWindowTitle(f"Overmind Studios Blender Updater {appversion}")

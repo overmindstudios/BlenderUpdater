@@ -1153,9 +1153,19 @@ qt_resource_struct = b"\
 "
 
 def qInitResources():
+    """
+    Initialize the qt resource
+
+    Args:
+    """
     QtCore.qRegisterResourceData(0x01, qt_resource_struct, qt_resource_name, qt_resource_data)
 
 def qCleanupResources():
+    """
+    Reregister the qt.
+
+    Args:
+    """
     QtCore.qUnregisterResourceData(0x01, qt_resource_struct, qt_resource_name, qt_resource_data)
 
 qInitResources()
