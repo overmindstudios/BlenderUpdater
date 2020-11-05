@@ -16,6 +16,13 @@ import res_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
+        """
+        Setup the main window
+
+        Args:
+            self: (todo): write your description
+            MainWindow: (todo): write your description
+        """
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(700, 550)
@@ -237,6 +244,13 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
+        """
+        Retranslate the main window.
+
+        Args:
+            self: (todo): write your description
+            MainWindow: (todo): write your description
+        """
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Overmind Studios BlenderUpdater", None))
         self.btn_Quit.setText(QCoreApplication.translate("MainWindow", u"Quit", None))
         self.btn_Check.setText(QCoreApplication.translate("MainWindow", u"Version Check", None))
