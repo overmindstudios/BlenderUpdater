@@ -315,30 +315,75 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             self.frm_start.show()
         soup = BeautifulSoup(req.text, "html.parser")
 
+        def clean(text):
+            ''' Removes spaces and uneeded characters from the given text. '''
+
+            return text.strip().strip("\xa0")
+
+        def parse_description(element):
+            ''' Parses the given description element.
+
+                Input text may look like:
+                <span>May 24, 07:44:19 - blender-v283-release - d553edeb7dbb - zip - 171.79MB</span>
+            '''
+
+            if element is None:
+                return None
+
+            parts = element.text.split(" - ")
+            output = {}
+            output["date"] = clean(parts[0])
+            output["name"] = clean(parts[1])
+            output["hash"] = clean(parts[2])
+            output["type"] = clean(parts[3])
+            output["size"] = clean(parts[4])
+            return output
+
         # iterate through the found versions
         results = []
         for ul in soup.find("div", {"class": "page-footer-main-text"}).find_all("ul"):
             for li in ul.find_all("li", class_="os"):
-                info = list()
-                info.append(li.find("a", href=True)["href"])  # Download URL to build
-                info.append(li.find("span", class_="size").text)  # Build file size
-                info.append(li.find("small").text)  # Build date
-                results.append(info)
-            results = [
-                [
-                    item.strip().strip("\xa0") if item is not None else None
-                    for item in sublist
-                ]
-                for sublist in results
-            ]  # Removes spaces
-        finallist = []
-        for sub in results:
-            sub = list(filter(None, sub))
-            sub[0] = sub[0][10:]  # Remove redundant parts of the URL (download...)
-            finallist.append(sub)
-        finallist = list(filter(None, finallist))
+                description_element = li.find("span", class_="name").find("small")
+                arch = li.find("span", class_="build").text
+                channel = li.find("span", class_="build-var").text
+                name = li.find("span", class_="name").find(text=True, recursive=False)
+                url = li.find("a", href=True)["href"]
 
-        def filterall():
+                description_data = parse_description(description_element)
+                if description_data is None:
+                    continue
+
+                info = {}
+                info["arch"] = clean(arch)
+                info["build_date"] = description_data["date"]
+                info["channel"] = clean(channel)
+                info["filename"] = clean(url).split("/")[-1]
+                info["hash"] = description_data["hash"]
+                info["name"] = clean(name) + " " + clean(channel)
+                info["size"] = description_data["size"]
+                info["type"] = description_data["type"]
+                info["url"] = clean(url)
+                info["version"] = description_data["name"] + "_" + description_data["hash"]
+
+                # Set "os" based on URL
+                if "windows" in clean(url):
+                    info["os"] = "windows"
+                elif "darwin" in clean(url):
+                    info["os"] = "osx"
+                else:
+                    info["os"] = "linux"
+
+                results.append(info)
+
+        finallist = results
+
+        def render_buttons(os_filter=["windows", "osx", "linux"]):
+            ''' Renders the download buttons on screen.
+
+                os_filter: Will modify the buttons to be rendered.
+                           If an empty list is being provided, all operating systems
+                           will be shown.
+            '''
             # Generate buttons for downloadable versions.
             global btn
             opsys = platform.system()
@@ -347,117 +392,61 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 btn[i].hide()
             i = 0
             btn = {}
-            for index, text in enumerate(finallist):
+
+            for index, entry in enumerate(finallist):
                 btn[index] = QtWidgets.QPushButton(self)
-                logger.debug(text[0] + " | " + text[1] + " | " + text[2])
-                if "macOS" in text[0]:  # set icon according to OS
-                    if opsys.lower == "darwin":
-                        btn[index].setStyleSheet("background: rgb(22, 52, 73)")
+
+                # Switch for skipping rendering buttons
+                skip_entry = False
+
+                # Skip certain file types
+                if entry["type"] in ("msix", "msi", "sha256"):
+                    skip_entry = True
+
+                # Skip based on os_filter entries
+                if entry["os"] not in os_filter:
+                    skip_entry = True
+
+                if skip_entry:
+                    continue
+
+                # set icons according to OS
+                if entry["os"] == "osx":
                     btn[index].setIcon(appleicon)
-                elif "linux" in text[0]:
-                    if opsys == "Linux":
-                        btn[index].setStyleSheet("background: rgb(22, 52, 73)")
+
+                if entry["os"] == "linux":
                     btn[index].setIcon(linuxicon)
-                elif "win" in text[0]:
-                    if opsys == "Windows":
-                        btn[index].setStyleSheet("background: rgb(22, 52, 73)")
+
+                if entry["os"] == "windows":
                     btn[index].setIcon(windowsicon)
 
-                version = str(text[0])
-                variation = str(text[0])
-                buttontext = str(text[0]) + " | " + str(text[1]) + " | " + str(text[2])
+                buttontext = f"{entry['name']} ({entry['arch']}) | {entry['size']} | {entry['build_date']}"
+                logger.debug(buttontext)
+
                 btn[index].setIconSize(QtCore.QSize(24, 24))
                 btn[index].setText(buttontext)
                 btn[index].setFixedWidth(686)
                 btn[index].move(6, 50 + i)
                 i += 32
                 btn[index].clicked.connect(
-                    lambda throwaway=0, version=version: self.download(
-                        version, variation
+                    lambda throwaway=0, entry=entry: self.download(
+                        entry
                     )
                 )
                 btn[index].show()
 
+
+        def filterall():
+            render_buttons(os_filter=["windows", "osx", "linux"])
+
         def filterosx():
-            global btn
-            for i in btn:
-                btn[i].hide()
-            btn = {}
-            i = 0
-            for index, text in enumerate(finallist):
-                btn[index] = QtWidgets.QPushButton(self)
-                if "macOS" in text[0]:
-                    btn[index].setIcon(appleicon)
-                    version = str(text[0])
-                    variation = str(text[0])
-                    buttontext = (
-                        str(text[0]) + " | " + str(text[1]) + " | " + str(text[2])
-                    )
-                    btn[index].setIconSize(QtCore.QSize(24, 24))
-                    btn[index].setText(buttontext)
-                    btn[index].setFixedWidth(686)
-                    btn[index].move(6, 50 + i)
-                    i += 32
-                    btn[index].clicked.connect(
-                        lambda throwaway=0, version=version: self.download(
-                            version, variation
-                        )
-                    )
-                    btn[index].show()
+            render_buttons(os_filter=["osx",])
 
         def filterlinux():
-            global btn
-            for i in btn:
-                btn[i].hide()
-            btn = {}
-            i = 0
-            for index, text in enumerate(finallist):
-                btn[index] = QtWidgets.QPushButton(self)
-                if "linux" in text[0]:
-                    btn[index].setIcon(linuxicon)
-                    version = str(text[0])
-                    variation = str(text[0])
-                    buttontext = (
-                        str(text[0]) + " | " + str(text[1]) + " | " + str(text[2])
-                    )
-                    btn[index].setIconSize(QtCore.QSize(24, 24))
-                    btn[index].setText(buttontext)
-                    btn[index].setFixedWidth(686)
-                    btn[index].move(6, 50 + i)
-                    i += 32
-                    btn[index].clicked.connect(
-                        lambda throwaway=0, version=version: self.download(
-                            version, variation
-                        )
-                    )
-                    btn[index].show()
+            render_buttons(os_filter=["linux",])
 
         def filterwindows():
-            global btn
-            for i in btn:
-                btn[i].hide()
-            btn = {}
-            i = 0
-            for index, text in enumerate(finallist):
-                btn[index] = QtWidgets.QPushButton(self)
-                if "win" in text[0]:
-                    btn[index].setIcon(windowsicon)
-                    version = str(text[0])
-                    variation = str(text[0])
-                    buttontext = (
-                        str(text[0]) + " | " + str(text[1]) + " | " + str(text[2])
-                    )
-                    btn[index].setIconSize(QtCore.QSize(24, 24))
-                    btn[index].setText(" " + buttontext)
-                    btn[index].setFixedWidth(686)
-                    btn[index].move(6, 50 + i)
-                    i += 32
-                    btn[index].clicked.connect(
-                        lambda throwaway=0, version=version: self.download(
-                            version, variation
-                        )
-                    )
-                    btn[index].show()
+            render_buttons(os_filter=["windows",])
 
         self.lbl_available.show()
         self.lbl_caution.show()
@@ -475,10 +464,14 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         f.close()
         filterall()
 
-    def download(self, version, variation):
+    def download(self, entry):
         """Download routines."""
         global dir_
-        url = "https://builder.blender.org/download/" + version
+
+        url = entry["url"]
+        version = entry["version"]
+        variation = entry["arch"]
+
         if version == installedversion:
             reply = QtWidgets.QMessageBox.question(
                 self,
@@ -498,24 +491,33 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
         if os.path.isdir("./blendertemp"):
             shutil.rmtree("./blendertemp")
+
         os.makedirs("./blendertemp")
         file = urllib.request.urlopen(url)
         totalsize = file.info()["Content-Length"]
         size_readable = self.hbytes(float(totalsize))
+
         global config
         config.read("config.ini")
         config.set("main", "path", dir_)
         config.set("main", "flavor", variation)
         config.set("main", "installed", version)
+
         with open("config.ini", "w") as f:
             config.write(f)
         f.close()
-        """Do the actual download"""
+
+        ##########################
+        # Do the actual download #
+        ##########################
+
         dir_ = os.path.join(dir_, "")
-        filename = "./blendertemp/" + version
+        filename = "./blendertemp/" + entry["filename"]
+
         for i in btn:
             btn[i].hide()
         logger.info(f"Starting download thread for {url}{version}")
+
         self.lbl_available.hide()
         self.lbl_caution.hide()
         self.progressBar.show()
@@ -529,6 +531,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.progressBar.setValue(0)
         self.btn_Check.setDisabled(True)
         self.statusbar.showMessage(f"Downloading {size_readable}")
+
         thread = WorkerThread(url, filename)
         thread.update.connect(self.updatepb)
         thread.finishedDL.connect(self.extraction)
