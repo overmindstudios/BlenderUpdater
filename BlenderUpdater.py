@@ -46,7 +46,7 @@ app = QtWidgets.QApplication(sys.argv)
 
 app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 
-appversion = "1.9.6"
+appversion = "1.9.7"
 dir_ = ""
 config = configparser.ConfigParser()
 btn = {}
@@ -316,16 +316,16 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         soup = BeautifulSoup(req.text, "html.parser")
 
         def clean(text):
-            ''' Removes spaces and uneeded characters from the given text. '''
+            """ Removes spaces and uneeded characters from the given text. """
 
             return text.strip().strip("\xa0")
 
         def parse_description(element):
-            ''' Parses the given description element.
+            """Parses the given description element.
 
-                Input text may look like:
-                <span>May 24, 07:44:19 - blender-v283-release - d553edeb7dbb - zip - 171.79MB</span>
-            '''
+            Input text may look like:
+            <span>May 24, 07:44:19 - blender-v283-release - d553edeb7dbb - zip - 171.79MB</span>
+            """
 
             if element is None:
                 return None
@@ -363,7 +363,9 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 info["size"] = description_data["size"]
                 info["type"] = description_data["type"]
                 info["url"] = clean(url)
-                info["version"] = description_data["name"] + "_" + description_data["hash"]
+                info["version"] = (
+                    description_data["name"] + "_" + description_data["hash"]
+                )
 
                 # Set "os" based on URL
                 if "windows" in clean(url):
@@ -378,12 +380,12 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         finallist = results
 
         def render_buttons(os_filter=["windows", "osx", "linux"]):
-            ''' Renders the download buttons on screen.
+            """Renders the download buttons on screen.
 
-                os_filter: Will modify the buttons to be rendered.
-                           If an empty list is being provided, all operating systems
-                           will be shown.
-            '''
+            os_filter: Will modify the buttons to be rendered.
+                       If an empty list is being provided, all operating systems
+                       will be shown.
+            """
             # Generate buttons for downloadable versions.
             global btn
             opsys = platform.system()
@@ -429,24 +431,33 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 btn[index].move(6, 50 + i)
                 i += 32
                 btn[index].clicked.connect(
-                    lambda throwaway=0, entry=entry: self.download(
-                        entry
-                    )
+                    lambda throwaway=0, entry=entry: self.download(entry)
                 )
                 btn[index].show()
-
 
         def filterall():
             render_buttons(os_filter=["windows", "osx", "linux"])
 
         def filterosx():
-            render_buttons(os_filter=["osx",])
+            render_buttons(
+                os_filter=[
+                    "osx",
+                ]
+            )
 
         def filterlinux():
-            render_buttons(os_filter=["linux",])
+            render_buttons(
+                os_filter=[
+                    "linux",
+                ]
+            )
 
         def filterwindows():
-            render_buttons(os_filter=["windows",])
+            render_buttons(
+                os_filter=[
+                    "windows",
+                ]
+            )
 
         self.lbl_available.show()
         self.lbl_caution.show()
