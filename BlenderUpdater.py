@@ -46,7 +46,7 @@ app = QtWidgets.QApplication(sys.argv)
 
 app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 
-appversion = "1.9.7"
+appversion = "1.9.8"
 dir_ = ""
 config = configparser.ConfigParser()
 btn = {}
@@ -362,9 +362,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             info["size"] = description_data["size"]
             info["type"] = description_data["type"]
             info["url"] = clean(url)
-            info["version"] = (
-                description_data["name"] + "_" + description_data["hash"]
-            )
+            info["version"] = description_data["name"] + "_" + description_data["hash"]
 
             # Set "os" based on URL
             if "windows" in clean(url):
