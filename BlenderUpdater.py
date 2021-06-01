@@ -341,41 +341,40 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
         # iterate through the found versions
         results = []
-        for ul in soup.find("div", {"class": "page-footer-main-text"}).find_all("ul"):
-            for li in ul.find_all("li", class_="os"):
-                description_element = li.find("span", class_="name").find("small")
-                arch = li.find("span", class_="build").text
-                channel = li.find("span", class_="build-var").text
-                name = li.find("span", class_="name").find(text=True, recursive=False)
-                url = li.find("a", href=True)["href"]
+        for li in soup.find_all("li", class_="os"):
+            description_element = li.find("div", class_="name").find("small")
+            arch = li.find("span", class_="build").find(text=True, recursive=False)
+            channel = li.find("span", class_="build-var").text
+            name = li.find("div", class_="name").find(text=True, recursive=False)
+            url = li.find("a", href=True)["href"]
 
-                description_data = parse_description(description_element)
-                if description_data is None:
-                    continue
+            description_data = parse_description(description_element)
+            if description_data is None:
+                continue
 
-                info = {}
-                info["arch"] = clean(arch)
-                info["build_date"] = description_data["date"]
-                info["channel"] = clean(channel)
-                info["filename"] = clean(url).split("/")[-1]
-                info["hash"] = description_data["hash"]
-                info["name"] = clean(name) + " " + clean(channel)
-                info["size"] = description_data["size"]
-                info["type"] = description_data["type"]
-                info["url"] = clean(url)
-                info["version"] = (
-                    description_data["name"] + "_" + description_data["hash"]
-                )
+            info = {}
+            info["arch"] = clean(arch)
+            info["build_date"] = description_data["date"]
+            info["channel"] = clean(channel)
+            info["filename"] = clean(url).split("/")[-1]
+            info["hash"] = description_data["hash"]
+            info["name"] = clean(name) + " " + clean(channel)
+            info["size"] = description_data["size"]
+            info["type"] = description_data["type"]
+            info["url"] = clean(url)
+            info["version"] = (
+                description_data["name"] + "_" + description_data["hash"]
+            )
 
-                # Set "os" based on URL
-                if "windows" in clean(url):
-                    info["os"] = "windows"
-                elif "darwin" in clean(url):
-                    info["os"] = "osx"
-                else:
-                    info["os"] = "linux"
+            # Set "os" based on URL
+            if "windows" in clean(url):
+                info["os"] = "windows"
+            elif "darwin" in clean(url):
+                info["os"] = "osx"
+            else:
+                info["os"] = "linux"
 
-                results.append(info)
+            results.append(info)
 
         finallist = results
 
