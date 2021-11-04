@@ -46,7 +46,7 @@ app = QtWidgets.QApplication(sys.argv)
 
 app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 
-appversion = "1.9.8"
+appversion = "1.9.9"
 dir_ = ""
 config = configparser.ConfigParser()
 btn = {}
@@ -316,7 +316,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         soup = BeautifulSoup(req.text, "html.parser")
 
         def clean(text):
-            """ Removes spaces and uneeded characters from the given text. """
+            """Removes spaces and uneeded characters from the given text."""
 
             return text.strip().strip("\xa0")
 
