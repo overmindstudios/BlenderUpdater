@@ -333,10 +333,10 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             parts = element.text.split(" - ")
             output = {}
             output["date"] = clean(parts[0])
-            output["name"] = clean(parts[1])
-            output["hash"] = clean(parts[2])
-            output["type"] = clean(parts[3])
-            output["size"] = clean(parts[4])
+            # output["name"] = clean(parts[1])
+            output["hash"] = clean(parts[1])
+            output["type"] = clean(parts[2])
+            output["size"] = clean(parts[3])
             return output
 
         # iterate through the found versions
@@ -362,7 +362,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             info["size"] = description_data["size"]
             info["type"] = description_data["type"]
             info["url"] = clean(url)
-            info["version"] = description_data["name"] + "_" + description_data["hash"]
+            info["version"] = name + "_" + description_data["hash"]
 
             # Set "os" based on URL
             if "windows" in clean(url):
