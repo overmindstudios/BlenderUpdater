@@ -46,7 +46,7 @@ app = QtWidgets.QApplication(sys.argv)
 
 app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 
-appversion = "1.9.9"
+appversion = "1.9.10"
 dir_ = ""
 config = configparser.ConfigParser()
 btn = {}
