@@ -33,7 +33,7 @@ from distutils.dir_util import copy_tree
 from distutils.version import StrictVersion
 
 import requests
-from bs4 import BeautifulSoup
+import re
 
 import mainwindow
 import qdarkstyle
@@ -313,7 +313,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             )
             logger.error("No connection to Blender nightly builds server")
             self.frm_start.show()
-        soup = BeautifulSoup(req.text, "html.parser")
 
         def clean(text):
             """Removes spaces and uneeded characters from the given text."""
@@ -340,43 +339,21 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             return output
 
         # iterate through the found versions
-        results = []
-        for li in soup.find_all("li", class_="os"):
-            description_element = li.find("div", class_="name").find("small")
-            arch = li.find("span", class_="build").find(text=True, recursive=False)
-            channel = li.find("span", class_="build-var").text
-            name = li.find("div", class_="name").find(text=True, recursive=False)
-            url = li.find("a", href=True)["href"]
+        templist = []
 
-            description_data = parse_description(description_element)
-            if description_data is None:
-                continue
+        filenames = re.findall(
+                r'blender-[^\s][^"]+',
+                req.text,
+                )
 
-            info = {}
-            info["arch"] = clean(arch)
-            info["build_date"] = description_data["date"]
-            info["channel"] = clean(channel)
-            info["filename"] = clean(url).split("/")[-1]
-            info["hash"] = description_data["hash"]
-            info["name"] = clean(name) + " " + clean(channel)
-            info["size"] = description_data["size"]
-            info["type"] = description_data["type"]
-            info["url"] = clean(url)
-            info["version"] = name + "_" + description_data["hash"]
+        for el in filenames:
+            if "sha256" not in el and "/" not in el and "msi" not in el:
+                templist.append(el)
 
-            # Set "os" based on URL
-            if "windows" in clean(url):
-                info["os"] = "windows"
-            elif "darwin" in clean(url):
-                info["os"] = "osx"
-            else:
-                info["os"] = "linux"
+        finallist = list(set(templist))
+        finallist.sort(reverse=True)
 
-            results.append(info)
-
-        finallist = results
-
-        def render_buttons(os_filter=["windows", "osx", "linux"]):
+        def render_buttons(os_filter=["windows", "darwin", "linux"]):
             """Renders the download buttons on screen.
 
             os_filter: Will modify the buttons to be rendered.
@@ -395,33 +372,23 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             for index, entry in enumerate(finallist):
                 btn[index] = QtWidgets.QPushButton(self)
 
-                # Switch for skipping rendering buttons
                 skip_entry = False
 
-                # Skip certain file types
-                if entry["type"] in ("msix", "msi", "sha256"):
-                    skip_entry = True
-
                 # Skip based on os_filter entries
-                if entry["os"] not in os_filter:
+                if any(filter not in entry for filter in os_filter):
                     skip_entry = True
 
                 if skip_entry:
                     continue
 
-                # set icons according to OS
-                if entry["os"] == "osx":
-                    btn[index].setIcon(appleicon)
-
-                if entry["os"] == "linux":
-                    btn[index].setIcon(linuxicon)
-
-                if entry["os"] == "windows":
-                    btn[index].setIcon(windowsicon)
-
-                buttontext = f"{entry['name']} ({entry['arch']}) | {entry['size']} | {entry['build_date']}"
+                buttontext = f"{entry}"
                 logger.debug(buttontext)
-
+                if "windows" in entry:
+                    btn[index].setIcon(windowsicon)
+                elif "darwin" in entry:
+                    btn[index].setIcon(appleicon)
+                elif "linux" in entry:
+                    btn[index].setIcon(linuxicon)
                 btn[index].setIconSize(QtCore.QSize(24, 24))
                 btn[index].setText(buttontext)
                 btn[index].setFixedWidth(686)
@@ -433,12 +400,12 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 btn[index].show()
 
         def filterall():
-            render_buttons(os_filter=["windows", "osx", "linux"])
+            render_buttons(os_filter=[])
 
         def filterosx():
             render_buttons(
                 os_filter=[
-                    "osx",
+                    "darwin",
                 ]
             )
 
