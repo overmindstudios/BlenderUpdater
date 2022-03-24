@@ -42,11 +42,11 @@ from PySide2 import QtWidgets, QtCore, QtGui
 
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 
+QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 app = QtWidgets.QApplication(sys.argv)
 
-app.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 
-appversion = "1.9.10"
+appversion = "1.10.0"
 dir_ = ""
 config = configparser.ConfigParser()
 btn = {}
