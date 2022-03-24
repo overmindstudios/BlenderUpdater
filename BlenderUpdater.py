@@ -443,11 +443,9 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         """Download routines."""
         global dir_
 
-        url = entry["url"]
-        version = entry["version"]
-        variation = entry["arch"]
+        url = "https://builder.blender.org/download/daily/" + entry
 
-        if version == installedversion:
+        if entry == installedversion:
             reply = QtWidgets.QMessageBox.question(
                 self,
                 "Warning",
@@ -475,8 +473,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         global config
         config.read("config.ini")
         config.set("main", "path", dir_)
-        config.set("main", "flavor", variation)
-        config.set("main", "installed", version)
+        config.set("main", "flavor", entry)
+        config.set("main", "installed", entry)
 
         with open("config.ini", "w") as f:
             config.write(f)
@@ -487,11 +485,11 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         ##########################
 
         dir_ = os.path.join(dir_, "")
-        filename = "./blendertemp/" + entry["filename"]
+        filename = "./blendertemp/" + entry
 
         for i in btn:
             btn[i].hide()
-        logger.info(f"Starting download thread for {url}{version}")
+        logger.info(f"Starting download thread for {url}{entry}")
 
         self.lbl_available.hide()
         self.lbl_caution.hide()
@@ -502,7 +500,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.frm_progress.show()
         nowpixmap = QtGui.QPixmap(":/newPrefix/images/Actions-arrow-right-icon.png")
         self.lbl_download_pic.setPixmap(nowpixmap)
-        self.lbl_downloading.setText(f"<b>Downloading {version}</b>")
+        self.lbl_downloading.setText(f"<b>Downloading {entry}</b>")
         self.progressBar.setValue(0)
         self.btn_Check.setDisabled(True)
         self.statusbar.showMessage(f"Downloading {size_readable}")
