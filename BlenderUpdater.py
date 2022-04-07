@@ -46,7 +46,7 @@ QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 app = QtWidgets.QApplication(sys.argv)
 
 
-appversion = "1.10.0"
+appversion = "1.10.1"
 dir_ = ""
 config = configparser.ConfigParser()
 btn = {}
@@ -116,6 +116,9 @@ class WorkerThread(QtCore.QThread):
         self.update.emit(percent)
 
     def run(self):
+        """
+        It downloads the file, emits a signal when it's done, and then unpacks the file
+        """
         urllib.request.urlretrieve(self.url, self.filename, reporthook=self.progress)
         self.finishedDL.emit()
         shutil.unpack_archive(self.filename, "./blendertemp/")
@@ -257,7 +260,9 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         QtWidgets.QMessageBox.about(self, "About", aboutText)
 
     def check_dir(self):
-        """Check if a vaild directory has been set by the user."""
+        """
+        Check if a valid directory has been set by the user
+        """
         global dir_
         dir_ = self.line_path.text()
         if not os.path.exists(dir_):
@@ -272,7 +277,12 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             self.check()
 
     def hbytes(self, num):
-        """Translate to human readable file size."""
+        """
+        Return a human readable file size
+        
+        :param num: The number of bytes to convert
+        :return: a string of the number of bytes in a more human readable way.
+        """
         for x in [" bytes", " KB", " MB", " GB"]:
             if num < 1024.0:
                 return "%3.1f%s" % (num, x)
@@ -440,7 +450,12 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         filterall()
 
     def download(self, entry):
-        """Download routines."""
+        """
+        Download the file
+        
+        :param entry: The version of Blender you want to download
+        :return: Nothing.
+        """
         global dir_
 
         url = "https://builder.blender.org/download/daily/" + entry
@@ -517,6 +532,9 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.progressBar.setValue(percent)
 
     def extraction(self):
+        """
+        Extract the downloaded file to a temporary directory
+        """
         logger.info("Extracting to temp directory")
         self.lbl_task.setText("Extracting...")
         self.btn_Quit.setEnabled(False)
@@ -588,6 +606,9 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
 
 def main():
+    """
+    This function creates an instance of the BlenderUpdater class and passes it to the Qt application
+    """
     app.setStyleSheet(qdarkstyle.load_stylesheet_pyside2())
     window = BlenderUpdater()
     window.setWindowTitle(f"Overmind Studios Blender Updater {appversion}")
