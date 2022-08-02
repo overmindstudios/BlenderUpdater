@@ -44,7 +44,7 @@ Freezing is done via pyinstaller (`pyinstaller --icon=icon.ico --onefile --windo
 
 ## Dependencies
 Developed with Python 3.7. It *should* work with Python 3.6 as well, but no guarantees here.
-It uses [Qt.py](https://github.com/mottosso/Qt.py) as an abstraction layer for Qt, so you should be able to use either PySide2 or PyQt5 in the background. BeautifulSoup is used for website parsing.
+It uses [Qt.py](https://github.com/mottosso/Qt.py) as an abstraction layer for Qt, so you should be able to use either PySide2 or PyQt5 in the background.
 
 ## Disclaimer
 This application was originally developed for in-house usage at [Overmind Studios](http://www.overmind-studios.de). Released as-is.
