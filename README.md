@@ -1,6 +1,6 @@
 [![GPL3 License](https://img.shields.io/badge/license-GPL3-blue.svg)](https://github.com/overmindstudios/BlenderUpdater/blob/master/LICENSE) 
 [![Downloads](https://img.shields.io/github/downloads/overmindstudios/BlenderUpdater/total)](https://img.shields.io/github/downloads/overmindstudios/BlenderUpdater/total)
-[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G2G5149IX)
+[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/tobkum)
 
 ![Screenshot](https://raw.githubusercontent.com/overmindstudios/BlenderUpdater/master/screenshot.png)
 
@@ -44,7 +44,7 @@ Freezing is done via pyinstaller (`pyinstaller --icon=icon.ico --onefile --windo
 
 ## Dependencies
 Developed with Python 3.7. It *should* work with Python 3.6 as well, but no guarantees here.
-It uses [Qt.py](https://github.com/mottosso/Qt.py) as an abstraction layer for Qt, so you should be able to use either PySide2 or PyQt5 in the background. BeautifulSoup is used for website parsing.
+It uses [Qt.py](https://github.com/mottosso/Qt.py) as an abstraction layer for Qt, so you should be able to use either PySide2 or PyQt5 in the background.
 
 ## Disclaimer
 This application was originally developed for in-house usage at [Overmind Studios](http://www.overmind-studios.de). Released as-is.
