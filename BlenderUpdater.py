@@ -614,7 +614,7 @@ def main():
     window.setWindowTitle(f"Overmind Studios Blender Updater {appversion}")
     window.statusbar.setSizeGripEnabled(False)
     window.show()
-    app.exec_()
+    app.exec()
 
 
 if __name__ == "__main__":
