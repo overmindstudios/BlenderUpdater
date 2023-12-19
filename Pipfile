@@ -5,19 +5,21 @@ name = "pypi"
 
 [packages]
 requests = "*"
-"pyside2" = "*"
+"pyside6" = "*"
 "bs4" = "*"
 "urllib3" = "*"
 qt-py = "*"
 qdarkstyle = "*"
+setuptools = "*"
 
 [dev-packages]
 pyinstaller = ">=6.3"
 flake8 = "*"
 black = "*"
+packaging = "*"
 
 [requires]
-python_version = "3.8"
+python_version = "3.12"
 
 [pipenv]
 allow_prereleases = true

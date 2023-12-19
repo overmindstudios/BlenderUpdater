@@ -29,8 +29,8 @@ import urllib.parse
 import urllib.request
 import webbrowser
 from datetime import datetime
-from distutils.dir_util import copy_tree
-from distutils.version import StrictVersion
+from shutil import copytree
+from packaging.utils import Version
 
 import requests
 import re
@@ -38,7 +38,7 @@ import re
 import mainwindow
 import qdarkstyle
 
-from PySide2 import QtWidgets, QtCore, QtGui
+from PySide6 import QtWidgets, QtCore, QtGui
 
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 
@@ -124,7 +124,7 @@ class WorkerThread(QtCore.QThread):
         shutil.unpack_archive(self.filename, "./blendertemp/")
         self.finishedEX.emit()
         source = next(os.walk("./blendertemp/"))[1]
-        copy_tree(os.path.join("./blendertemp/", source[0]), dir_)
+        copytree(os.path.join("./blendertemp/", source[0]), dir_)
         self.finishedCP.emit()
         shutil.rmtree("./blendertemp")
         self.finishedCL.emit()
@@ -215,7 +215,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             UpdateData = json.loads(Appupdate)
             applatestversion = UpdateData["tag_name"]
             logger.info(f"Version found online: {applatestversion}")
-            if StrictVersion(applatestversion) > StrictVersion(appversion):
+            if Version(applatestversion) > Version(appversion):
                 logger.info("Newer version found on Github")
                 self.btn_newVersion.clicked.connect(self.getAppUpdate)
                 self.btn_newVersion.setStyleSheet("background: rgb(73, 50, 20)")
