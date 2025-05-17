@@ -40,6 +40,9 @@ import qdarkstyle
 
 from PySide6 import QtWidgets, QtCore, QtGui
 
+# Add QScrollArea import
+from PySide6.QtWidgets import QScrollArea, QVBoxLayout, QWidget
+
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 
 QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
@@ -124,7 +127,7 @@ class WorkerThread(QtCore.QThread):
         shutil.unpack_archive(self.filename, "./blendertemp/")
         self.finishedEX.emit()
         source = next(os.walk("./blendertemp/"))[1]
-        copytree(os.path.join("./blendertemp/", source[0]), dir_)
+        copytree(os.path.join("./blendertemp/", source[0]), dir_, dirs_exist_ok=True)
         self.finishedCP.emit()
         shutil.rmtree("./blendertemp")
         self.finishedCL.emit()
@@ -136,6 +139,25 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         logger.debug("Constructing UI")
         super(BlenderUpdater, self).__init__(parent)
         self.setupUi(self)
+        
+        # Create scroll area for the build buttons
+        self.scrollArea = QScrollArea(self.centralwidget)
+        self.scrollArea.setGeometry(QtCore.QRect(6, 50, 686, 625))  # Adjust height to leave space for buttons
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollArea.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.scrollArea.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        
+        # Create a container widget for the buttons
+        self.scrollContent = QWidget()
+        self.scrollLayout = QVBoxLayout(self.scrollContent)
+        self.scrollLayout.setSpacing(2)
+        self.scrollLayout.setContentsMargins(0, 0, 0, 0)
+        
+        # Set the scroll content widget
+        self.scrollArea.setWidget(self.scrollContent)
+        self.scrollArea.hide()  # Hide initially until needed
+        
+        # Rest of the initialization remains the same
         self.btn_oneclick.hide()
         self.lbl_quick.hide()
         self.lbl_caution.hide()
@@ -303,6 +325,9 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.lbl_task.hide()
         self.btn_newVersion.hide()
         self.btn_execute.hide()
+        
+        # Show the scroll area for build buttons
+        self.scrollArea.show()
 
         appleicon = QtGui.QIcon(":/newPrefix/images/Apple-icon.png")
         windowsicon = QtGui.QIcon(":/newPrefix/images/Windows-icon.png")
@@ -374,14 +399,21 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             global btn
             opsys = platform.system()
             logger.info(f"Operating system: {opsys}")
+            
+            # Clear previous buttons
             for i in btn:
-                btn[i].hide()
-            i = 0
+                btn[i].setParent(None)
+                btn[i].deleteLater()
+            
+            # Clear layout
+            while self.scrollLayout.count():
+                child = self.scrollLayout.takeAt(0)
+                if child.widget():
+                    child.widget().deleteLater()
+                    
             btn = {}
-
+            
             for index, entry in enumerate(finallist):
-                btn[index] = QtWidgets.QPushButton(self)
-
                 skip_entry = False
 
                 # Skip based on os_filter entries
@@ -391,24 +423,31 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 if skip_entry:
                     continue
 
+                btn[index] = QtWidgets.QPushButton()
                 buttontext = f"{entry}"
                 logger.debug(buttontext)
+                
                 if "windows" in entry:
                     btn[index].setIcon(windowsicon)
                 elif "darwin" in entry:
                     btn[index].setIcon(appleicon)
                 elif "linux" in entry:
                     btn[index].setIcon(linuxicon)
+                    
                 btn[index].setIconSize(QtCore.QSize(24, 24))
                 btn[index].setText(buttontext)
-                btn[index].setFixedWidth(686)
-                btn[index].move(6, 50 + i)
-                i += 32
+                btn[index].setFixedWidth(670)  # Slightly narrower to fit in scroll area
                 btn[index].clicked.connect(
                     lambda throwaway=0, entry=entry: self.download(entry)
                 )
-                btn[index].show()
+                
+                # Add to the scroll layout instead of placing manually
+                self.scrollLayout.addWidget(btn[index])
+            
+            # Add stretch at the end to push buttons to the top
+            self.scrollLayout.addStretch()
 
+        # Define filter functions
         def filterall():
             render_buttons(os_filter=[])
 
@@ -450,6 +489,11 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         filterall()
 
     def download(self, entry):
+        # Hide the scroll area during download
+        self.scrollArea.hide()
+        
+        # The rest of the download method remains unchanged
+        # ... (existing code)
         """
         Download the file
         
