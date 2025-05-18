@@ -49,6 +49,7 @@ QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 app = QtWidgets.QApplication(sys.argv)
 
 
+appversion = "1.12.1 (Unofficial Fork by Thane5)"
 appversion = "1.11.0"
 dir_ = ""
 config = configparser.ConfigParser()
@@ -194,6 +195,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             config.set("main", "lastdl", "")
             config.set("main", "installed", "")
             config.set("main", "flavor", "")
+            config.set("main", "os_filter", "all")
             with open("config.ini", "w") as f:
                 config.write(f)
         if config_exist:
@@ -399,9 +401,21 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         with open("config.ini", "w") as f:
             config.write(f)
         f.close()
-
-        # Initial filter - show all builds
-        self.filterall()
+        
+        # Apply saved filter preference instead of just showing all
+        saved_filter = config.get("main", "os_filter")
+        if saved_filter == "windows":
+            self.btn_windows.setChecked(True)
+            self.filterwindows()
+        elif saved_filter == "darwin":
+            self.btn_osx.setChecked(True)
+            self.filterosx()
+        elif saved_filter == "linux":
+            self.btn_linux.setChecked(True)
+            self.filterlinux()
+        else:  # Default or "all"
+            self.btn_allos.setChecked(True)
+            self.filterall()
 
     def download(self, entry):
         # Hide the scroll area during download
@@ -563,38 +577,41 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         _ = subprocess.Popen(os.path.join(f"{dir_}/blender"))
         logger.info(f"Executing {dir_}blender")
 
-    # Define filter functions
     def filterall(self):
         """Show all operating systems"""
+        # Save the filter preference
+        config.read("config.ini")
+        config.set("main", "os_filter", "all")
+        with open("config.ini", "w") as f:
+            config.write(f)
         self.render_buttons(os_filter=[])
-
 
     def filterosx(self):
         """Show only macOS builds"""
-        self.render_buttons(
-            os_filter=[
-                "darwin",
-            ]
-        )
-
+        # Save the filter preference
+        config.read("config.ini")
+        config.set("main", "os_filter", "darwin")
+        with open("config.ini", "w") as f:
+            config.write(f)
+        self.render_buttons(os_filter=["darwin"])
 
     def filterlinux(self):
         """Show only Linux builds"""
-        self.render_buttons(
-            os_filter=[
-                "linux",
-            ]
-        )
-
+        # Save the filter preference
+        config.read("config.ini")
+        config.set("main", "os_filter", "linux")
+        with open("config.ini", "w") as f:
+            config.write(f)
+        self.render_buttons(os_filter=["linux"])
 
     def filterwindows(self):
         """Show only Windows builds"""
-        self.render_buttons(
-            os_filter=[
-                "windows",
-            ]
-        )
-
+        # Save the filter preference
+        config.read("config.ini")
+        config.set("main", "os_filter", "windows")
+        with open("config.ini", "w") as f:
+            config.write(f)
+        self.render_buttons(os_filter=["windows"])
 
     # Also move render_buttons to be a class method
     def render_buttons(self, os_filter=["windows", "darwin", "linux"]):
