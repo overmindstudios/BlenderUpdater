@@ -12,7 +12,7 @@ the latest buildbot version. Download and install nightly builds with one click.
 
 If you want to support me, feel free to donate on Ko-Fi!
 
-<a href="https://ko-fi.com/tobkum"><img src="https://az743702.vo.msecnd.net/cdn/kofi1.png?v=2" width="150"></a>
+[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/tobkum)
 
 ## Download
 Here's the latest release: [https://github.com/overmindstudios/BlenderUpdater/releases/latest](https://github.com/overmindstudios/BlenderUpdater/releases/latest)
