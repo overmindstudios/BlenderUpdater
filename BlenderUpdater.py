@@ -40,12 +40,16 @@ import qdarkstyle
 
 from PySide6 import QtWidgets, QtCore, QtGui
 
+# Add QScrollArea import
+from PySide6.QtWidgets import QScrollArea, QVBoxLayout, QWidget
+
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 
 QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 app = QtWidgets.QApplication(sys.argv)
 
 
+appversion = "1.12.1 (Unofficial Fork by Thane5)"
 appversion = "1.11.0"
 dir_ = ""
 config = configparser.ConfigParser()
@@ -124,7 +128,7 @@ class WorkerThread(QtCore.QThread):
         shutil.unpack_archive(self.filename, "./blendertemp/")
         self.finishedEX.emit()
         source = next(os.walk("./blendertemp/"))[1]
-        copytree(os.path.join("./blendertemp/", source[0]), dir_)
+        copytree(os.path.join("./blendertemp/", source[0]), dir_, dirs_exist_ok=True)
         self.finishedCP.emit()
         shutil.rmtree("./blendertemp")
         self.finishedCL.emit()
@@ -136,6 +140,25 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         logger.debug("Constructing UI")
         super(BlenderUpdater, self).__init__(parent)
         self.setupUi(self)
+        
+        # Create scroll area for the build buttons
+        self.scrollArea = QScrollArea(self.centralwidget)
+        self.scrollArea.setGeometry(QtCore.QRect(6, 50, 686, 625))  # Adjust height to leave space for buttons
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollArea.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.scrollArea.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        
+        # Create a container widget for the buttons
+        self.scrollContent = QWidget()
+        self.scrollLayout = QVBoxLayout(self.scrollContent)
+        self.scrollLayout.setSpacing(2)
+        self.scrollLayout.setContentsMargins(0, 0, 0, 0)
+        
+        # Set the scroll content widget
+        self.scrollArea.setWidget(self.scrollContent)
+        self.scrollArea.hide()  # Hide initially until needed
+        
+        # Rest of the initialization remains the same
         self.btn_oneclick.hide()
         self.lbl_quick.hide()
         self.lbl_caution.hide()
@@ -172,6 +195,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             config.set("main", "lastdl", "")
             config.set("main", "installed", "")
             config.set("main", "flavor", "")
+            config.set("main", "os_filter", "all")
             with open("config.ini", "w") as f:
                 config.write(f)
         if config_exist:
@@ -304,9 +328,17 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.btn_newVersion.hide()
         self.btn_execute.hide()
 
-        appleicon = QtGui.QIcon(":/newPrefix/images/Apple-icon.png")
-        windowsicon = QtGui.QIcon(":/newPrefix/images/Windows-icon.png")
-        linuxicon = QtGui.QIcon(":/newPrefix/images/Linux-icon.png")
+        # Reset filter button to "all OS" and ensure it's checked
+        self.btn_allos.setChecked(True)
+
+        # Show the scroll area for build buttons
+        self.scrollArea.show()
+
+        # Store these as instance variables so they can be accessed by render_buttons
+        self.appleicon = QtGui.QIcon(":/newPrefix/images/Apple-icon.png")
+        self.windowsicon = QtGui.QIcon(":/newPrefix/images/Windows-icon.png")
+        self.linuxicon = QtGui.QIcon(":/newPrefix/images/Linux-icon.png")
+
         url = "https://builder.blender.org/download/"
         # Do path settings save here, in case user has manually edited it
         global config
@@ -323,123 +355,45 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             )
             logger.error("No connection to Blender nightly builds server")
             self.frm_start.show()
+            return
 
-        def clean(text):
-            """Removes spaces and uneeded characters from the given text."""
+        # Rest of the existing code...
 
-            return text.strip().strip("\xa0")
-
-        def parse_description(element):
-            """Parses the given description element.
-
-            Input text may look like:
-            <span>May 24, 07:44:19 - blender-v283-release - d553edeb7dbb - zip - 171.79MB</span>
-            """
-
-            if element is None:
-                return None
-
-            parts = element.text.split(" - ")
-            output = {}
-            output["date"] = clean(parts[0])
-            # output["name"] = clean(parts[1])
-            output["hash"] = clean(parts[1])
-            output["type"] = clean(parts[2])
-            output["size"] = clean(parts[3])
-            return output
-
-        # iterate through the found versions
+        # Parse and prepare the list of builds
         templist = []
 
         filenames = re.findall(
-                r'blender-[^\s][^"]+',
-                req.text,
-                )
+            r'blender-[^\s][^"]+',
+            req.text,
+        )
 
         for el in filenames:
             if "sha256" not in el and "/" not in el and "msi" not in el:
                 templist.append(el)
 
-        finallist = list(set(templist))
-        finallist.sort(reverse=True)
+        self.finallist = list(set(templist))  # Store as instance variable
+        self.finallist.sort(reverse=True)
 
-        def render_buttons(os_filter=["windows", "darwin", "linux"]):
-            """Renders the download buttons on screen.
-
-            os_filter: Will modify the buttons to be rendered.
-                       If an empty list is being provided, all operating systems
-                       will be shown.
-            """
-            # Generate buttons for downloadable versions.
-            global btn
-            opsys = platform.system()
-            logger.info(f"Operating system: {opsys}")
-            for i in btn:
-                btn[i].hide()
-            i = 0
-            btn = {}
-
-            for index, entry in enumerate(finallist):
-                btn[index] = QtWidgets.QPushButton(self)
-
-                skip_entry = False
-
-                # Skip based on os_filter entries
-                if any(filter not in entry for filter in os_filter):
-                    skip_entry = True
-
-                if skip_entry:
-                    continue
-
-                buttontext = f"{entry}"
-                logger.debug(buttontext)
-                if "windows" in entry:
-                    btn[index].setIcon(windowsicon)
-                elif "darwin" in entry:
-                    btn[index].setIcon(appleicon)
-                elif "linux" in entry:
-                    btn[index].setIcon(linuxicon)
-                btn[index].setIconSize(QtCore.QSize(24, 24))
-                btn[index].setText(buttontext)
-                btn[index].setFixedWidth(686)
-                btn[index].move(6, 50 + i)
-                i += 32
-                btn[index].clicked.connect(
-                    lambda throwaway=0, entry=entry: self.download(entry)
-                )
-                btn[index].show()
-
-        def filterall():
-            render_buttons(os_filter=[])
-
-        def filterosx():
-            render_buttons(
-                os_filter=[
-                    "darwin",
-                ]
-            )
-
-        def filterlinux():
-            render_buttons(
-                os_filter=[
-                    "linux",
-                ]
-            )
-
-        def filterwindows():
-            render_buttons(
-                os_filter=[
-                    "windows",
-                ]
-            )
-
+        # Connect the buttons to the class methods
         self.lbl_available.show()
         self.lbl_caution.show()
         self.btngrp_filter.show()
-        self.btn_osx.clicked.connect(filterosx)
-        self.btn_linux.clicked.connect(filterlinux)
-        self.btn_windows.clicked.connect(filterwindows)
-        self.btn_allos.clicked.connect(filterall)
+
+        # Disconnect previous connections if they exist
+        try:
+            self.btn_osx.clicked.disconnect()
+            self.btn_linux.clicked.disconnect()
+            self.btn_windows.clicked.disconnect()
+            self.btn_allos.clicked.disconnect()
+        except:
+            pass
+
+        # Connect buttons to class methods
+        self.btn_osx.clicked.connect(self.filterosx)
+        self.btn_linux.clicked.connect(self.filterlinux)
+        self.btn_windows.clicked.connect(self.filterwindows)
+        self.btn_allos.clicked.connect(self.filterall)
+
         lastcheck = datetime.now().strftime("%a %b %d %H:%M:%S %Y")
         self.statusbar.showMessage(f"Ready - Last check: {str(lastcheck)}")
         config.read("config.ini")
@@ -447,9 +401,28 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         with open("config.ini", "w") as f:
             config.write(f)
         f.close()
-        filterall()
+        
+        # Apply saved filter preference instead of just showing all
+        saved_filter = config.get("main", "os_filter")
+        if saved_filter == "windows":
+            self.btn_windows.setChecked(True)
+            self.filterwindows()
+        elif saved_filter == "darwin":
+            self.btn_osx.setChecked(True)
+            self.filterosx()
+        elif saved_filter == "linux":
+            self.btn_linux.setChecked(True)
+            self.filterlinux()
+        else:  # Default or "all"
+            self.btn_allos.setChecked(True)
+            self.filterall()
 
     def download(self, entry):
+        # Hide the scroll area during download
+        self.scrollArea.hide()
+        
+        # The rest of the download method remains unchanged
+        # ... (existing code)
         """
         Download the file
         
@@ -603,6 +576,102 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
     def exec_linux(self):
         _ = subprocess.Popen(os.path.join(f"{dir_}/blender"))
         logger.info(f"Executing {dir_}blender")
+
+    def filterall(self):
+        """Show all operating systems"""
+        # Save the filter preference
+        config.read("config.ini")
+        config.set("main", "os_filter", "all")
+        with open("config.ini", "w") as f:
+            config.write(f)
+        self.render_buttons(os_filter=[])
+
+    def filterosx(self):
+        """Show only macOS builds"""
+        # Save the filter preference
+        config.read("config.ini")
+        config.set("main", "os_filter", "darwin")
+        with open("config.ini", "w") as f:
+            config.write(f)
+        self.render_buttons(os_filter=["darwin"])
+
+    def filterlinux(self):
+        """Show only Linux builds"""
+        # Save the filter preference
+        config.read("config.ini")
+        config.set("main", "os_filter", "linux")
+        with open("config.ini", "w") as f:
+            config.write(f)
+        self.render_buttons(os_filter=["linux"])
+
+    def filterwindows(self):
+        """Show only Windows builds"""
+        # Save the filter preference
+        config.read("config.ini")
+        config.set("main", "os_filter", "windows")
+        with open("config.ini", "w") as f:
+            config.write(f)
+        self.render_buttons(os_filter=["windows"])
+
+    # Also move render_buttons to be a class method
+    def render_buttons(self, os_filter=["windows", "darwin", "linux"]):
+        """Renders the download buttons on screen.
+
+        os_filter: Will modify the buttons to be rendered.
+                    If an empty list is being provided, all operating systems
+                    will be shown.
+        """
+        # Generate buttons for downloadable versions.
+        global btn
+        opsys = platform.system()
+        logger.info(f"Operating system: {opsys}")
+
+        # Clear previous buttons
+        for i in btn:
+            btn[i].setParent(None)
+            btn[i].deleteLater()
+
+        # Clear layout
+        while self.scrollLayout.count():
+            child = self.scrollLayout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
+
+        btn = {}
+
+        for index, entry in enumerate(self.finallist):  # Update to use self.finallist
+            skip_entry = False
+
+            # Skip based on os_filter entries
+            if os_filter and any(filter not in entry for filter in os_filter):
+                skip_entry = True
+
+            if skip_entry:
+                continue
+
+            btn[index] = QtWidgets.QPushButton()
+            buttontext = f"{entry}"
+            logger.debug(buttontext)
+
+            if "windows" in entry:
+                btn[index].setIcon(self.windowsicon)  # Update to use self.windowsicon
+            elif "darwin" in entry:
+                btn[index].setIcon(self.appleicon)  # Update to use self.appleicon
+            elif "linux" in entry:
+                btn[index].setIcon(self.linuxicon)  # Update to use self.linuxicon
+
+            btn[index].setIconSize(QtCore.QSize(24, 24))
+            btn[index].setText(buttontext)
+            btn[index].setFixedWidth(670)  # Slightly narrower to fit in scroll area
+            btn[index].clicked.connect(
+                lambda throwaway=0, entry=entry: self.download(entry)
+            )
+
+            # Add to the scroll layout instead of placing manually
+            self.scrollLayout.addWidget(btn[index])
+
+        # Add stretch at the end to push buttons to the top
+        self.scrollLayout.addStretch()
 
 
 def main():
