@@ -46,7 +46,7 @@ from PySide6.QtWidgets import QScrollArea, QVBoxLayout, QWidget
 
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 
-QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
+# QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling) # Deprecated
 app = QtWidgets.QApplication(sys.argv)
 
 
