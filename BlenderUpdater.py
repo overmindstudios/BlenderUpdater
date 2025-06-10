@@ -33,6 +33,7 @@ from datetime import datetime
 from shutil import copytree
 from packaging.utils import Version
 
+import platform
 import requests
 
 # Import PySide6 modules before qdarkstyle to guide qtpy's binding detection
@@ -138,6 +139,14 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.build_buttons = {}
         self.setupUi(self)
         
+        # Apply stylesheet for highlighting
+        self.setStyleSheet(u"""
+            QPushButton[highlight="true"] {
+                background-color: steelblue;
+                color: black;
+            }
+        """)
+
         # Create scroll area for the build buttons
         self.scrollArea = QScrollArea(self.centralwidget)
         self.scrollArea.setGeometry(QtCore.QRect(6, 50, 686, 625))  # Adjust height to leave space for buttons
@@ -228,6 +237,57 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             logger.error(f"Error parsing update information from GitHub: {e}")
             # QtWidgets.QMessageBox.warning(self, "Update Check Error",
             # "Error parsing application update information.")
+
+    def _get_os_arch_details(self):
+        """
+        Returns a dictionary with details for highlighting builds matching the user's OS and architecture.
+        'exact': A specific string pattern for OS and architecture (e.g., "windows.amd64", "macos.arm64").
+        'generic_os': A generic string for the OS (e.g., "windows", "macos", "linux").
+        'conflicting_arch_for_os': A list of architecture strings that would conflict if found with 'generic_os'.
+        """
+        current_os_system = platform.system()
+        current_arch_machine = platform.machine()
+        details = {'exact': None, 'generic_os': None, 'conflicting_arch_for_os': []}
+
+        if current_os_system == "Windows":
+            details['generic_os'] = "windows"
+            if current_arch_machine == "AMD64": # Common for 64-bit Windows
+                details['exact'] = "windows.amd64"
+                details['conflicting_arch_for_os'] = ["x86", "win32", "arm64"]
+            elif current_arch_machine == "x86": # For 32-bit Windows
+                details['exact'] = "windows.x86" # Assuming this pattern or "win32"
+                details['conflicting_arch_for_os'] = ["amd64", "x64", "arm64"]
+            elif current_arch_machine == "ARM64": # For Windows on ARM
+                details['exact'] = "windows.arm64"
+                details['conflicting_arch_for_os'] = ["amd64", "x64", "x86", "win32"]
+
+        elif current_os_system == "Darwin":  # macOS
+            details['generic_os'] = "macos"  # Blender filenames use "macos"
+            if current_arch_machine == "x86_64": # Intel macOS
+                details['exact'] = "macos.x86_64"
+                details['conflicting_arch_for_os'] = ["arm64"]
+            elif current_arch_machine == "arm64": # Apple Silicon macOS
+                details['exact'] = "macos.arm64"
+                details['conflicting_arch_for_os'] = ["x86_64"]
+
+        elif current_os_system == "Linux":
+            details['generic_os'] = "linux"
+            if current_arch_machine == "x86_64":
+                details['exact'] = "linux.x86_64"
+                details['conflicting_arch_for_os'] = ["aarch64"]
+            elif current_arch_machine == "aarch64": # For ARM Linux
+                details['exact'] = "linux.aarch64"
+                details['conflicting_arch_for_os'] = ["x86_64"]
+
+        # Normalize all keywords to lowercase for case-insensitive matching
+        if details['exact']:
+            details['exact'] = details['exact'].lower()
+        if details['generic_os']:
+            details['generic_os'] = details['generic_os'].lower()
+        details['conflicting_arch_for_os'] = [kw.lower() for kw in details['conflicting_arch_for_os']]
+
+        logger.debug(f"OS/Arch details for highlighting: {details}")
+        return details
 
     def _load_config(self):
         if os.path.isfile(CONFIG_FILE_NAME):
@@ -629,6 +689,18 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 child.widget().deleteLater()
         self.build_buttons.clear()
 
+        # Get keywords for the current OS and architecture for highlighting
+        os_arch_details = self._get_os_arch_details()
+        # logger.debug already called in _get_os_arch_details
+
+        # Map OS keywords to icons
+        os_icon_map = {
+            "windows": self.windowsicon,
+            "win64": self.windowsicon,
+            "win32": self.windowsicon,
+            "darwin": self.appleicon,
+            "linux": self.linuxicon,
+        }
         for index, entry_filename in enumerate(self.finallist):
             skip_entry = False
 
@@ -641,19 +713,37 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 continue
 
             self.build_buttons[index] = QtWidgets.QPushButton()
-            buttontext = f"{entry_filename}"
-            logger.debug(buttontext)
-
+            
             entry_lower = entry_filename.lower()
-            if "windows" in entry_lower or "win64" in entry_lower or "win32" in entry_lower:
-                self.build_buttons[index].setIcon(self.windowsicon)
-            elif "darwin" in entry_lower or "macos" in entry_lower:
+            is_highlighted = False
+
+            # 1. Check for exact OS and Arch match
+            if os_arch_details['exact'] and os_arch_details['exact'] in entry_lower:
+                is_highlighted = True
+            # 2. If no exact match, check for generic OS match WITHOUT conflicting architectures
+            elif os_arch_details['generic_os'] and os_arch_details['generic_os'] in entry_lower:
+                has_conflicting_arch_marker_in_filename = False
+                if os_arch_details['conflicting_arch_for_os']:
+                    for conf_arch_kw in os_arch_details['conflicting_arch_for_os']:
+                        if conf_arch_kw in entry_lower:
+                            has_conflicting_arch_marker_in_filename = True
+                            break
+                
+                if not has_conflicting_arch_marker_in_filename:
+                    is_highlighted = True
+
+            self.build_buttons[index].setProperty("highlight", is_highlighted)
+
+            # Icon assignment based on filename content (more robust might use os_arch_details['generic_os'])
+            if "macos" in entry_lower or "darwin" in entry_lower: # "darwin" for older compatibility if any
                 self.build_buttons[index].setIcon(self.appleicon)
             elif "linux" in entry_lower:
                 self.build_buttons[index].setIcon(self.linuxicon)
+            elif "windows" in entry_lower or "win64" in entry_lower or "win32" in entry_lower:
+                self.build_buttons[index].setIcon(self.windowsicon)
 
             self.build_buttons[index].setIconSize(QtCore.QSize(24, 24))
-            self.build_buttons[index].setText(buttontext)
+            self.build_buttons[index].setText(entry_filename)
             self.build_buttons[index].setFixedWidth(670)
             self.build_buttons[index].clicked.connect(
                 lambda checked=False, filename=entry_filename: self.download(filename)
@@ -670,7 +760,6 @@ def main():
     """
     This function creates an instance of the BlenderUpdater class and passes it to the Qt application
     """
-    app.setStyleSheet(qdarkstyle.load_stylesheet())
     window = BlenderUpdater()
     window.setWindowTitle(f"Overmind Studios Blender Updater {appversion}")
     window.statusbar.setSizeGripEnabled(False)
