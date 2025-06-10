@@ -33,12 +33,13 @@ from shutil import copytree
 from packaging.utils import Version
 
 import requests
-import re
 
+# Import PySide6 modules before qdarkstyle to guide qtpy's binding detection
+from PySide6 import QtWidgets, QtCore, QtGui
+from PySide6.QtWidgets import QScrollArea, QVBoxLayout, QWidget
 import mainwindow
 import qdarkstyle
-
-from PySide6 import QtWidgets, QtCore, QtGui
+import re
 
 # Add QScrollArea import
 from PySide6.QtWidgets import QScrollArea, QVBoxLayout, QWidget
@@ -216,6 +217,12 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.btn_Check.clicked.connect(self.check_dir)
         self.btn_about.clicked.connect(self.about)
         self.btn_path.clicked.connect(self.select_path)
+        # Connect filter buttons signals once during initialization
+        self.btn_osx.clicked.connect(self.filterosx)
+        self.btn_linux.clicked.connect(self.filterlinux)
+        self.btn_windows.clicked.connect(self.filterwindows)
+        self.btn_allos.clicked.connect(self.filterall)
+
         # Check internet connection, disable SSL
         # FIXME - should be changed! (preliminary fix to work in OSX)
         ssl._create_default_https_context = ssl._create_unverified_context
@@ -378,21 +385,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.lbl_available.show()
         self.lbl_caution.show()
         self.btngrp_filter.show()
-
-        # Disconnect previous connections if they exist
-        try:
-            self.btn_osx.clicked.disconnect()
-            self.btn_linux.clicked.disconnect()
-            self.btn_windows.clicked.disconnect()
-            self.btn_allos.clicked.disconnect()
-        except:
-            pass
-
-        # Connect buttons to class methods
-        self.btn_osx.clicked.connect(self.filterosx)
-        self.btn_linux.clicked.connect(self.filterlinux)
-        self.btn_windows.clicked.connect(self.filterwindows)
-        self.btn_allos.clicked.connect(self.filterall)
 
         lastcheck = datetime.now().strftime("%a %b %d %H:%M:%S %Y")
         self.statusbar.showMessage(f"Ready - Last check: {str(lastcheck)}")
@@ -678,7 +670,7 @@ def main():
     """
     This function creates an instance of the BlenderUpdater class and passes it to the Qt application
     """
-    app.setStyleSheet(qdarkstyle.load_stylesheet_pyside2())
+    app.setStyleSheet(qdarkstyle.load_stylesheet())
     window = BlenderUpdater()
     window.setWindowTitle(f"Overmind Studios Blender Updater {appversion}")
     window.statusbar.setSizeGripEnabled(False)
