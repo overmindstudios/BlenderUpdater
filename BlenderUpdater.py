@@ -50,8 +50,7 @@ os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 app = QtWidgets.QApplication(sys.argv)
 
 
-appversion = "1.12.1 (Unofficial Fork by Thane5)"
-appversion = "1.11.0"
+appversion = "1.12.0"
 dir_ = ""
 config = configparser.ConfigParser()
 btn = {}
