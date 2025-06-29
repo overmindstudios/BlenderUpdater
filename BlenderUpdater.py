@@ -141,9 +141,17 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         
         # Apply stylesheet for highlighting
         self.setStyleSheet(u"""
-            QPushButton[highlight="true"] {
-                background-color: steelblue;
+            QPushButton[highlight="true"][os="windows"] {
+                background-color: #0078D4;
+                color: white;
+            }
+            QPushButton[highlight="true"][os="macos"] {
+                background-color: #A2A2A2;
                 color: black;
+            }
+            QPushButton[highlight="true"][os="linux"] {
+                background-color: #E95420;
+                color: white;
             }
         """)
 
@@ -733,6 +741,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                     is_highlighted = True
 
             self.build_buttons[index].setProperty("highlight", is_highlighted)
+            if is_highlighted:
+                self.build_buttons[index].setProperty("os", os_arch_details['generic_os'])
 
             # Icon assignment based on filename content (more robust might use os_arch_details['generic_os'])
             if "macos" in entry_lower or "darwin" in entry_lower: # "darwin" for older compatibility if any
