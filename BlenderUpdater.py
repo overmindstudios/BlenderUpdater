@@ -38,6 +38,7 @@ import requests
 
 # Import PySide6 modules before qdarkstyle to guide qtpy's binding detection
 from PySide6 import QtWidgets, QtCore, QtGui
+from PySide6.QtCore import QRunnable, Slot, QThreadPool
 from PySide6.QtWidgets import QScrollArea, QVBoxLayout, QWidget
 import mainwindow
 import qdarkstyle
@@ -75,59 +76,78 @@ logging.basicConfig(
 logger = logging.getLogger()
 
 
-class WorkerThread(QtCore.QThread):
-    """Does all the actual work in the background, informs GUI about status"""
+class DownloadManager(QtCore.QObject):
+    """Manages download and extraction process in the background."""
+    progress = QtCore.Signal(int)
+    finished = QtCore.Signal(bool, str)
 
-    update = QtCore.Signal(int)
-    finishedDL = QtCore.Signal()
-    finishedEX = QtCore.Signal()
-    finishedCP = QtCore.Signal()
-    finishedCL = QtCore.Signal()
-
-    def __init__(self, url, file_path_to_download, config_updater_func, install_path):
-        super(WorkerThread, self).__init__(parent=app)
-        self.file_path_to_download = file_path_to_download
+    def __init__(self, url, download_path, install_path, parent=None):
+        super().__init__(parent)
         self.url = url
-        self._update_config = config_updater_func
+        self.download_path = download_path
         self.install_path = install_path
-        self.filename_only = Path(file_path_to_download).name
+        self.threadpool = QThreadPool.globalInstance()
 
-        # Determine and save a description for the download
-        # This is a simplified description based on major OS.
-        # The original code had more granular descriptions based on glibc etc.
-        # We can enhance this map if needed.
-        last_dl_desc_map = {
-            "macOS": "macOS", # Matches "darwin" internally
-            "darwin": "macOS",
-            "win32": "Windows 32bit",
-            "win64": "Windows 64bit",
-            "linux": "Linux", # Generic Linux
-            # Add more specific glibc versions if necessary, e.g.:
-            # "glibc219-x86_64": "Linux glibc219 x86_64",
-        }
-        for key_substring, desc_value in last_dl_desc_map.items():
-            if key_substring.lower() in self.filename_only.lower():
-                self._update_config(CONFIG_KEY_LAST_DL_DESC, desc_value)
-                break
+    def start(self):
+        worker = DownloadWorker(self.url, self.download_path, self.install_path)
+        worker.signals.progress.connect(self.progress.emit)
+        worker.signals.finished.connect(self.finished.emit)
+        worker.signals.extraction_started.connect(self.parent().extraction)
+        worker.signals.copying_started.connect(self.parent().finalcopy)
+        worker.signals.cleanup_started.connect(self.parent().cleanup)
+        self.threadpool.start(worker)
 
-    def progress(self, count, blockSize, totalSize):
-        """Updates progress bar"""
-        percent = int(count * blockSize * 100 / totalSize)
-        self.update.emit(percent)
+class DownloadWorker(QRunnable):
+    """Worker for handling the download and extraction."""
+    def __init__(self, url, download_path, install_path):
+        super().__init__()
+        self.url = url
+        self.download_path = download_path
+        self.install_path = install_path
+        self.signals = self.WorkerSignals()
 
+    @Slot()
     def run(self):
-        """
-        It downloads the file, emits a signal when it's done, and then unpacks the file
-        """
-        urllib.request.urlretrieve(self.url, self.file_path_to_download, reporthook=self.progress)
-        self.finishedDL.emit()
-        shutil.unpack_archive(self.file_path_to_download, "./blendertemp/")
-        self.finishedEX.emit()
-        source = next(os.walk("./blendertemp/"))[1]
-        copytree(Path("./blendertemp/") / source[0], self.install_path, dirs_exist_ok=True)
-        self.finishedCP.emit()
-        shutil.rmtree("./blendertemp")
-        self.finishedCL.emit()
+        try:
+            # Download
+            response = requests.get(self.url, stream=True)
+            response.raise_for_status()
+            total_size = int(response.headers.get('content-length', 0))
+            with open(self.download_path, 'wb') as f:
+                downloaded_size = 0
+                for chunk in response.iter_content(chunk_size=8192):
+                    f.write(chunk)
+                    downloaded_size += len(chunk)
+                    if total_size > 0:
+                        progress = int(downloaded_size * 100 / total_size)
+                        self.signals.progress.emit(progress)
+            
+            # Extraction
+            self.signals.extraction_started.emit()
+            shutil.unpack_archive(self.download_path, "./blendertemp/")
+            source = next(os.walk("./blendertemp/"))[1][0]
+            
+            # Copying
+            self.signals.copying_started.emit()
+            copytree(Path("./blendertemp/") / source, self.install_path, dirs_exist_ok=True)
+            
+            # Cleanup
+            self.signals.cleanup_started.emit()
+            shutil.rmtree("./blendertemp/")
+            
+            self.signals.finished.emit(True, "Download and extraction successful.")
+        except Exception as e:
+            self.signals.finished.emit(False, str(e))
+
+    class WorkerSignals(QtCore.QObject):
+        progress = QtCore.Signal(int)
+        finished = QtCore.Signal(bool, str)
+        extraction_started = QtCore.Signal()
+        copying_started = QtCore.Signal()
+        cleanup_started = QtCore.Signal()
+
+
+
 
 
 class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
@@ -138,6 +158,10 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.config = configparser.ConfigParser()
         self.build_buttons = {}
         self.setupUi(self)
+        self.session = requests.Session()
+        self.filename_regex = re.compile(r'blender-[^\s][^"]+')
+        self.threadpool = QThreadPool()
+        logger.info(f"Multithreading with maximum {self.threadpool.maxThreadCount()} threads")
         
         # Apply stylesheet for highlighting
         self.setStyleSheet(u"""
@@ -247,52 +271,46 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             # "Error parsing application update information.")
 
     def _get_os_arch_details(self):
-        """
-        Returns a dictionary with details for highlighting builds matching the user's OS and architecture.
-        'exact': A specific string pattern for OS and architecture (e.g., "windows.amd64", "macos.arm64").
-        'generic_os': A generic string for the OS (e.g., "windows", "macos", "linux").
-        'conflicting_arch_for_os': A list of architecture strings that would conflict if found with 'generic_os'.
-        """
-        current_os_system = platform.system()
-        current_arch_machine = platform.machine()
+        """Returns a dictionary with details for highlighting builds matching the user's OS and architecture."""
+        system = platform.system()
+        machine = platform.machine()
         details = {'exact': None, 'generic_os': None, 'conflicting_arch_for_os': []}
 
-        if current_os_system == "Windows":
-            details['generic_os'] = "windows"
-            if current_arch_machine == "AMD64": # Common for 64-bit Windows
-                details['exact'] = "windows.amd64"
-                details['conflicting_arch_for_os'] = ["x86", "win32", "arm64"]
-            elif current_arch_machine == "x86": # For 32-bit Windows
-                details['exact'] = "windows.x86" # Assuming this pattern or "win32"
-                details['conflicting_arch_for_os'] = ["amd64", "x64", "arm64"]
-            elif current_arch_machine == "ARM64": # For Windows on ARM
-                details['exact'] = "windows.arm64"
-                details['conflicting_arch_for_os'] = ["amd64", "x64", "x86", "win32"]
+        os_map = {
+            "Windows": {
+                "generic_os": "windows",
+                "arch_map": {
+                    "AMD64": ("windows.amd64", ["x86", "win32", "arm64"]),
+                    "x86": ("windows.x86", ["amd64", "x64", "arm64"]),
+                    "ARM64": ("windows.arm64", ["amd64", "x64", "x86", "win32"])
+                }
+            },
+            "Darwin": {
+                "generic_os": "macos",
+                "arch_map": {
+                    "x86_64": ("macos.x86_64", ["arm64"]),
+                    "arm64": ("macos.arm64", ["x86_64"])
+                }
+            },
+            "Linux": {
+                "generic_os": "linux",
+                "arch_map": {
+                    "x86_64": ("linux.x86_64", ["aarch64"]),
+                    "aarch64": ("linux.aarch64", ["x86_64"])
+                }
+            }
+        }
 
-        elif current_os_system == "Darwin":  # macOS
-            details['generic_os'] = "macos"  # Blender filenames use "macos"
-            if current_arch_machine == "x86_64": # Intel macOS
-                details['exact'] = "macos.x86_64"
-                details['conflicting_arch_for_os'] = ["arm64"]
-            elif current_arch_machine == "arm64": # Apple Silicon macOS
-                details['exact'] = "macos.arm64"
-                details['conflicting_arch_for_os'] = ["x86_64"]
+        if system in os_map:
+            os_info = os_map[system]
+            details['generic_os'] = os_info["generic_os"]
+            if machine in os_info["arch_map"]:
+                exact, conflicts = os_info["arch_map"][machine]
+                details['exact'] = exact
+                details['conflicting_arch_for_os'] = [c.lower() for c in conflicts]
 
-        elif current_os_system == "Linux":
-            details['generic_os'] = "linux"
-            if current_arch_machine == "x86_64":
-                details['exact'] = "linux.x86_64"
-                details['conflicting_arch_for_os'] = ["aarch64"]
-            elif current_arch_machine == "aarch64": # For ARM Linux
-                details['exact'] = "linux.aarch64"
-                details['conflicting_arch_for_os'] = ["x86_64"]
-
-        # Normalize all keywords to lowercase for case-insensitive matching
         if details['exact']:
             details['exact'] = details['exact'].lower()
-        if details['generic_os']:
-            details['generic_os'] = details['generic_os'].lower()
-        details['conflicting_arch_for_os'] = [kw.lower() for kw in details['conflicting_arch_for_os']]
 
         logger.debug(f"OS/Arch details for highlighting: {details}")
         return details
@@ -421,24 +439,20 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         url = "https://builder.blender.org/download/"
 
         try:
-            req = requests.get(url)
-        except Exception:
+            req = self.session.get(url)
+            req.raise_for_status()
+        except requests.exceptions.RequestException as e:
             self.statusBar().showMessage(
-                "Error reaching server - check your internet connection"
+                f"Error reaching server: {e}"
             )
-            logger.error("No connection to Blender nightly builds server")
+            logger.error(f"No connection to Blender nightly builds server: {e}")
             self.frm_start.show()
             return
-
-        # Rest of the existing code...
 
         # Parse and prepare the list of builds
         templist = []
 
-        filenames = re.findall(
-            r'blender-[^\s][^"]+',
-            req.text,
-        )
+        filenames = self.filename_regex.findall(req.text)
 
         for el in filenames:
             if "sha256" not in el and "/" not in el and "msi" not in el:
@@ -514,13 +528,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self._update_config(CONFIG_KEY_LAST_DL_FILENAME, entry)
         # CONFIG_KEY_INSTALLED_FILENAME will be updated in done() upon success
 
-        ##########################
-        # Do the actual download #
-        ##########################
         download_target_path = Path("./blendertemp/") / entry
-
-        # self.scrollArea.hide() # Already done at the start of the method
-        logger.info(f"Starting download thread for {url}{entry}")
 
         self.lbl_available.hide()
         self.lbl_caution.hide()
@@ -536,20 +544,31 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.btn_Check.setDisabled(True)
         self.statusbar.showMessage(f"Downloading {size_readable}")
 
-        thread = WorkerThread(url, str(download_target_path), self._update_config, self.install_path)
-        thread.update.connect(self.updatepb)
-        thread.finishedDL.connect(self.extraction)
-        thread.finishedEX.connect(self.finalcopy)
-        thread.finishedCP.connect(self.cleanup)
-        thread.finishedCL.connect(self.done)
-        thread.start()
+        self.download_manager = DownloadManager(url, str(download_target_path), self.install_path, parent=self)
+        self.download_manager.progress.connect(self.updatepb)
+        self.download_manager.finished.connect(self.on_download_finished)
+        self.download_manager.start()
+
+    def on_download_finished(self, success, message):
+        if success:
+            logger.info("Download and extraction successful.")
+            self.done()
+        else:
+            logger.error(f"Download or extraction failed: {message}")
+            QtWidgets.QMessageBox.critical(self, "Error", f"An error occurred: {message}")
+            self.statusbar.showMessage("Error during download/extraction.")
+            # Reset UI to a safe state
+            self.frm_progress.hide()
+            self.scrollArea.show()
+            self.btn_Check.setEnabled(True)
+            self.btn_Quit.setEnabled(True)
 
     def updatepb(self, percent):
         self.progressBar.setValue(percent)
 
     def extraction(self):
         """
-        Extract the downloaded file to a temporary directory
+        Update UI to show extraction is in progress.
         """
         logger.info("Extracting to temp directory")
         self.lbl_task.setText("Extracting...")
@@ -565,6 +584,9 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.progressBar.setValue(-1)
 
     def finalcopy(self):
+        """
+        Update UI to show files are being copied.
+        """
         logger.info(f"Copying to {self.install_path}")
         nowpixmap = QtGui.QPixmap(":/newPrefix/images/Actions-arrow-right-icon.png")
         donepixmap = QtGui.QPixmap(":/newPrefix/images/Check-icon.png")
@@ -575,6 +597,9 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.statusbar.showMessage(f"Copying files to {self.install_path}, please wait... ")
 
     def cleanup(self):
+        """
+        Update UI to show cleanup is in progress.
+        """
         logger.info("Cleaning up temp files")
         nowpixmap = QtGui.QPixmap(":/newPrefix/images/Actions-arrow-right-icon.png")
         donepixmap = QtGui.QPixmap(":/newPrefix/images/Check-icon.png")
@@ -583,6 +608,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.lbl_cleanup.setText("<b>Cleaning up</b>")
         self.lbl_task.setText("Cleaning up...")
         self.statusbar.showMessage("Cleaning temporary files")
+
+    
 
     def done(self):
         logger.info("Finished")
