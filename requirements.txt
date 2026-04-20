@@ -9,4 +9,4 @@ QDarkStyle==3.2.3
 QtPy==2.4.3
 requests==2.32.4
 shiboken6==6.9.1
-urllib3==2.4.0
+urllib3==2.6.3
