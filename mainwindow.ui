@@ -25,7 +25,7 @@
   <property name="maximumSize">
    <size>
     <width>700</width>
-    <height>700</height>
+    <height>800</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -385,7 +385,7 @@
       <string>Copying files</string>
      </property>
     </widget>
-    <widget class="QLabel" name="lbl_clean_pic">
+    <widget class="QLabel" name="lbl_verify_pic">
      <property name="geometry">
       <rect>
        <x>40</x>
@@ -398,11 +398,37 @@
       <string/>
      </property>
     </widget>
-    <widget class="QLabel" name="lbl_cleanup">
+    <widget class="QLabel" name="lbl_verification">
      <property name="geometry">
       <rect>
        <x>70</x>
        <y>140</y>
+       <width>221</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Verifying</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbl_clean_pic">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>170</y>
+       <width>24</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbl_cleanup">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>170</y>
        <width>171</width>
        <height>24</height>
       </rect>
