@@ -317,7 +317,7 @@
       <string/>
      </property>
     </widget>
-    <widget class="QLabel" name="lbl_extract_pic">
+    <widget class="QLabel" name="lbl_verify_pic">
      <property name="geometry">
       <rect>
        <x>40</x>
@@ -330,11 +330,24 @@
       <string/>
      </property>
     </widget>
-    <widget class="QLabel" name="lbl_copy_pic">
+    <widget class="QLabel" name="lbl_extract_pic">
      <property name="geometry">
       <rect>
        <x>40</x>
        <y>110</y>
+       <width>24</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbl_copy_pic">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>140</y>
        <width>24</width>
        <height>24</height>
       </rect>
@@ -359,11 +372,24 @@
       <string>Downloading</string>
      </property>
     </widget>
-    <widget class="QLabel" name="lbl_extraction">
+    <widget class="QLabel" name="lbl_verification">
      <property name="geometry">
       <rect>
        <x>70</x>
        <y>80</y>
+       <width>221</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Verifying</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbl_extraction">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>110</y>
        <width>221</width>
        <height>24</height>
       </rect>
@@ -376,39 +402,13 @@
      <property name="geometry">
       <rect>
        <x>70</x>
-       <y>110</y>
+       <y>140</y>
        <width>181</width>
        <height>24</height>
       </rect>
      </property>
      <property name="text">
       <string>Copying files</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="lbl_verify_pic">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>140</y>
-       <width>24</width>
-       <height>24</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-    <widget class="QLabel" name="lbl_verification">
-     <property name="geometry">
-      <rect>
-       <x>70</x>
-       <y>140</y>
-       <width>221</width>
-       <height>24</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Verifying</string>
      </property>
     </widget>
     <widget class="QLabel" name="lbl_clean_pic">
@@ -551,46 +551,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QPushButton" name="btn_oneclick">
-    <property name="geometry">
-     <rect>
-      <x>260</x>
-      <y>729</y>
-      <width>191</width>
-      <height>35</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>Use last used settings to update blender. Uses the path in the above text field and specified version on the button.</string>
-    </property>
-    <property name="styleSheet">
-     <string notr="true"/>
-    </property>
-    <property name="text">
-     <string>PushButton</string>
-    </property>
-    <property name="icon">
-     <iconset resource="res.qrc">
-      <normaloff>:/newPrefix/images/Actions-quickopen-icon.png</normaloff>:/newPrefix/images/Actions-quickopen-icon.png</iconset>
-    </property>
-   </widget>
-   <widget class="QLabel" name="lbl_quick">
-    <property name="geometry">
-     <rect>
-      <x>290</x>
-      <y>709</y>
-      <width>131</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Quick Update</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="lbl_caution">
+<widget class="QLabel" name="lbl_caution">
     <property name="geometry">
      <rect>
       <x>6</x>
@@ -679,9 +640,7 @@
    <zorder>btn_about</zorder>
    <zorder>btn_cancel</zorder>
    <zorder>frm_progress</zorder>
-   <zorder>btn_oneclick</zorder>
-   <zorder>lbl_quick</zorder>
-   <zorder>lbl_caution</zorder>
+<zorder>lbl_caution</zorder>
    <zorder>btn_newVersion</zorder>
    <zorder>btn_execute</zorder>
   </widget>

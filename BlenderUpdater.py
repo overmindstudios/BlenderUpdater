@@ -20,7 +20,6 @@ import hashlib
 import json
 import logging
 import os
-import os.path
 import platform
 import re
 import shutil
@@ -31,13 +30,10 @@ import urllib.parse
 import webbrowser
 from datetime import datetime
 from pathlib import Path
-from shutil import copytree
 
-import qdarkstyle
 import requests
 from packaging.utils import Version
 
-# Import PySide6 modules before qdarkstyle to guide qtpy's binding detection
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtCore import QRunnable, QThreadPool, Slot
 from PySide6.QtWidgets import QScrollArea, QVBoxLayout, QWidget
@@ -46,13 +42,12 @@ import mainwindow
 
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 
-appversion = "1.13.0"
+appversion = "1.14.0"
 
 # Config keys
 CONFIG_SECTION_MAIN = "main"
 CONFIG_KEY_PATH = "path"
 CONFIG_KEY_LAST_CHECK = "lastcheck"
-CONFIG_KEY_LAST_DL_FILENAME = "lastdl_filename"
 CONFIG_KEY_INSTALLED_FILENAME = "installed_filename"
 CONFIG_KEY_OS_FILTER = "os_filter"
 CONFIG_FILE_NAME = "config.ini"
@@ -83,30 +78,14 @@ OS_DESCRIPTIONS = {
 }
 
 LOG_FORMAT = "%(levelname)s %(asctime)s - %(message)s"
+_log_path = (Path(sys.executable).parent if getattr(sys, "frozen", False) else Path(__file__).parent) / "BlenderUpdater.log"
 
 logging.basicConfig(
-    filename="BlenderUpdater.log", format=LOG_FORMAT, level=logging.DEBUG, filemode="a"
+    filename=_log_path, format=LOG_FORMAT, level=logging.DEBUG, filemode="a"
 )
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
-
-_BUILD_LABEL_RE = re.compile(
-    r"blender-(\d+\.\d+[^-]*)-(?:.*-)?(windows|linux|darwin|macos)[\.\-]?(\w+)?",
-    re.IGNORECASE,
-)
-
-
-def _build_label(filename: str) -> str:
-    """Return a short human-readable label for a Blender build filename."""
-    m = _BUILD_LABEL_RE.search(filename)
-    if m:
-        version, os_name, arch = m.group(1), m.group(2), m.group(3)
-        os_label = OS_DESCRIPTIONS.get(os_name.lower(), os_name)
-        return f"Blender {version} ({os_label}{' ' + arch if arch else ''})"
-    # Fallback: strip prefix and extension
-    stem = re.sub(r"\.(zip|tar\.xz|dmg|tar\.gz)$", "", filename, flags=re.IGNORECASE)
-    return stem.removeprefix("blender-")
 
 
 def _hbytes(num: float) -> str:
@@ -178,10 +157,10 @@ class DownloadManager(QtCore.QObject):
 
     def start(self):
         try:
-            self.temp_dir = tempfile.mkdtemp(prefix="blenderupdater-")
+            self.temp_dir = Path(tempfile.mkdtemp(prefix="blenderupdater-"))
             logger.info(f"Created temporary directory: {self.temp_dir}")
-            filename = os.path.basename(urllib.parse.urlparse(self.url).path)
-            download_path = os.path.join(self.temp_dir, filename)
+            filename = Path(urllib.parse.urlparse(self.url).path).name
+            download_path = self.temp_dir / filename
 
             self._worker = DownloadWorker(
                 self.url, download_path, self.install_path, self.temp_dir, self.session
@@ -205,7 +184,7 @@ class DownloadManager(QtCore.QObject):
             self._worker.cancel()
 
     def on_worker_finished(self, success, message):
-        if self.temp_dir and os.path.exists(self.temp_dir):
+        if self.temp_dir and self.temp_dir.exists():
             try:
                 shutil.rmtree(self.temp_dir)
                 logger.info(
@@ -255,9 +234,7 @@ class DownloadWorker(QRunnable):
                 content_length = 0
 
             if content_length > 0:
-                free_space = shutil.disk_usage(
-                    os.path.dirname(self.download_path)
-                ).free
+                free_space = shutil.disk_usage(self.download_path.parent).free
                 if content_length > free_space:
                     raise OSError(
                         f"Insufficient disk space: {_hbytes(content_length)} needed, "
@@ -306,23 +283,23 @@ class DownloadWorker(QRunnable):
             # Extraction
             self.signals.extraction_started.emit()
             self.signals.status_update.emit("Extracting to temporary folder...")
-            extract_dir = os.path.join(self.temp_dir, "extracted")
-            os.makedirs(extract_dir, exist_ok=True)
+            extract_dir = Path(self.temp_dir) / "extracted"
+            extract_dir.mkdir(parents=True, exist_ok=True)
             shutil.unpack_archive(self.download_path, extract_dir)
 
             # Zip-slip guard: ensure no extracted path escapes the extract directory
-            extract_dir_resolved = Path(extract_dir).resolve()
+            extract_dir_resolved = extract_dir.resolve()
             for member in extract_dir_resolved.rglob("*"):
                 member.resolve().relative_to(extract_dir_resolved)
 
-            _, subdirs, _ = next(os.walk(extract_dir))
+            subdirs = [p for p in extract_dir.iterdir() if p.is_dir()]
             if not subdirs:
                 raise OSError("Archive did not contain a top-level directory as expected")
-            source_path = os.path.join(extract_dir, subdirs[0])
+            source_path = subdirs[0]
 
             # Copying
             self.signals.copying_started.emit()
-            copytree(source_path, self.install_path, dirs_exist_ok=True)
+            shutil.copytree(source_path, self.install_path, dirs_exist_ok=True)
 
             # Cleanup (signal only; DownloadManager does the actual removal)
             self.signals.cleanup_started.emit()
@@ -344,19 +321,23 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
     def __init__(self, parent=None):
         logger.info(f"Running version {appversion}")
         logger.debug("Constructing UI")
-        super(BlenderUpdater, self).__init__(parent)
+        super().__init__(parent)
         self.config = configparser.ConfigParser()
-        self.build_buttons = {}
+        self.build_buttons = []
+        self.download_manager = None
+        self.finallist = []
         self.setupUi(self)
         self.session = requests.Session()
         self.filename_regex = re.compile(
             r'blender-\d+\.\d+[^"\s/]*\.(?:zip|tar\.xz|dmg|tar\.gz)'
         )
         self.threadpool = QThreadPool()
-        self.finallist = []
         logger.info(
             f"Multithreading with maximum {self.threadpool.maxThreadCount()} threads"
         )
+        self.appleicon = QtGui.QIcon(":/newPrefix/images/Apple-icon.png")
+        self.windowsicon = QtGui.QIcon(":/newPrefix/images/Windows-icon.png")
+        self.linuxicon = QtGui.QIcon(":/newPrefix/images/Linux-icon.png")
 
         self.setStyleSheet("""
             QPushButton[highlight="true"][os="windows"] {
@@ -387,8 +368,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.scrollArea.setWidget(self.scrollContent)
         self.scrollArea.hide()
 
-        self.btn_oneclick.hide()
-        self.lbl_quick.hide()
         self.lbl_caution.hide()
         self.btn_newVersion.hide()
         self.btn_execute.hide()
@@ -397,13 +376,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self._load_config()
         self.install_path = self._get_config(CONFIG_KEY_PATH)
         self.line_path.setText(self.install_path)
-
-        last_dl_filename = self._get_config(CONFIG_KEY_LAST_DL_FILENAME)
-        if last_dl_filename:
-            self.btn_oneclick.setText(_build_label(last_dl_filename))
-            self.btn_oneclick.clicked.connect(lambda: self.download(last_dl_filename))
-            self.btn_oneclick.show()
-            self.lbl_quick.show()
 
         self.btn_cancel.hide()
         self.frm_progress.hide()
@@ -426,6 +398,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.btn_linux.clicked.connect(lambda: self._set_os_filter("linux"))
         self.btn_windows.clicked.connect(lambda: self._set_os_filter("windows"))
         self.btn_allos.clicked.connect(lambda: self._set_os_filter("all"))
+
 
         try:
             self.session.get(GITHUB_CHECK_URL, timeout=CONNECTIVITY_TIMEOUT)
@@ -495,7 +468,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         return details
 
     def _load_config(self):
-        if os.path.isfile(CONFIG_FILE_NAME):
+        if Path(CONFIG_FILE_NAME).is_file():
             logger.info("Reading existing configuration file")
             self.config.read(CONFIG_FILE_NAME)
             if not self.config.has_section(CONFIG_SECTION_MAIN):
@@ -507,7 +480,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         defaults = {
             CONFIG_KEY_PATH: "",
             CONFIG_KEY_LAST_CHECK: "Never",
-            CONFIG_KEY_LAST_DL_FILENAME: "",
             CONFIG_KEY_INSTALLED_FILENAME: "",
             CONFIG_KEY_OS_FILTER: "all",
         }
@@ -563,8 +535,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
     def check_dir(self):
         self.install_path = self.line_path.text()
-        if not os.path.isdir(self.install_path):
-            QtWidgets.QMessageBox.about(
+        if not Path(self.install_path).is_dir():
+            QtWidgets.QMessageBox.warning(
                 self,
                 "Directory not set",
                 "Please choose a valid destination directory first",
@@ -587,8 +559,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self._update_config(CONFIG_KEY_PATH, self.install_path)
         self.frm_start.hide()
         self.frm_progress.hide()
-        self.btn_oneclick.hide()
-        self.lbl_quick.hide()
         self.btn_newVersion.hide()
         self.progressBar.hide()
         self.lbl_task.hide()
@@ -614,15 +584,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
         self.finallist = build_list
 
-        last_dl_filename = self._get_config(CONFIG_KEY_LAST_DL_FILENAME)
-        if last_dl_filename and last_dl_filename not in build_list:
-            self._update_config(CONFIG_KEY_LAST_DL_FILENAME, "")
-            self.btn_oneclick.hide()
-            self.lbl_quick.hide()
-
-        self.appleicon = QtGui.QIcon(":/newPrefix/images/Apple-icon.png")
-        self.windowsicon = QtGui.QIcon(":/newPrefix/images/Windows-icon.png")
-        self.linuxicon = QtGui.QIcon(":/newPrefix/images/Linux-icon.png")
+        self.btn_execute.hide()
 
         self.scrollArea.show()
         self.lbl_available.show()
@@ -630,8 +592,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.btngrp_filter.show()
 
         lastcheck = datetime.now().strftime("%a %b %d %H:%M:%S %Y")
-        self.statusbar.showMessage(f"Ready - Last check: {str(lastcheck)}")
-        self._update_config(CONFIG_KEY_LAST_CHECK, str(lastcheck))
+        self.statusbar.showMessage(f"Ready - Last check: {lastcheck}")
+        self._update_config(CONFIG_KEY_LAST_CHECK, lastcheck)
 
         saved_filter = self._get_config(CONFIG_KEY_OS_FILTER, "all")
         if saved_filter == "windows":
@@ -663,7 +625,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 return
 
         self._update_config(CONFIG_KEY_PATH, self.install_path)
-        self._update_config(CONFIG_KEY_LAST_DL_FILENAME, entry)
 
         self.scrollArea.hide()
         self.lbl_available.hide()
@@ -692,7 +653,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.download_manager.start()
 
     def cancel_download(self):
-        if hasattr(self, "download_manager"):
+        if self.download_manager is not None:
             self.download_manager.cancel()
         self.btn_cancel.hide()
 
@@ -799,18 +760,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         elif opsys == "Linux":
             self.btn_execute.clicked.connect(self.exec_linux)
 
-        if installed_entry_filename:
-            self.btn_oneclick.setText(_build_label(installed_entry_filename))
-            try:
-                self.btn_oneclick.clicked.disconnect()
-            except RuntimeError:
-                pass
-            self.btn_oneclick.clicked.connect(lambda: self.download(installed_entry_filename))
-            self.btn_oneclick.show()
-            self.lbl_quick.show()
-        else:
-            self.btn_oneclick.hide()
-            self.lbl_quick.hide()
 
     def exec_windows(self):
         blender_exe = Path(self.install_path) / "blender.exe"
@@ -829,9 +778,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         )
         if blender_executable.exists():
             try:
-                current_mode = os.stat(str(blender_executable)).st_mode
-                os.chmod(str(blender_executable), current_mode | 0o111)
-                subprocess.Popen([str(blender_executable)])
+                blender_executable.chmod(blender_executable.stat().st_mode | 0o111)
+                subprocess.Popen([blender_executable])
                 logger.info(f"Executing {blender_executable}")
             except OSError as e:
                 logger.error(f"Failed to execute Blender on macOS: {e}")
@@ -848,9 +796,8 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         blender_executable = Path(self.install_path) / "blender"
         if blender_executable.exists():
             try:
-                current_mode = os.stat(str(blender_executable)).st_mode
-                os.chmod(str(blender_executable), current_mode | 0o111)
-                subprocess.Popen([str(blender_executable)])
+                blender_executable.chmod(blender_executable.stat().st_mode | 0o111)
+                subprocess.Popen([blender_executable])
                 logger.info(f"Executing {blender_executable}")
             except OSError as e:
                 logger.error(f"Failed to execute Blender on Linux: {e}")
@@ -889,15 +836,14 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
         os_arch_details = self._get_os_arch_details()
 
-        for index, entry_filename in enumerate(self.finallist):
+        for entry_filename in self.finallist:
             if os_filter_keywords and not any(
                 keyword.lower() in entry_filename.lower()
                 for keyword in os_filter_keywords
             ):
                 continue
 
-            self.build_buttons[index] = QtWidgets.QPushButton()
-
+            btn = QtWidgets.QPushButton()
             entry_lower = entry_filename.lower()
             is_highlighted = False
 
@@ -913,31 +859,26 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 ):
                     is_highlighted = True
 
-            self.build_buttons[index].setProperty("highlight", is_highlighted)
+            btn.setProperty("highlight", is_highlighted)
             if is_highlighted:
-                self.build_buttons[index].setProperty(
-                    "os", os_arch_details["generic_os"]
-                )
+                btn.setProperty("os", os_arch_details["generic_os"])
 
             if "macos" in entry_lower or "darwin" in entry_lower:
-                self.build_buttons[index].setIcon(self.appleicon)
+                btn.setIcon(self.appleicon)
             elif "linux" in entry_lower:
-                self.build_buttons[index].setIcon(self.linuxicon)
-            elif (
-                "windows" in entry_lower
-                or "win64" in entry_lower
-                or "win32" in entry_lower
-            ):
-                self.build_buttons[index].setIcon(self.windowsicon)
+                btn.setIcon(self.linuxicon)
+            elif "windows" in entry_lower or "win64" in entry_lower or "win32" in entry_lower:
+                btn.setIcon(self.windowsicon)
 
-            self.build_buttons[index].setIconSize(QtCore.QSize(24, 24))
-            self.build_buttons[index].setText(entry_filename)
-            self.build_buttons[index].setFixedWidth(670)
-            self.build_buttons[index].clicked.connect(
+            btn.setIconSize(QtCore.QSize(24, 24))
+            btn.setText(entry_filename)
+            btn.setFixedWidth(670)
+            btn.clicked.connect(
                 lambda checked=False, filename=entry_filename: self.download(filename)
             )
 
-            self.scrollLayout.addWidget(self.build_buttons[index])
+            self.build_buttons.append(btn)
+            self.scrollLayout.addWidget(btn)
 
         self.scrollLayout.addStretch()
 
