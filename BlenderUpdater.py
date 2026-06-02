@@ -52,7 +52,6 @@ appversion = "1.13.0"
 CONFIG_SECTION_MAIN = "main"
 CONFIG_KEY_PATH = "path"
 CONFIG_KEY_LAST_CHECK = "lastcheck"
-CONFIG_KEY_LAST_DL_DESC = "lastdl_desc"
 CONFIG_KEY_LAST_DL_FILENAME = "lastdl_filename"
 CONFIG_KEY_INSTALLED_FILENAME = "installed_filename"
 CONFIG_KEY_OS_FILTER = "os_filter"
@@ -90,6 +89,24 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger()
+
+
+_BUILD_LABEL_RE = re.compile(
+    r"blender-(\d+\.\d+[^-]*)-(?:.*-)?(windows|linux|darwin|macos)[\.\-]?(\w+)?",
+    re.IGNORECASE,
+)
+
+
+def _build_label(filename: str) -> str:
+    """Return a short human-readable label for a Blender build filename."""
+    m = _BUILD_LABEL_RE.search(filename)
+    if m:
+        version, os_name, arch = m.group(1), m.group(2), m.group(3)
+        os_label = OS_DESCRIPTIONS.get(os_name.lower(), os_name)
+        return f"Blender {version} ({os_label}{' ' + arch if arch else ''})"
+    # Fallback: strip prefix and extension
+    stem = re.sub(r"\.(zip|tar\.xz|dmg|tar\.gz)$", "", filename, flags=re.IGNORECASE)
+    return stem.removeprefix("blender-")
 
 
 def _hbytes(num: float) -> str:
@@ -257,6 +274,7 @@ class DownloadWorker(QRunnable):
                 downloaded_size = 0
                 for chunk in response.iter_content(chunk_size=DOWNLOAD_CHUNK_SIZE):
                     if self._cancelled:
+                        response.close()
                         self.signals.finished.emit(False, CANCEL_MESSAGE)
                         return
                     f.write(chunk)
@@ -291,8 +309,16 @@ class DownloadWorker(QRunnable):
             extract_dir = os.path.join(self.temp_dir, "extracted")
             os.makedirs(extract_dir, exist_ok=True)
             shutil.unpack_archive(self.download_path, extract_dir)
-            source_dir_name = next(os.walk(extract_dir))[1][0]
-            source_path = os.path.join(extract_dir, source_dir_name)
+
+            # Zip-slip guard: ensure no extracted path escapes the extract directory
+            extract_dir_resolved = Path(extract_dir).resolve()
+            for member in extract_dir_resolved.rglob("*"):
+                member.resolve().relative_to(extract_dir_resolved)
+
+            _, subdirs, _ = next(os.walk(extract_dir))
+            if not subdirs:
+                raise OSError("Archive did not contain a top-level directory as expected")
+            source_path = os.path.join(extract_dir, subdirs[0])
 
             # Copying
             self.signals.copying_started.emit()
@@ -327,6 +353,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             r'blender-\d+\.\d+[^"\s/]*\.(?:zip|tar\.xz|dmg|tar\.gz)'
         )
         self.threadpool = QThreadPool()
+        self.finallist = []
         logger.info(
             f"Multithreading with maximum {self.threadpool.maxThreadCount()} threads"
         )
@@ -372,10 +399,11 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.line_path.setText(self.install_path)
 
         last_dl_filename = self._get_config(CONFIG_KEY_LAST_DL_FILENAME)
-        last_dl_desc = self._get_config(CONFIG_KEY_LAST_DL_DESC)
-        if last_dl_filename and last_dl_desc:
-            self.btn_oneclick.setText(f"{last_dl_filename} | {last_dl_desc}")
+        if last_dl_filename:
+            self.btn_oneclick.setText(_build_label(last_dl_filename))
+            self.btn_oneclick.clicked.connect(lambda: self.download(last_dl_filename))
             self.btn_oneclick.show()
+            self.lbl_quick.show()
 
         self.btn_cancel.hide()
         self.frm_progress.hide()
@@ -408,7 +436,7 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             logger.critical("No internet connection")
 
         try:
-            response = self.session.get(GITHUB_RELEASES_API_URL)
+            response = self.session.get(GITHUB_RELEASES_API_URL, timeout=CONNECTIVITY_TIMEOUT)
             response.raise_for_status()
             update_data = response.json()
             logger.info("Reading existing configuration file")
@@ -479,7 +507,6 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         defaults = {
             CONFIG_KEY_PATH: "",
             CONFIG_KEY_LAST_CHECK: "Never",
-            CONFIG_KEY_LAST_DL_DESC: "",
             CONFIG_KEY_LAST_DL_FILENAME: "",
             CONFIG_KEY_INSTALLED_FILENAME: "",
             CONFIG_KEY_OS_FILTER: "all",
@@ -586,6 +613,12 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             return
 
         self.finallist = build_list
+
+        last_dl_filename = self._get_config(CONFIG_KEY_LAST_DL_FILENAME)
+        if last_dl_filename and last_dl_filename not in build_list:
+            self._update_config(CONFIG_KEY_LAST_DL_FILENAME, "")
+            self.btn_oneclick.hide()
+            self.lbl_quick.hide()
 
         self.appleicon = QtGui.QIcon(":/newPrefix/images/Apple-icon.png")
         self.windowsicon = QtGui.QIcon(":/newPrefix/images/Windows-icon.png")
@@ -766,9 +799,13 @@ class BlenderUpdater(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         elif opsys == "Linux":
             self.btn_execute.clicked.connect(self.exec_linux)
 
-        last_dl_desc = self._get_config(CONFIG_KEY_LAST_DL_DESC)
-        if last_dl_desc and installed_entry_filename:
-            self.btn_oneclick.setText(f"{installed_entry_filename} | {last_dl_desc}")
+        if installed_entry_filename:
+            self.btn_oneclick.setText(_build_label(installed_entry_filename))
+            try:
+                self.btn_oneclick.clicked.disconnect()
+            except RuntimeError:
+                pass
+            self.btn_oneclick.clicked.connect(lambda: self.download(installed_entry_filename))
             self.btn_oneclick.show()
             self.lbl_quick.show()
         else:
